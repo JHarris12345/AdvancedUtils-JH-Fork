@@ -1,0 +1,72 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:5.2.0'
+    }
+}
+
+group 'net.advancedplugins.utils'
+version '1.0.0'
+
+apply plugin: 'java'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+
+    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    maven { url 'https://oss.sonatype.org/content/groups/public/' }
+    maven { url 'https://jitpack.io' }
+    maven { url 'https://repo.andrei1058.dev/releases/' }
+    maven { url 'https://repo.codemc.org/repository/maven-public/' } // Some CodeCo stuff
+    maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' } // PlaceholderAPI
+
+    // PlotSquared
+    maven {
+        name = "EngineHub"
+        url = uri("https://maven.enginehub.org/repo/")
+    }
+    maven {
+        name = "OSS Sonatype"
+        url = uri("https://oss.sonatype.org/content/repositories/snapshots/")
+    }
+
+    maven { url 'https://mvn.lumine.io/repository/maven-public/' } // MythicMobs
+
+    maven { url 'https://gitlab.com/api/v4/projects/14122684/packages/maven' } // BedWars1058
+    maven { url 'https://repo.codemc.org/repository/maven-public' } // ASkyBlock
+    maven { url 'https://repo.citizensnpcs.co/' } // Citizens
+    maven { url 'https://bitbucket.org/kangarko/libraries/raw/master' } // All mineacademy, e.g BossTM
+
+    maven { url 'https://papermc.io/repo/repository/maven-public/' }
+}
+
+dependencies {
+    compileOnly fileTree(include: ['*.jar'], dir: 'libs') // Add everything in the libs folder.
+    implementation group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
+}
+
+processResources {
+    expand project.properties
+    filter org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+            "version": project.property("version"),
+            "date": getDate()
+    ]
+}
+
+shadowJar {
+}
+
+def getDate() {
+    def date = new Date()
+    def formattedDate = date.format('dd/MM/yyyy')
+    return formattedDate
+}
