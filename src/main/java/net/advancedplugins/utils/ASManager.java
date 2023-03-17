@@ -1195,4 +1195,20 @@ public class ASManager {
         }
         return rt;
     }
+
+    /**
+     * Checks if a String representing an Enum is valid.
+     *
+     * @param enumType Type of enum.
+     * @param name     Name to check.
+     * @return True if the String is a valid enum, false otherwise.
+     */
+    public static <T extends Enum<T>> boolean isValidEnum(Class<T> enumType, String name) {
+        try {
+            Enum.valueOf(enumType, name);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
 }
