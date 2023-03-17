@@ -1211,4 +1211,10 @@ public class ASManager {
             return false;
         }
     }
+
+    public static boolean notNullAndTrue(Boolean value) {
+        if (value == null)
+            return false;
+        return value;
+    }
 }
