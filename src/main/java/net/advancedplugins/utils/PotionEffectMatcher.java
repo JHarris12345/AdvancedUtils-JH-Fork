@@ -1,5 +1,6 @@
 package net.advancedplugins.utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
@@ -22,9 +23,9 @@ public class PotionEffectMatcher {
                     }
                 }
             }
-
             return PotionEffectType.getByName(input);
         } catch (Exception ev) {
+            ev.printStackTrace();
             return PotionEffectType.getByName(input);
         }
     }
@@ -32,8 +33,6 @@ public class PotionEffectMatcher {
     private static void init() {
         for (PotionEffectType type : PotionEffectType.values()) {
             List<String> aliases = new ArrayList<>();
-            if(type == null)
-                continue;
 
             if (type.equals(PotionEffectType.CONFUSION)) {
                 aliases.add("NAUSEA");
@@ -54,7 +53,7 @@ public class PotionEffectMatcher {
                 aliases.add("JUMP_BOOST");
             } else if (type.equals(PotionEffectType.SLOW)) {
                 aliases.add("SLOWNESS");
-            }if (type.equals(PotionEffectType.BLINDNESS)) {
+            } else if (type.equals(PotionEffectType.BLINDNESS)) {
                 aliases.add("BLIND");
             }
 

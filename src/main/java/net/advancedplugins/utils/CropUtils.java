@@ -3,6 +3,7 @@ package net.advancedplugins.utils;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import org.apache.commons.math3.distribution.BinomialDistribution;
 import org.apache.commons.math3.distribution.UniformIntegerDistribution;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
@@ -138,14 +139,10 @@ public class CropUtils {
      */
     public static boolean isFullyGrown(Block b) {
         if (!ASManager.isValid(b) || !isCrop(b.getType())) return false;
-        if (MinecraftVersion.isNew()) {
-            if (!(b.getBlockData() instanceof Ageable))
-                return false;
-            Ageable a = (Ageable) b.getBlockData();
-            return a.getAge() == a.getMaximumAge();
-        } else {
-            return (b.getType() == Material.COCOA) ? b.getData() == 9 : b.getData() == 7;
-        }
+        if (!(b.getBlockData() instanceof Ageable))
+            return false;
+        Ageable a = (Ageable) b.getBlockData();
+        return a.getAge() == a.getMaximumAge();
     }
 
     /**

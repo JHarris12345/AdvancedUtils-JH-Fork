@@ -2,6 +2,7 @@ package net.advancedplugins.utils;
 
 import net.advancedplugins.utils.nbt.NBTapi;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
@@ -95,6 +96,14 @@ public class ItemDurability {
 
         setDurability(getDurability() - amount);
         return this;
+    }
+
+    public ItemDurability handleDurabilityChange(int amount) {
+        if (amount < 0) {
+            return healItem((short) amount);
+        } else {
+            return damageItem((short) amount);
+        }
     }
 
     /**

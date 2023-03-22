@@ -68,7 +68,7 @@ public class ASManager {
     }
 
     public static boolean isExcessVelocity(Vector vel) {
-        return (vel.getX() > 4.0D) || (vel.getX() < -4.0D) || (vel.getY() > 4.0D) || (vel.getY() < -4.0D) || (vel.getZ() > 4.0D) || (vel.getZ() < -4.0D);
+        return (vel.getX() > 10.0D) || (vel.getX() < -10.0D) || (vel.getY() > 10.0D) || (vel.getY() < -10.0D) || (vel.getZ() > 10.0D) || (vel.getZ() < -10.0D);
     }
 
     public static List<Block> getBlocksFlat(Block start, int radius) {
@@ -492,7 +492,7 @@ public class ASManager {
 
     public static boolean contains(String query, String[] list) {
         for (String badWord : list) {
-            if (query.toLowerCase(Locale.ROOT).contains(badWord.toLowerCase(Locale.ROOT))) {
+            if (query.toLowerCase(Locale.ROOT).equalsIgnoreCase(badWord.toLowerCase(Locale.ROOT))) {
                 return true;
             }
         }
@@ -516,7 +516,7 @@ public class ASManager {
                 int max = Integer.parseInt(toparse.split("-")[1]);
                 return ThreadLocalRandom.current().nextInt(max - min) + min;
             }
-            return Integer.parseInt(toparse.replaceAll("[^0-9]", ""));
+            return Integer.parseInt(toparse.replaceAll("\"[^0-9.-]\"", ""));
         } catch (Exception e) {
             instance.getLogger().warning("Failed to parse " + toparse + " from String to Integer.");
             e.printStackTrace();
@@ -1217,4 +1217,11 @@ public class ASManager {
             return false;
         return value;
     }
+
+    public static boolean sameBlock(Location locationOne, Location locationTwo) {
+        return locationOne.getBlockX() == locationTwo.getBlockX()
+                && locationOne.getBlockY() == locationTwo.getBlockY()
+                && locationOne.getBlockZ() == locationTwo.getBlockZ();
+    }
+
 }

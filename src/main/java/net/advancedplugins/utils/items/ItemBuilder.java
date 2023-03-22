@@ -1,11 +1,20 @@
 package net.advancedplugins.utils.items;
 
-import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
+import net.advancedplugins.ae.api.AEAPI;
+import net.advancedplugins.ae.utils.AManager;
+import net.advancedplugins.ae.utils.ColorUtils;
+import net.advancedplugins.ae.utils.GlowEffect;
+import net.advancedplugins.ae.utils.nbt.backend.utils.MinecraftVersion;
+import net.advancedplugins.heads.api.AdvancedHeadsAPI;
+import net.advancedplugins.utils.ASManager;
+import net.advancedplugins.utils.nbt.NBTapi;
+import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -14,10 +23,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Easily create itemstacks, without messing your hands.
@@ -30,6 +36,7 @@ public class ItemBuilder {
 
     private ItemStack is;
     private ItemMeta im;
+    private ConfigurationSection section;
 
     /**
      * Create a new ItemBuilder from scratch.
@@ -49,6 +56,66 @@ public class ItemBuilder {
         this.is = is;
         im = is.getItemMeta();
     }
+
+    /**
+     * Creates and {@link ItemStack} from a given configuration section, will check a few different field names
+     * @param config a {@link ConfigurationSection}
+     */
+    public ItemBuilder(ConfigurationSection config) {
+        this.section = config;
+        ItemStack itemType = AManager.matchMaterial(config.getString("type"), 1, 0);
+
+        if (itemType == null){
+            throw new IllegalArgumentException("Could create item from config section: " + config.getCurrentPath() + " because the type was null.");
+            //AManager.error("Could create item from config section: " + config.getCurrentPath() + " because the type was null.");
+        }
+
+        String displayName = config.isString("name") ? ColorUtils.format(config.getString("name")) : "";
+        List<String> description = config.isList("lore") ? config.getStringList("lore") : new ArrayList<>();
+        int customModelData = config.isInt("custom-model-data") && net.advancedplugins.ae.utils.nbt.backend.utils.MinecraftVersion.getVersionNumber() > 1_14_0 ? config.getInt("custom-model-data") : 0;
+        int amount = config.isInt("amount") ? config.getInt("amount") : 1;
+        int advancedHeadsId = config.isInt("advanced-heads-id") ? config.getInt("advanced-heads-id") : 0;
+        boolean makeGlow = config.isBoolean("force-glow") && config.getBoolean("force-glow");
+
+        ItemStack stack = new ItemStack(itemType);
+        ItemMeta stackMeta = stack.getItemMeta();
+
+        assert stackMeta != null;
+        stackMeta.setDisplayName(displayName);
+
+        stackMeta.setLore(ColorUtils.format(description));
+
+        if (customModelData != 0) {
+            stackMeta.setCustomModelData(customModelData);
+        }
+
+        stack.setAmount(amount);
+
+        if (makeGlow) {
+            stackMeta.addEnchant(Enchantment.DURABILITY, 1, true);
+            stackMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        }
+
+        stack.setItemMeta(stackMeta);
+        this.is = stack;
+        this.im = this.is.getItemMeta();
+
+        if (advancedHeadsId != 0 && Bukkit.getServer().getPluginManager().isPluginEnabled("AdvancedHeads")) {
+            this.is = AdvancedHeadsAPI.getHead(advancedHeadsId);
+            this.im = this.is.getItemMeta();
+        }
+    }
+
+    /**
+     * Gets an Optional of the ConfigurationSection used to create this ItemBuilder
+     * If the class constructor is not a {@link ConfigurationSection} then this will return empty
+     * @return an Optional ConfigurationSection
+     */
+    public Optional<ConfigurationSection> getConfigSection() {
+        if (this.section == null) return Optional.empty();
+        return Optional.of(this.section);
+    }
+
 
     /**
      * Create a new ItemBuilder from scratch.
@@ -294,6 +361,12 @@ public class ItemBuilder {
      *
      * @param integer Custom model data.
      */
+    /**
+     * Sets the items custom model data on 1.14+ servers.
+     * If called on a server < 1.14 it won't do anything.
+     *
+     * @param integer Custom model data.
+     */
     public ItemBuilder setCustomModelData(Integer integer) {
         if (MinecraftVersion.getVersionNumber() >= 1_14_0) {
             im.setCustomModelData(integer);
@@ -301,6 +374,34 @@ public class ItemBuilder {
         return this;
     }
 
+
+    /**
+     * Adds string NBT data to itemstack.
+     *
+     * @param type The type of data.
+     * @param arguments The string arguments to add.
+     */
+    public ItemBuilder addNBTTag(String type, String arguments) {
+        is.setItemMeta(im);
+        is = NBTapi.addNBTTag(type, arguments, is);
+        im = is.getItemMeta();
+        return this;
+    }
+
+    public ItemBuilder setGlowing(boolean bool) {
+        is.setItemMeta(im);
+        if (bool) {
+            is = AManager.addGlow(is);
+        } else {
+            if (MinecraftVersion.isNew()) {
+                if (is.containsEnchantment(GlowEffect.GLOW)) {
+                    is.removeEnchantment(GlowEffect.GLOW);
+                }
+            }
+        }
+        im = is.getItemMeta();
+        return this;
+    }
 
     /**
      * Gets the ItemMeta from the item that's being built.
@@ -322,4 +423,29 @@ public class ItemBuilder {
     }
 
 
+    /**
+     * Sets an items unbreakable status.
+     *
+     * @param unbreakable Whether the item should be unbreakable.
+     */
+    public ItemBuilder setUnbreakable(boolean unbreakable) {
+        if (MinecraftVersion.getVersionNumber() >= 1_11_0) {
+            assert im != null;
+            im.setUnbreakable(unbreakable);
+        }
+        return this;
+    }
+
+    /**
+     * Adds a custom enchantment.
+     *
+     * @param enchantment Enchantment to add.
+     * @param level       The enchantments level.
+     */
+    public ItemBuilder addCustomEnchantment(String enchantment, int level) {
+        is.setItemMeta(im);
+        is = net.advancedplugins.ae.api.AEAPI.applyEnchant(enchantment, level, is);
+        im = is.getItemMeta();
+        return this;
+    }
 }
