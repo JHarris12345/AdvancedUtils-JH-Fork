@@ -39,6 +39,11 @@ public class NBTapi {
         return nbti.getString(argument);
     }
 
+    public static Integer getInt(String argument, ItemStack i) {
+        NBTItem nbti = new NBTItem(i);
+        return nbti.getInteger(argument);
+    }
+
     public static boolean hasNBT(ItemStack i) {
         if (i == null) {
             return false;

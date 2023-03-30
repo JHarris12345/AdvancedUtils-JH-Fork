@@ -26,6 +26,9 @@ public class HooksHandler {
         } else if (isPluginEnabled("HolographicDisplays")) {
             holograms = new DecentHologramsHandler(plugin);
             return;
+        } else {
+            plugin.getLogger().info("No hologram plugin was detected - spawner holograms will be disabled.");
+            holograms = new HologramHandler(plugin);
         }
     }
 

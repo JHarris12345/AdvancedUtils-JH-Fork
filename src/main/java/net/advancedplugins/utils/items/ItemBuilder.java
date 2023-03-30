@@ -1,13 +1,10 @@
 package net.advancedplugins.utils.items;
 
-import net.advancedplugins.ae.api.AEAPI;
-import net.advancedplugins.ae.utils.AManager;
-import net.advancedplugins.ae.utils.ColorUtils;
-import net.advancedplugins.ae.utils.GlowEffect;
-import net.advancedplugins.ae.utils.nbt.backend.utils.MinecraftVersion;
 import net.advancedplugins.heads.api.AdvancedHeadsAPI;
 import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.nbt.NBTapi;
+import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
+import net.advancedplugins.utils.text.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -59,20 +56,21 @@ public class ItemBuilder {
 
     /**
      * Creates and {@link ItemStack} from a given configuration section, will check a few different field names
+     *
      * @param config a {@link ConfigurationSection}
      */
     public ItemBuilder(ConfigurationSection config) {
         this.section = config;
-        ItemStack itemType = AManager.matchMaterial(config.getString("type"), 1, 0);
+        ItemStack itemType = ASManager.matchMaterial(config.getString("type"), 1, 0);
 
-        if (itemType == null){
+        if (itemType == null) {
             throw new IllegalArgumentException("Could create item from config section: " + config.getCurrentPath() + " because the type was null.");
-            //AManager.error("Could create item from config section: " + config.getCurrentPath() + " because the type was null.");
+            //ASManager.error("Could create item from config section: " + config.getCurrentPath() + " because the type was null.");
         }
 
-        String displayName = config.isString("name") ? ColorUtils.format(config.getString("name")) : "";
+        String displayName = config.isString("name") ? Text.modify(config.getString("name")) : "";
         List<String> description = config.isList("lore") ? config.getStringList("lore") : new ArrayList<>();
-        int customModelData = config.isInt("custom-model-data") && net.advancedplugins.ae.utils.nbt.backend.utils.MinecraftVersion.getVersionNumber() > 1_14_0 ? config.getInt("custom-model-data") : 0;
+        int customModelData = config.isInt("custom-model-data") && MinecraftVersion.getVersionNumber() > 1_14_0 ? config.getInt("custom-model-data") : 0;
         int amount = config.isInt("amount") ? config.getInt("amount") : 1;
         int advancedHeadsId = config.isInt("advanced-heads-id") ? config.getInt("advanced-heads-id") : 0;
         boolean makeGlow = config.isBoolean("force-glow") && config.getBoolean("force-glow");
@@ -83,7 +81,7 @@ public class ItemBuilder {
         assert stackMeta != null;
         stackMeta.setDisplayName(displayName);
 
-        stackMeta.setLore(ColorUtils.format(description));
+        stackMeta.setLore(Text.modify(description));
 
         if (customModelData != 0) {
             stackMeta.setCustomModelData(customModelData);
@@ -109,6 +107,7 @@ public class ItemBuilder {
     /**
      * Gets an Optional of the ConfigurationSection used to create this ItemBuilder
      * If the class constructor is not a {@link ConfigurationSection} then this will return empty
+     *
      * @return an Optional ConfigurationSection
      */
     public Optional<ConfigurationSection> getConfigSection() {
@@ -334,7 +333,6 @@ public class ItemBuilder {
     }
 
 
-
     /**
      * Sets the amount of items in the stack.
      *
@@ -378,7 +376,7 @@ public class ItemBuilder {
     /**
      * Adds string NBT data to itemstack.
      *
-     * @param type The type of data.
+     * @param type      The type of data.
      * @param arguments The string arguments to add.
      */
     public ItemBuilder addNBTTag(String type, String arguments) {
@@ -390,15 +388,6 @@ public class ItemBuilder {
 
     public ItemBuilder setGlowing(boolean bool) {
         is.setItemMeta(im);
-        if (bool) {
-            is = AManager.addGlow(is);
-        } else {
-            if (MinecraftVersion.isNew()) {
-                if (is.containsEnchantment(GlowEffect.GLOW)) {
-                    is.removeEnchantment(GlowEffect.GLOW);
-                }
-            }
-        }
         im = is.getItemMeta();
         return this;
     }
@@ -444,7 +433,6 @@ public class ItemBuilder {
      */
     public ItemBuilder addCustomEnchantment(String enchantment, int level) {
         is.setItemMeta(im);
-        is = net.advancedplugins.ae.api.AEAPI.applyEnchant(enchantment, level, is);
         im = is.getItemMeta();
         return this;
     }

@@ -97,7 +97,7 @@ public abstract class SubCommand<T extends CommandSender> extends Command<T> {
                     .map(Player::getName)
                     .collect(Collectors.toList());
         }
-        Argument<S> a = new Argument<S>(ArgumentHandler.getArgumentType(clazz), argument, onTabComplete, aliases);
+        Argument<S> a = new Argument<>(ArgumentHandler.getArgumentType(clazz), argument, onTabComplete, aliases);
         this.arguments.add(a);
         return a;
     }
@@ -112,7 +112,13 @@ public abstract class SubCommand<T extends CommandSender> extends Command<T> {
 
     @SuppressWarnings("unchecked")
     public <U> U parseArgument(String[] args, int index) {
+        return parseArgument(args, index, null);
+    }
+
+    public <U> U parseArgument(String[] args, int index, U def) {
         String arg = args.length - 1 < index ? null : args[index];
+        if (arg == null)
+            return def;
         return ((Argument<U>) this.arguments.get(index)).getType().parse(arg);
     }
 

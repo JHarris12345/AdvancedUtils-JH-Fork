@@ -2,6 +2,8 @@ package net.advancedplugins.utils.commands;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import jdk.internal.joptsimple.internal.Strings;
+import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.commands.argument.ArgumentHandler;
 import net.advancedplugins.utils.commands.argument.ArgumentType;
 import net.advancedplugins.utils.text.Text;
@@ -12,7 +14,10 @@ import org.bukkit.command.Command;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.StringUtil;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -121,7 +126,11 @@ public class CommandBase implements CommandExecutor, TabCompleter {
                 tabCompleteSuggestions.addAll(subResult.tabCompletionSuggestion(sender, args.length - 1));
             }
         }
-        return tabCompleteSuggestions;
+
+        List<String> sortedArgs = new ArrayList<>();
+        StringUtil.copyPartialMatches(args[args.length - 1], tabCompleteSuggestions, sortedArgs);
+        Collections.sort(sortedArgs);
+        return sortedArgs;
     }
 
     public Set<SimpleCommand<? extends CommandSender>> getCommands() {
@@ -133,6 +142,6 @@ public class CommandBase implements CommandExecutor, TabCompleter {
                 .registerArgumentType(Player.class, Bukkit::getPlayerExact)
                 .registerArgumentType(OfflinePlayer.class, Bukkit::getOfflinePlayer)
                 .registerArgumentType(Integer.class, string -> StringUtils.isNumeric(string) ? Integer.parseInt(string) : 0)
-                .registerArgumentType(Boolean.class, string -> string.equalsIgnoreCase("true") ? true : string.equalsIgnoreCase("false") ? false : null);
+                .registerArgumentType(Boolean.class, string -> string.equalsIgnoreCase("true") || (string.equalsIgnoreCase("false") ? false : null));
     }
 }

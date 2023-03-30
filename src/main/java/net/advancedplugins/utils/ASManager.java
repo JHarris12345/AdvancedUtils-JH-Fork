@@ -1224,4 +1224,18 @@ public class ASManager {
                 && locationOne.getBlockZ() == locationTwo.getBlockZ();
     }
 
+    private static boolean debug = false;
+
+    public static void debug(String string) {
+        if (!debug) return;
+        Bukkit.broadcastMessage(string);
+    }
+
+    public static String join(String[] args, String s) {
+        StringBuilder builder = new StringBuilder();
+        for (String l : args) {
+            builder.append(l).append(s);
+        }
+        return builder.substring(0, builder.length() - s.length());
+    }
 }
