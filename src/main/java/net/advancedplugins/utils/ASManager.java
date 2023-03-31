@@ -516,7 +516,8 @@ public class ASManager {
                 int max = Integer.parseInt(toparse.split("-")[1]);
                 return ThreadLocalRandom.current().nextInt(max - min) + min;
             }
-            return Integer.parseInt(toparse.replaceAll("\"[^0-9.-]\"", ""));
+            return Integer.parseInt(toparse.replaceAll("\"[^0-9.-]\"", "")
+                    .replaceAll(" ", ""));
         } catch (Exception e) {
             instance.getLogger().warning("Failed to parse " + toparse + " from String to Integer.");
             e.printStackTrace();
@@ -1231,11 +1232,15 @@ public class ASManager {
         Bukkit.broadcastMessage(string);
     }
 
-    public static String join(String[] args, String s) {
+    public static String join(Iterable<String> args, String s) {
         StringBuilder builder = new StringBuilder();
         for (String l : args) {
             builder.append(l).append(s);
         }
         return builder.substring(0, builder.length() - s.length());
+    }
+
+    public static String join(String[] args, String s) {
+        return join(Arrays.asList(args), s);
     }
 }
