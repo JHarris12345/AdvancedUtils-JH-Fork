@@ -435,7 +435,7 @@ public class ASManager {
 
         ex.printStackTrace();
 
-        Bukkit.getLogger().info("[AdvancedPets ERROR] Could not pass " + ExceptionUtils.getRootCauseMessage(ex) + "");
+        Bukkit.getLogger().info("[" + instance.getDescription().getName() + " ERROR] Could not pass " + ExceptionUtils.getRootCauseMessage(ex) + "");
         Bukkit.getLogger().info("   Class: " + pckg);
         Bukkit.getLogger().info("   Extra info: " + addInfo + "; mc[" + MinecraftVersion.getVersionNumber() + "];");
         Bukkit.getLogger().info("If you cannot indentify cause of this, contact developer providing this report. ");
