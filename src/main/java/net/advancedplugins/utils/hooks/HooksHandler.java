@@ -5,6 +5,7 @@ import net.advancedplugins.utils.hooks.holograms.CMIHologramHandler;
 import net.advancedplugins.utils.hooks.holograms.DecentHologramsHandler;
 import net.advancedplugins.utils.hooks.holograms.HologramHandler;
 import net.advancedplugins.utils.hooks.plugins.McMMOHook;
+import net.advancedplugins.utils.hooks.plugins.WorldGuardHook;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -19,9 +20,11 @@ public class HooksHandler {
         HooksHandler.plugin = plugin;
         holograms();
 
-        if (isPluginEnabled(HookPlugin.MCMMO.getPluginName())) {
+        if (isPluginEnabled(HookPlugin.MCMMO.getPluginName()))
             registerNew(HookPlugin.MCMMO, new McMMOHook());
-        }
+
+        if (isPluginEnabled(HookPlugin.WORLDGUARD.getPluginName()))
+            registerNew(HookPlugin.WORLDGUARD, new WorldGuardHook());
     }
 
     private static void registerNew(HookPlugin plugin, PluginHookInstance instance) {
@@ -44,7 +47,6 @@ public class HooksHandler {
             holograms = new DecentHologramsHandler(plugin);
             return;
         } else {
-            plugin.getLogger().info("No hologram plugin was detected - spawner holograms will be disabled.");
             holograms = new HologramHandler(plugin);
         }
     }
