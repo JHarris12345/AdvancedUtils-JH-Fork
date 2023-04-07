@@ -4,10 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import net.advancedplugins.utils.hooks.holograms.CMIHologramHandler;
 import net.advancedplugins.utils.hooks.holograms.DecentHologramsHandler;
 import net.advancedplugins.utils.hooks.holograms.HologramHandler;
-import net.advancedplugins.utils.hooks.plugins.GriefPreventionHook;
-import net.advancedplugins.utils.hooks.plugins.McMMOHook;
-import net.advancedplugins.utils.hooks.plugins.SlimeFunHook;
-import net.advancedplugins.utils.hooks.plugins.WorldGuardHook;
+import net.advancedplugins.utils.hooks.plugins.*;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -33,6 +30,16 @@ public class HooksHandler {
 
         if (isPluginEnabled(HookPlugin.SLIMEFUN.getPluginName()))
             registerNew(HookPlugin.SLIMEFUN, new SlimeFunHook());
+
+        // Figure out which factions plugin is loaded and hook into the correct one
+
+        if (isPluginEnabled(HookPlugin.FACTIONS.getPluginName())) {
+            if (isPluginEnabled("MassiveCore")) {
+                registerNew(HookPlugin.FACTIONS, new FactionsMCoreHook());
+            } else {
+                registerNew(HookPlugin.FACTIONS, new FactionsUUIDHook());
+            }
+        }
     }
 
     private static void registerNew(HookPlugin plugin, PluginHookInstance instance) {
@@ -67,4 +74,7 @@ public class HooksHandler {
         return holograms;
     }
 
+    public static boolean isEnabled(HookPlugin hookPlugin) {
+        return pluginHookMap.containsKey(hookPlugin);
+    }
 }

@@ -4,6 +4,7 @@ public enum HookPlugin {
     WORLDGUARD("WorldGuard"),
     GRIEFPREVENTION("GriefPrevention"),
     SLIMEFUN("SlimeFun"),
+    FACTIONS("Factions"),
     MCMMO("mcMMO");
 
     private final String pluginName;
