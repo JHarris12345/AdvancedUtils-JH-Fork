@@ -1241,8 +1241,8 @@ public class ASManager {
     }
 
     public static String get() {
-        return "9454";
-//        return "%%__USER__%%";
+//        return "9454";
+        return "%%__USER__%%";
     }
 
     public static String join(String[] args, String s) {

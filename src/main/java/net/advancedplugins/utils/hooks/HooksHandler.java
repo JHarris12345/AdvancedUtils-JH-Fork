@@ -4,7 +4,9 @@ import com.google.common.collect.ImmutableMap;
 import net.advancedplugins.utils.hooks.holograms.CMIHologramHandler;
 import net.advancedplugins.utils.hooks.holograms.DecentHologramsHandler;
 import net.advancedplugins.utils.hooks.holograms.HologramHandler;
+import net.advancedplugins.utils.hooks.plugins.GriefPreventionHook;
 import net.advancedplugins.utils.hooks.plugins.McMMOHook;
+import net.advancedplugins.utils.hooks.plugins.SlimeFunHook;
 import net.advancedplugins.utils.hooks.plugins.WorldGuardHook;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,6 +27,12 @@ public class HooksHandler {
 
         if (isPluginEnabled(HookPlugin.WORLDGUARD.getPluginName()))
             registerNew(HookPlugin.WORLDGUARD, new WorldGuardHook());
+
+        if (isPluginEnabled(HookPlugin.GRIEFPREVENTION.getPluginName()))
+            registerNew(HookPlugin.GRIEFPREVENTION, new GriefPreventionHook());
+
+        if (isPluginEnabled(HookPlugin.SLIMEFUN.getPluginName()))
+            registerNew(HookPlugin.SLIMEFUN, new SlimeFunHook());
     }
 
     private static void registerNew(HookPlugin plugin, PluginHookInstance instance) {
