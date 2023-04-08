@@ -1,6 +1,8 @@
 package net.advancedplugins.utils;
 
+import com.google.common.collect.ImmutableSet;
 import net.advancedplugins.utils.evalex.Expression;
+import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.nbt.NBTapi;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import net.advancedplugins.utils.text.Replace;
@@ -1232,6 +1234,18 @@ public class ASManager {
         Bukkit.broadcastMessage(string);
     }
 
+    public static String join(String[] args, String s) {
+        return join(Arrays.asList(args), s);
+    }
+
+    public static String join(Collection<String> args, String s) {
+        StringBuilder builder = new StringBuilder();
+        for (String l : args) {
+            builder.append(l).append(s);
+        }
+        return builder.substring(0, builder.length() - s.length());
+    }
+
     public static String join(Iterable<String> args, String s) {
         StringBuilder builder = new StringBuilder();
         for (String l : args) {
@@ -1245,7 +1259,4 @@ public class ASManager {
         return "%%__USER__%%";
     }
 
-    public static String join(String[] args, String s) {
-        return join(Arrays.asList(args), s);
-    }
 }

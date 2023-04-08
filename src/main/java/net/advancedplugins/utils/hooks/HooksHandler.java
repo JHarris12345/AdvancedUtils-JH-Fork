@@ -1,12 +1,15 @@
 package net.advancedplugins.utils.hooks;
 
 import com.google.common.collect.ImmutableMap;
+import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.hooks.holograms.CMIHologramHandler;
 import net.advancedplugins.utils.hooks.holograms.DecentHologramsHandler;
 import net.advancedplugins.utils.hooks.holograms.HologramHandler;
 import net.advancedplugins.utils.hooks.plugins.*;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.stream.Collectors;
 
 public class HooksHandler {
 
@@ -40,7 +43,21 @@ public class HooksHandler {
                 registerNew(HookPlugin.FACTIONS, new FactionsUUIDHook());
             }
         }
+
+        sendHookMessage(plugin);
     }
+
+    private static void sendHookMessage(JavaPlugin plugin) {
+        if (pluginHookMap.isEmpty())
+            return;
+
+        StringBuilder hooks = new StringBuilder();
+        for (HookPlugin hook : pluginHookMap.keySet())
+            hooks.append(hook.getPluginName()).append(", ");
+
+        plugin.getLogger().info("Successfully hooked into " + hooks.substring(0, hooks.length() - 2) + ".");
+    }
+
 
     private static void registerNew(HookPlugin plugin, PluginHookInstance instance) {
         pluginHookMap = ImmutableMap.<HookPlugin, PluginHookInstance>builder().putAll(pluginHookMap)
