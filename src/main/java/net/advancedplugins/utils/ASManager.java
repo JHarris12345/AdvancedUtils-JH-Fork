@@ -1254,9 +1254,4 @@ public class ASManager {
         return builder.substring(0, builder.length() - s.length());
     }
 
-    public static String get() {
-//        return "9454";
-        return "%%__USER__%%";
-    }
-
 }

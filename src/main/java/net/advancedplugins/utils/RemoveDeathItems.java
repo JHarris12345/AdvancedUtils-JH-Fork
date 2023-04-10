@@ -13,7 +13,8 @@ public class RemoveDeathItems implements Listener {
     private static final HashMap<UUID, List<ItemStack>> itemsCache = new HashMap<>();
 
     public static void add(UUID uuid, ItemStack item) {
-        if (!ASManager.isValid(item)) return;
+        if (!ASManager.isValid(item))
+            return;
         List<ItemStack> list = (itemsCache.containsKey(uuid)) ? itemsCache.get(uuid) : new ArrayList<>();
         list.add(item);
         itemsCache.put(uuid, list);
@@ -21,7 +22,6 @@ public class RemoveDeathItems implements Listener {
 
     @EventHandler
     public void onDeath(EntityDeathEvent e) {
-
         if (e.getEntityType() != EntityType.PLAYER)
             return;
 
