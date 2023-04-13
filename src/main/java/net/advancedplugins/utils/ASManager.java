@@ -518,7 +518,7 @@ public class ASManager {
                 int max = Integer.parseInt(toparse.split("-")[1]);
                 return ThreadLocalRandom.current().nextInt(max - min) + min;
             }
-            return Integer.parseInt(toparse.replaceAll("\"[^0-9.-]\"", "")
+            return (int) Double.parseDouble(toparse.replaceAll("\"[^0-9.-]\"", "")
                     .replaceAll(" ", ""));
         } catch (Exception e) {
             instance.getLogger().warning("Failed to parse " + toparse + " from String to Integer.");

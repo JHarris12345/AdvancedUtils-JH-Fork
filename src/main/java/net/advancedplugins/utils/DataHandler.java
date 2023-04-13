@@ -9,7 +9,10 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class DataHandler {
@@ -91,7 +94,15 @@ public class DataHandler {
     }
 
     public void reloadConfig() {
-        populateFile(false);
+        file = new File(instance.getDataFolder(), fileName + ".yml");
+
+        try {
+            fileConfiguration = new YamlConfiguration();
+            fileConfiguration.load(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+//        populateFile(false);
     }
 
 
