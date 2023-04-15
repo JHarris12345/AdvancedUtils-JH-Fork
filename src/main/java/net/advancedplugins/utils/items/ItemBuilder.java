@@ -433,6 +433,7 @@ public class ItemBuilder {
      */
     public ItemBuilder addCustomEnchantment(String enchantment, int level) {
         is.setItemMeta(im);
+        is = net.advancedplugins.ae.api.AEAPI.applyEnchant(enchantment, level, is);
         im = is.getItemMeta();
         return this;
     }
