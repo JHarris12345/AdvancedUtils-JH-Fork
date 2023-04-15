@@ -1231,7 +1231,10 @@ public class ASManager {
 
     public static void debug(String string) {
         if (!debug) return;
-        Bukkit.broadcastMessage(string);
+        Bukkit.getLogger().info(string);
+        Bukkit.getOnlinePlayers().stream()
+                .filter(player -> player.hasPermission("advancedplugins.admin") || player.isOp())
+                .forEach(player -> player.sendMessage(ColorUtils.format(string)));
     }
 
     public static String join(String[] args, String s) {
