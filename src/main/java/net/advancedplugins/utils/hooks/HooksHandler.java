@@ -7,6 +7,7 @@ import net.advancedplugins.utils.hooks.holograms.DecentHologramsHandler;
 import net.advancedplugins.utils.hooks.holograms.HologramHandler;
 import net.advancedplugins.utils.hooks.plugins.*;
 import org.bukkit.Bukkit;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.stream.Collectors;
@@ -19,11 +20,19 @@ public class HooksHandler {
     private static ImmutableMap<HookPlugin, PluginHookInstance> pluginHookMap = ImmutableMap.<HookPlugin, PluginHookInstance>builder().build();
 
     public static void hook(JavaPlugin plugin) {
+        // This shouldn't be loaded more than once, but if it is - clear pluginHookMap
+        if (!pluginHookMap.isEmpty()) {
+            pluginHookMap = ImmutableMap.<HookPlugin, PluginHookInstance>builder().build();
+        }
+
         HooksHandler.plugin = plugin;
         holograms();
 
         if (isPluginEnabled(HookPlugin.MCMMO.getPluginName()))
             registerNew(HookPlugin.MCMMO, new McMMOHook());
+
+        if (isPluginEnabled(HookPlugin.AURELIUMSKILLS.getPluginName()))
+            registerNew(HookPlugin.AURELIUMSKILLS, new AureliumSkillsHook(), true);
 
         if (isPluginEnabled(HookPlugin.WORLDGUARD.getPluginName()))
             registerNew(HookPlugin.WORLDGUARD, new WorldGuardHook());
@@ -60,8 +69,17 @@ public class HooksHandler {
 
 
     private static void registerNew(HookPlugin plugin, PluginHookInstance instance) {
+        registerNew(plugin, instance, false);
+    }
+
+
+    private static void registerNew(HookPlugin plugin, PluginHookInstance instance, boolean listener) {
         pluginHookMap = ImmutableMap.<HookPlugin, PluginHookInstance>builder().putAll(pluginHookMap)
                 .put(plugin, instance).build();
+
+        if (listener) {
+            HooksHandler.plugin.getServer().getPluginManager().registerEvents((Listener) instance, HooksHandler.plugin);
+        }
     }
 
     public static PluginHookInstance getHook(HookPlugin plugin) {

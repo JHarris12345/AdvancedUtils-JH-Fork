@@ -5,6 +5,7 @@ public enum HookPlugin {
     GRIEFPREVENTION("GriefPrevention"),
     SLIMEFUN("SlimeFun"),
     ADVANCEDPETS("AdvancedPets"),
+    AURELIUMSKILLS("AureliumSkills"),
     FACTIONS("Factions"),
     MCMMO("mcMMO");
 
