@@ -5,7 +5,6 @@ import net.advancedplugins.utils.nbt.NBTapi;
 import net.advancedplugins.utils.nbt.backend.ReflectionMethod;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import net.advancedplugins.utils.text.Replace;
-import net.advancedplugins.utils.text.Replacer;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang.StringUtils;
@@ -27,8 +26,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileOutputStream;
