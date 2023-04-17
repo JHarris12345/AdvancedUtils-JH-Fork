@@ -111,26 +111,29 @@ public enum ReflectionMethod {
     CRAFT_PERSISTENT_DATA_CONTAINER_GET_MAP (ClassWrapper.CRAFT_PERSISTENTDATACONTAINER, new Class[]{}, MinecraftVersion.MC1_14_R1, new Since(MinecraftVersion.MC1_14_R1, "getRaw")),
     CRAFT_PERSISTENT_DATA_CONTAINER_PUT_ALL (ClassWrapper.CRAFT_PERSISTENTDATACONTAINER, new Class[]{ClassWrapper.NMS_NBTTAGCOMPOUND.getClazz()}, MinecraftVersion.MC1_14_R1, new Since(MinecraftVersion.MC1_14_R1, "putAll")),
     // Block
-    CRAFT_MagicNumbers_getBlock(ClassWrapper.CRAFT_MagicNumbers.getClazz(), new Class[]{ Material.class }, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "getBlock")),
+    CRAFT_MagicNumbers_getBlock(ClassWrapper.CRAFT_MagicNumbers.getClazz(), new Class[]{Material.class}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "getBlock")),
     // NMS_World_getTileEntity(ClassWrapper.NMS_World.getClazz(), new Class[]{ ClassWrapper.NMS_BlockPosition.getClazz() }, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "getTileEntity")),
     NMS_Block_getBlockData(ClassWrapper.NMS_Block.getClazz(), new Class[]{}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_13_R1, "getBlockData"),
             new Since(MinecraftVersion.MC1_18_R1, "n"), // TODO: remove if fixed in new 1.18
-            new Since(MinecraftVersion.MC1_19_R1, "m")), // TODO: remove if fixed in new 1.19
+            new Since(MinecraftVersion.MC1_19_R1, "m"),
+            new Since(MinecraftVersion.MC1_19_R2, "n"),
+            new Since(MinecraftVersion.MC1_19_R3, "o")), // TODO: remove if fixed in new 1.19
 
     // Item
-    CRAFT_MagicNumbers_getItem(ClassWrapper.CRAFT_MagicNumbers.getClazz(), new Class[]{ Material.class }, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "getItem")),
-    CRAFT_ItemStack_asNMSCopy(ClassWrapper.CRAFT_ItemStack.getClazz(), new Class[]{ ItemStack.class }, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "asNMSCopy")),
+    CRAFT_MagicNumbers_getItem(ClassWrapper.CRAFT_MagicNumbers.getClazz(), new Class[]{Material.class}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "getItem")),
+    CRAFT_ItemStack_asNMSCopy(ClassWrapper.CRAFT_ItemStack.getClazz(), new Class[]{ItemStack.class}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "asNMSCopy")),
 
-    NMS_ItemStack_canDestroySpecialBlock(ClassWrapper.NMS_ItemStack.getClazz(), new SinceArgs[]{ new SinceArgs(MinecraftVersion.MC1_7_R4, new Class[]{ ClassWrapper.NMS_Block.getClazz() }),
-            new SinceArgs(MinecraftVersion.MC1_9_R1, new Class[]{ ClassWrapper.NMS_IBlockData.getClazz() }) }, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "b"),
+    NMS_ItemStack_canDestroySpecialBlock(ClassWrapper.NMS_ItemStack.getClazz(), new SinceArgs[]{new SinceArgs(MinecraftVersion.MC1_7_R4, new Class[]{ClassWrapper.NMS_Block.getClazz()}),
+            new SinceArgs(MinecraftVersion.MC1_9_R1, new Class[]{ClassWrapper.NMS_IBlockData.getClazz()})}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "b"),
             new Since(MinecraftVersion.MC1_15_R1, "canDestroySpecialBlock"),
-            new Since(MinecraftVersion.MC1_18_R1, "b")), // TODO: remove if fixed in new 1.18),
+            new Since(MinecraftVersion.MC1_18_R1, "b"),
+            new Since(MinecraftVersion.MC1_19_R2, "b"), new Since(MinecraftVersion.MC1_19_R3, "b")),
 
     // Entities
     CRAFT_Entity_getHandle(ClassWrapper.CRAFT_Entity.getClazz(), new Class[]{}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "getHandle")),
-    NMS_Entity_damageEntity(ClassWrapper.NMS_Entity.getClazz(), new Class[]{ ClassWrapper.NMS_DamageSource.getClazz(), float.class }, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "damageEntity"),
+    NMS_Entity_damageEntity(ClassWrapper.NMS_Entity.getClazz(), new Class[]{ClassWrapper.NMS_DamageSource.getClazz(), float.class}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "damageEntity"),
             new Since(MinecraftVersion.MC1_18_R1, "a")),// TODO: remove if fixed in new 1.18),
-    NMS_EntityPlayer_attack(ClassWrapper.NMS_EntityPlayer.getClazz(), new Class[]{ ClassWrapper.NMS_Entity.getClazz() }, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "attack"),
+    NMS_EntityPlayer_attack(ClassWrapper.NMS_EntityPlayer.getClazz(), new Class[]{ClassWrapper.NMS_Entity.getClazz()}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "attack"),
             new Since(MinecraftVersion.MC1_18_R1, "d")),// TODO: remove if fixed in new 1.18),
 
     NMS_ENTITY_GETNAVIGATION(ClassWrapper.NMS_ENTITY_INSENTIENT.getClazz(), new Class[]{}, MinecraftVersion.MC1_13_R1,

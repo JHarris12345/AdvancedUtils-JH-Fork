@@ -1,9 +1,8 @@
 package net.advancedplugins.utils;
 
-import com.google.common.collect.ImmutableSet;
 import net.advancedplugins.utils.evalex.Expression;
-import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.nbt.NBTapi;
+import net.advancedplugins.utils.nbt.backend.ReflectionMethod;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import net.advancedplugins.utils.text.Replace;
 import net.advancedplugins.utils.text.Replacer;
@@ -28,6 +27,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -1213,6 +1214,34 @@ public class ASManager {
         } catch (IllegalArgumentException e) {
             return false;
         }
+    }
+
+    /**
+     * Checks if an Item is the correct tool to break a block.
+     *
+     * @param tool      Tool to test.
+     * @param blockType Type of block to test.
+     * @return True if the provided tool is the correct one, false otherwise.
+     */
+    public static boolean isCorrectTool(ItemStack tool, Material blockType) {
+//        if (MinecraftVersion.getVersionNumber() == 1_17_0) {
+//            IBlockData data = CraftMagicNumbers.getBlock(blockType).getBlockData();
+//            return CraftItemStack.asNMSCopy(tool).canDestroySpecialBlock(data);
+//        } else if (MinecraftVersion.getVersionNumber() >= 1_18_0) {
+//            IBlockData data = org.bukkit.craftbukkit.v1_17_R1.getBlock(blockType).getBlockData();
+//            return CraftItemStack.asNMSCopy(tool).canDestroySpecialBlock(data);
+////        } else {
+        // code below was a test to remove NMS, didn't work
+//        if(MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_18_R1)) {
+//            Bukkit.broadcastMessage("passedBlock.getBreakSpeed(p) "+passedBlock.getBreakSpeed(p) +" "+blockType.name());
+//            return passedBlock.getBreakSpeed(p) > 1;
+//        }
+
+        Object item = ReflectionMethod.CRAFT_ItemStack_asNMSCopy.run(null, tool);
+        Object block = ReflectionMethod.CRAFT_MagicNumbers_getBlock.run(null, blockType);
+        Object data = ReflectionMethod.NMS_Block_getBlockData.run(block);
+        return (boolean) ReflectionMethod.NMS_ItemStack_canDestroySpecialBlock.run(item, data);
+        //  }
     }
 
     public static boolean notNullAndTrue(Boolean value) {

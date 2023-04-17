@@ -37,5 +37,3 @@ gradle-app.setting
 # MacOS
 .DS_Store
 /.idea/
-
-Registry.java
