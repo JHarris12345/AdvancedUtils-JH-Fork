@@ -1,7 +1,6 @@
 package net.advancedplugins.utils;
 
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -20,8 +19,7 @@ public class BreakWholeTree {
     public BreakWholeTree(final Block block) {
         Location originLocation = block.getLocation();
         this.foundBlocks = new HashSet<>();
-        originLocation = block.getLocation();
-        Material originType = block.getType();
+        //Material originType = block.getType();
         final World world = originLocation.getWorld();
 
         int maxTreeRadius = 2;
@@ -83,6 +81,7 @@ public class BreakWholeTree {
 
             }
         }
+        foundBlocks.remove(block); // Remove the main block to avoid breaking it twice. (https://github.com/GC-spigot/AdvancedEnchantments/issues/3269)
     }
 
     private void scanUp(final Block start) {
