@@ -1,5 +1,6 @@
 package net.advancedplugins.utils.hooks.plugins;
 
+import com.sk89q.worldguard.protection.flags.Flags;
 import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.hooks.PluginHookInstance;
 import org.bukkit.Bukkit;
@@ -25,12 +26,14 @@ public class WorldGuardHook extends PluginHookInstance {
             return com.sk89q.worldguard.WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery().testState(
                     com.sk89q.worldedit.bukkit.BukkitAdapter.adapt(l),
                     com.sk89q.worldguard.bukkit.WorldGuardPlugin.inst().wrapPlayer(p),
-                    com.sk89q.worldguard.protection.flags.Flags.BUILD) || com.sk89q.worldguard.WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery().testState(com.sk89q.worldedit.bukkit.BukkitAdapter.adapt(l),
+                    Flags.BUILD) ||  com.sk89q.worldguard.WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery().testState(
+                    com.sk89q.worldedit.bukkit.BukkitAdapter.adapt(l),
                     com.sk89q.worldguard.bukkit.WorldGuardPlugin.inst().wrapPlayer(p),
-                    com.sk89q.worldguard.protection.flags.Flags.BLOCK_PLACE);
+                    Flags.BLOCK_BREAK);
         } catch (Exception ev) {
             ev.printStackTrace();
-            ASManager.getInstance().getLogger().warning("Error with WorldGuard v(" + (Bukkit.getPluginManager().getPlugin("WorldGuard").getDescription().getVersion() + ") - Version unsupported"));
+            ASManager.getInstance().getLogger().warning("Error with WorldGuard v(" + (Bukkit.getPluginManager().getPlugin("WorldGuard")
+                    .getDescription().getVersion() + ") - Version unsupported"));
         }
         return false;
     }

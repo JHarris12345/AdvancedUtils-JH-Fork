@@ -4,6 +4,7 @@ import net.advancedplugins.utils.nbt.NBTapi;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -35,6 +36,10 @@ public class ItemDurability {
         }
 
         return item;
+    }
+
+    public int getUnbreakingLevel() {
+        return item.getEnchantmentLevel(Enchantment.DURABILITY);
     }
 
     /**
