@@ -18,6 +18,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Base64;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * A library for the Bukkit API to create player skulls
@@ -27,7 +28,8 @@ import java.util.UUID;
  */
 public class SkullCreator {
 
-    private SkullCreator() {}
+    private SkullCreator() {
+    }
 
     private static boolean warningPosted = true;
 
@@ -258,18 +260,9 @@ public class SkullCreator {
 
     private static GameProfile makeProfile(String b64) {
         // random uuid based on the b64 string
-        UUID id;
+        UUID id = UUID.randomUUID();
 
-        try {
-            id = new UUID(
-                    b64.substring(b64.length() - 20).hashCode(),
-                    b64.substring(b64.length() - 10).hashCode()
-            );
-        } catch (Exception ev) {
-            id = UUID.randomUUID();
-        }
-
-        GameProfile profile = new GameProfile(id, "aaaaa");
+        GameProfile profile = new GameProfile(id, (ThreadLocalRandom.current().nextDouble() * ThreadLocalRandom.current().nextDouble()) + "");
         profile.getProperties().put("textures", new Property("textures", b64));
         return profile;
     }
@@ -319,8 +312,10 @@ public class SkullCreator {
             Material.class.getDeclaredField("PLAYER_HEAD");
             Material.valueOf("SKULL");
 
-            if (!warningPosted) {warningPosted = true;
+            if (!warningPosted) {
+                warningPosted = true;
             }
-        } catch (NoSuchFieldException | IllegalArgumentException ignored) {}
+        } catch (NoSuchFieldException | IllegalArgumentException ignored) {
+        }
     }
 }
