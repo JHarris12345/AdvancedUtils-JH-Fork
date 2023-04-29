@@ -93,7 +93,7 @@ public class ASManager {
      */
     public static int getAmount(Player player, Material material) {
         int count = 0;
-        for (ItemStack item : player.getInventory().getContents()) {
+        for (ItemStack item : player.getInventory().getStorageContents()) {
             if (item == null)
                 continue;
             if (item.getType() != material)

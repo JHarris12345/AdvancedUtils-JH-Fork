@@ -18,7 +18,7 @@ public class SlimeFunHook extends PluginHookInstance {
     }
 
     public boolean canBuild(Player p, Location l) {
-        return me.mrCookieSlime.Slimefun.api.BlockStorage.check(l.getBlock()) != null;
+        return me.mrCookieSlime.Slimefun.api.BlockStorage.check(l.getBlock()) == null;
     }
 
 }
