@@ -40,6 +40,9 @@ public class HooksHandler {
         if (isPluginEnabled(HookPlugin.GRIEFPREVENTION.getPluginName()))
             registerNew(HookPlugin.GRIEFPREVENTION, new GriefPreventionHook());
 
+        if (isPluginEnabled(HookPlugin.PLACEHOLDERAPI.getPluginName()))
+            registerNew(HookPlugin.PLACEHOLDERAPI, new PlaceholderAPIHook());
+
         if (isPluginEnabled(HookPlugin.SLIMEFUN.getPluginName()))
             registerNew(HookPlugin.SLIMEFUN, new SlimeFunHook());
 
