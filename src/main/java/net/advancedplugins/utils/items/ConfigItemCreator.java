@@ -1,8 +1,8 @@
 package net.advancedplugins.utils.items;
 
 import net.advancedplugins.utils.*;
-import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 
+import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;

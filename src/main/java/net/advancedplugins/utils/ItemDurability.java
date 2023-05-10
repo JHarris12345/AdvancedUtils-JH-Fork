@@ -1,8 +1,6 @@
 package net.advancedplugins.utils;
 
-import net.advancedplugins.utils.nbt.NBTapi;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
