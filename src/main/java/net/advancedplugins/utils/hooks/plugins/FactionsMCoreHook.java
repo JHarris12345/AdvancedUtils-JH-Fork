@@ -27,7 +27,7 @@ public class FactionsMCoreHook extends FactionsPluginHook {
     @Override
     public String getRelationOfLand(Player p) {
         com.massivecraft.factions.FPlayer fp = com.massivecraft.factions.FPlayers.getInstance().getByPlayer(p);
-        com.massivecraft.factions.struct.Relation rl = fp.getRelationToLocation();
+        com.massivecraft.factions.perms.Relation rl = fp.getRelationToLocation();
 
         return rl.toString();
     }
