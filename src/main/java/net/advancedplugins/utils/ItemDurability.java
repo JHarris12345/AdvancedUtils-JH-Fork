@@ -47,7 +47,7 @@ public class ItemDurability {
      */
     public ItemDurability damageItem(short amount) {
         try {
-            if (!ASManager.isDamageable(item.getType()) || item.getType().name().contains("SKULL"))
+            if (!ASManager.isDamageable(item.getType()) || item.getType().name().contains("SKULL") || ASManager.isUnbreakable(item))
                 return this;
 
             if (amount < 0) {
