@@ -8,6 +8,7 @@ public enum HookPlugin {
     AURELIUMSKILLS("AureliumSkills"),
     PLACEHOLDERAPI("PlaceholderAPI"),
     FACTIONS("Factions"),
+    MYTHICMOBS("MythicMobs"),
     MCMMO("mcMMO");
 
     private final String pluginName;

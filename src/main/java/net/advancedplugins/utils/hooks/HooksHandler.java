@@ -46,6 +46,9 @@ public class HooksHandler {
         if (isPluginEnabled(HookPlugin.SLIMEFUN.getPluginName()))
             registerNew(HookPlugin.SLIMEFUN, new SlimeFunHook());
 
+        if (isPluginEnabled(HookPlugin.MYTHICMOBS.getPluginName()))
+            registerNew(HookPlugin.MYTHICMOBS, new MythicMobsHook());
+
         // Figure out which factions plugin is loaded and hook into the correct one
 
         if (isPluginEnabled(HookPlugin.FACTIONS.getPluginName())) {

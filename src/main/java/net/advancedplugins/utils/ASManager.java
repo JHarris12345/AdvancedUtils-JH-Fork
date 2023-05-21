@@ -2,6 +2,7 @@ package net.advancedplugins.utils;
 
 import net.advancedplugins.utils.evalex.Expression;
 import net.advancedplugins.utils.nbt.NBTapi;
+import net.advancedplugins.utils.nbt.backend.ClassWrapper;
 import net.advancedplugins.utils.nbt.backend.ReflectionMethod;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import net.advancedplugins.utils.text.Replace;
@@ -64,6 +65,16 @@ public class ASManager {
         if (b == null || b.getType() == null)
             return false;
         return isSpawner(b.getType());
+    }
+    /**
+     * Checks if a Material is a tool.
+     *
+     * @param material Material to check.
+     * @return True of the material is a tool, false otherwise.
+     */
+    public static boolean isTool(Material material) {
+        Object item = ReflectionMethod.CRAFT_MagicNumbers_getItem.run(null, material);
+        return ASManager.isValid(material) && ClassWrapper.NMS_ItemTool.getClazz().isInstance(item);
     }
 
     public static boolean isExcessVelocity(Vector vel) {
