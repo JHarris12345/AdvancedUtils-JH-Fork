@@ -3,6 +3,7 @@ package net.advancedplugins.utils.commands;
 import com.google.common.collect.Sets;
 import net.advancedplugins.utils.text.Text;
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -62,14 +63,14 @@ public abstract class SimpleCommand<T extends CommandSender> extends Command<T> 
     public void sendHelpPage(CommandSender sendTo, String color, String[] args) {
         if (pageCount == null) pageCount = (int) Math.ceil((float) this.subCommands.size() / COMMANDS_PER_PAGE);
 
-        int page = (args.length == 0 ? 0 : StringUtils.isNumeric(args[0]) ? Math.max(0, Integer.parseInt(args[0])) : 1)-1;
+        int page = (args.length == 0 ? 0 : StringUtils.isNumeric(args[0]) ? Math.max(0, Integer.parseInt(args[0])) : 1) - 1;
         page = Math.min(Math.max(0, page), pageCount);
 
         PluginDescriptionFile description = super.plugin.getDescription();
         Text.sendMessage(sendTo, color + "[<] &8+-------< " + color + "&l" + description.getName().concat(" &7Page " + (page + 1) + "/" + pageCount) + " &8>-------+ " + color + "[>]");
 
         Text.sendMessage(sendTo, " ");
-        for (SubCommand s : subCommands.subList(page * COMMANDS_PER_PAGE, Math.min(subCommands.size(), (page +1) * COMMANDS_PER_PAGE))) {
+        for (SubCommand s : subCommands.subList(page * COMMANDS_PER_PAGE, Math.min(subCommands.size(), (page + 1) * COMMANDS_PER_PAGE))) {
             Text.sendMessage(sendTo, "  " + s.getFormatted(command));
         }
         Text.sendMessage(sendTo, " ");

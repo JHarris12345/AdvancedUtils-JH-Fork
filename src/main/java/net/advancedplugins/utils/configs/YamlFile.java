@@ -147,6 +147,7 @@ public class YamlFile {
             ASManager.getInstance().getLogger().severe("Failed to load config file \"" + from + "\"! Please ensure that it doesn't have any syntax errors. " +
                     "You can check for syntax errors with this website: \"https://www.yamlchecker.com/\". " +
                     "If you see any errors this, this is most likely the cause of them.");
+            e.printStackTrace();
             try (InputStream is = ASManager.getInstance().getResource(from)) {
                 if (is != null) {
                     cfg.load(new InputStreamReader(is));
