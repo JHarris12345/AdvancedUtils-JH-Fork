@@ -1,7 +1,8 @@
 package net.advancedplugins.utils.hooks.plugins;
 
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.mobs.MobManager;
+import io.lumine.mythic.api.MythicPlugin;
+import io.lumine.mythic.api.mobs.MobManager;
+import io.lumine.mythic.bukkit.MythicBukkit;
 import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.hooks.PluginHookInstance;
 import org.bukkit.entity.LivingEntity;
@@ -19,8 +20,7 @@ public class MythicMobsHook extends PluginHookInstance {
     }
 
     public boolean isMythicMob(LivingEntity ent) {
-        MobManager mobManager = MythicMobs.inst().getMobManager();
-        return mobManager.isActiveMob(ent.getUniqueId());
+        return MythicBukkit.inst().getAPIHelper().isMythicMob(ent.getUniqueId());
     }
 
 }
