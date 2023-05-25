@@ -1043,7 +1043,7 @@ public class ASManager {
                 case "GOLD_INGOT":
                 case "RAW_GOLD": {
                     fortuneBlock = true;
-                    //allowFortune = true;
+                    allowFortune = true;
                     break;
                 }
                 case "ENDER_CHEST": {

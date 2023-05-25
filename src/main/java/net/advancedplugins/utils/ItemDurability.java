@@ -1,5 +1,8 @@
 package net.advancedplugins.utils;
 
+import net.advancedplugins.utils.hooks.HookPlugin;
+import net.advancedplugins.utils.hooks.HooksHandler;
+import net.advancedplugins.utils.hooks.plugins.ItemsAdderHook;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -113,6 +116,9 @@ public class ItemDurability {
      * @return The maximum durability of the item.
      */
     public int getMaxDurability() {
+        if (HooksHandler.isEnabled(HookPlugin.ITEMSADDER) && ((ItemsAdderHook) HooksHandler.getHook(HookPlugin.ITEMSADDER)).isCustomItem(item)) {
+            return ((ItemsAdderHook) HooksHandler.getHook(HookPlugin.ITEMSADDER)).getCustomItemMaxDurability(item);
+        }
         return item.getType().getMaxDurability();
     }
 
@@ -120,6 +126,9 @@ public class ItemDurability {
      * @return The current durability of the item.
      */
     public int getDurability() {
+        if (HooksHandler.isEnabled(HookPlugin.ITEMSADDER) && ((ItemsAdderHook) HooksHandler.getHook(HookPlugin.ITEMSADDER)).isCustomItem(item)) {
+            return ((ItemsAdderHook) HooksHandler.getHook(HookPlugin.ITEMSADDER)).getCustomItemDurability(item);
+        }
         return item.getDurability();
     }
 
@@ -129,6 +138,11 @@ public class ItemDurability {
      * @param amount Durability to set.
      */
     public ItemDurability setDurability(int amount) {
+        if (HooksHandler.isEnabled(HookPlugin.ITEMSADDER) && ((ItemsAdderHook) HooksHandler.getHook(HookPlugin.ITEMSADDER)).isCustomItem(item)) {
+            ((ItemsAdderHook) HooksHandler.getHook(HookPlugin.ITEMSADDER)).setCustomItemDurability(item, amount);
+            return this;
+        }
+
         this.setDurabilityVersionSave(amount);
         return this;
     }

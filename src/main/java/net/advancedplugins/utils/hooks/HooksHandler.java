@@ -31,6 +31,9 @@ public class HooksHandler {
         if (isPluginEnabled(HookPlugin.MCMMO.getPluginName()))
             registerNew(HookPlugin.MCMMO, new McMMOHook());
 
+        if (isPluginEnabled(HookPlugin.ITEMSADDER.getPluginName()))
+            registerNew(HookPlugin.ITEMSADDER, new ItemsAdderHook());
+
         if (isPluginEnabled(HookPlugin.AURELIUMSKILLS.getPluginName()))
             registerNew(HookPlugin.AURELIUMSKILLS, new AureliumSkillsHook(), true);
 

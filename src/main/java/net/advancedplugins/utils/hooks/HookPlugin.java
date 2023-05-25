@@ -8,6 +8,7 @@ public enum HookPlugin {
     AURELIUMSKILLS("AureliumSkills"),
     PLACEHOLDERAPI("PlaceholderAPI"),
     FACTIONS("Factions"),
+    ITEMSADDER("ItemsAdder"),
     MYTHICMOBS("MythicMobs"),
     MCMMO("mcMMO");
 
