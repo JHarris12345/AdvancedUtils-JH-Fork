@@ -1263,7 +1263,7 @@ public class ASManager {
                 && locationOne.getBlockZ() == locationTwo.getBlockZ();
     }
 
-    private static boolean debug = false;
+    private static boolean debug = true;
 
     public static void debug(String string) {
         if (!debug) return;
