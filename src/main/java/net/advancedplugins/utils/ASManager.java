@@ -66,6 +66,7 @@ public class ASManager {
             return false;
         return isSpawner(b.getType());
     }
+
     /**
      * Checks if a Material is a tool.
      *
@@ -1293,4 +1294,9 @@ public class ASManager {
         return builder.substring(0, builder.length() - s.length());
     }
 
+    public static String getMaterial(ItemStack itemStack) {
+        if (itemStack == null)
+            return "AIR";
+        return itemStack.getType().name();
+    }
 }
