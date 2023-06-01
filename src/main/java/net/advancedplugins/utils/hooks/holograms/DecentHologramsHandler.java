@@ -25,7 +25,7 @@ public class DecentHologramsHandler extends HologramHandler {
             return;
         }
 
-        DHAPI.createHologram(name, loc, Arrays.asList(text));
+        DHAPI.createHologram(name, loc, false, Arrays.asList(text));
     }
 
     @Override
