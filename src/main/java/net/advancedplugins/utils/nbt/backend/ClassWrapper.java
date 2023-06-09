@@ -33,7 +33,7 @@ public enum ClassWrapper {
     NMS_IBlockData("net.minecraft", "world.level.block.state", "IBlockData", MinecraftVersion.MC1_8_R3),
     NMS_BlockPosition("net.minecraft", "core", "BlockPosition", MinecraftVersion.MC1_8_R3),
     NMS_World("net.minecraft", "server.level", "WorldServer", MinecraftVersion.MC1_8_R3),
-    NMS_Material("net.minecraft", "world.level.material", "Material", MinecraftVersion.MC1_8_R3),
+//    NMS_Material("net.minecraft", "world.level.material", "Material", MinecraftVersion.MC1_8_R3),
     // Items
     NMS_ItemStack("net.minecraft", "world.item", "ItemStack", MinecraftVersion.MC1_8_R3),
     NMS_ItemTool("net.minecraft", "world.item", "ItemTool", MinecraftVersion.MC1_8_R3),
