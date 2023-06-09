@@ -1,6 +1,5 @@
 package net.advancedplugins.utils.nbt.utils;
 
-import net.advancedplugins.utils.nbt.NBTapi;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -28,7 +27,8 @@ public enum MinecraftVersion {
     MC1_18_R2(1_18_2, true),
     MC1_19_R1(1_19_1, true),
     MC1_19_R2(1_19_2, true),
-    MC1_19_R3(1_19_4, true);
+    MC1_19_R3(1_19_4, true),
+    MC1_20_R1(1_20_1, true);
 
     private final int versionId;
     public final boolean mojangMapping;
@@ -89,6 +89,7 @@ public enum MinecraftVersion {
     public static int getVersionNumber() {
         return version.versionId;
     }
+
     /**
      * @return The current MinecraftVersion the server is running.
      */
@@ -100,12 +101,12 @@ public enum MinecraftVersion {
     /**
      * @return True if method names are in Mojang format and need to be remapped internally
      */
-    public  boolean isMojangMapping() {
+    public boolean isMojangMapping() {
         return mojangMapping;
     }
 
     public String getPackageName() {
-        if(getVersion() == MinecraftVersion.Unknown) {
+        if (getVersion() == MinecraftVersion.Unknown) {
             return Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
         }
         return this.name().replace("MC", "v");
@@ -157,7 +158,7 @@ public enum MinecraftVersion {
 
     public static void disableDuplicateUUIDReporting(JavaPlugin plugin) {
         FileConfiguration fc = plugin.getServer().spigot().getPaperConfig();
-        if(fc.contains("log-duplicate-entity-UUIDs"))
+        if (fc.contains("log-duplicate-entity-UUIDs"))
             return;
 
         fc.set("log-duplicate-entity-UUIDs", false);

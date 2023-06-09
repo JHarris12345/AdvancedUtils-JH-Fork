@@ -38,7 +38,6 @@ public class MojangToMapping {
             put("net.minecraft.nbt.CompoundTag#getShort(java.lang.String)", "g");
             put("net.minecraft.nbt.CompoundTag#putByte(java.lang.String,byte)", "a");
             put("net.minecraft.nbt.CompoundTag#getAllKeys()", "d");
-            put("net.minecraft.nbt.CompoundTag#getAllKeys()", "d");
             put("net.minecraft.nbt.CompoundTag#putUUID(java.lang.String,java.util.UUID)", "a");
             put("net.minecraft.nbt.CompoundTag#putShort(java.lang.String,short)", "a");
             put("net.minecraft.nbt.CompoundTag#getLong(java.lang.String)", "i");
@@ -104,14 +103,33 @@ public class MojangToMapping {
         }
 
     };
-    public static Map<String, String> getMapping(){
-        switch(MinecraftVersion.getVersion()) {
-            case MC1_19_R1: return MC1_19R1;
-            case MC1_18_R2: return MC1_18R2;
-            case MC1_18_R1: return MC1_18R1;
+
+    @SuppressWarnings("serial")
+    private static Map<String, String> MC1_20R1 = new HashMap<String, String>() {
+
+        {
+            putAll(MC1_19R2);
+
+            put("net.minecraft.world.entity.Entity#getEncodeId()", "br");
+            put("net.minecraft.world.item.ItemStack#getTag()", "v");
+        }
+
+    };
+
+    public static Map<String, String> getMapping() {
+        switch (MinecraftVersion.getVersion()) {
+            case MC1_19_R1:
+                return MC1_19R1;
+            case MC1_20_R1:
+                return MC1_20R1;
+            case MC1_18_R2:
+                return MC1_18R2;
+            case MC1_18_R1:
+                return MC1_18R1;
             case MC1_19_R2:
                 return MC1_19R2;
-            default: return MC1_19R2;//throw new NbtApiException("This version of the NBTAPI is not compatible with this server version!");
+            default:
+                return MC1_20R1;//throw new NbtApiException("This version of the NBTAPI is not compatible with this server version!");
         }
     }
 
