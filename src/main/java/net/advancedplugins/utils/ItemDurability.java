@@ -4,6 +4,7 @@ import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.hooks.HooksHandler;
 import net.advancedplugins.utils.hooks.plugins.ItemsAdderHook;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -16,8 +17,11 @@ public class ItemDurability {
     private ItemStack item;
     private int dealtDamage = 0;
 
+    private final boolean itemsAdder;
+
     public ItemDurability(ItemStack input) {
         this.item = (input == null) ? new ItemStack(Material.AIR) : input;
+        itemsAdder = HooksHandler.isEnabled(HookPlugin.ITEMSADDER) && ((ItemsAdderHook) HooksHandler.getHook(HookPlugin.ITEMSADDER)).isCustomItem(item);
     }
 
     /**
@@ -116,7 +120,7 @@ public class ItemDurability {
      * @return The maximum durability of the item.
      */
     public int getMaxDurability() {
-        if (HooksHandler.isEnabled(HookPlugin.ITEMSADDER) && ((ItemsAdderHook) HooksHandler.getHook(HookPlugin.ITEMSADDER)).isCustomItem(item)) {
+        if (itemsAdder) {
             return ((ItemsAdderHook) HooksHandler.getHook(HookPlugin.ITEMSADDER)).getCustomItemMaxDurability(item);
         }
         return item.getType().getMaxDurability();
@@ -126,8 +130,8 @@ public class ItemDurability {
      * @return The current durability of the item.
      */
     public int getDurability() {
-        if (HooksHandler.isEnabled(HookPlugin.ITEMSADDER) && ((ItemsAdderHook) HooksHandler.getHook(HookPlugin.ITEMSADDER)).isCustomItem(item)) {
-            return ((ItemsAdderHook) HooksHandler.getHook(HookPlugin.ITEMSADDER)).getCustomItemDurability(item);
+        if (itemsAdder) {
+            return getMaxDurability() - ((ItemsAdderHook) HooksHandler.getHook(HookPlugin.ITEMSADDER)).getCustomItemDurability(item);
         }
         return item.getDurability();
     }
@@ -138,8 +142,9 @@ public class ItemDurability {
      * @param amount Durability to set.
      */
     public ItemDurability setDurability(int amount) {
-        if (HooksHandler.isEnabled(HookPlugin.ITEMSADDER) && ((ItemsAdderHook) HooksHandler.getHook(HookPlugin.ITEMSADDER)).isCustomItem(item)) {
-            ((ItemsAdderHook) HooksHandler.getHook(HookPlugin.ITEMSADDER)).setCustomItemDurability(item, amount);
+        if (itemsAdder) {
+            ((ItemsAdderHook) HooksHandler.getHook(HookPlugin.ITEMSADDER)).setCustomItemDurability(item,
+                    amount < getMaxDurability() ? getMaxDurability() - amount : -1);
             return this;
         }
 
