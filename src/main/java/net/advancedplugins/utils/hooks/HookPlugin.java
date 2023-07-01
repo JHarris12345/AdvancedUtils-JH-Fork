@@ -2,6 +2,7 @@ package net.advancedplugins.utils.hooks;
 
 public enum HookPlugin {
     WORLDGUARD("WorldGuard"),
+    TOWNY("Towny"),
     GRIEFPREVENTION("GriefPrevention"),
     SLIMEFUN("Slimefun"),
     ADVANCEDPETS("AdvancedPets"),
