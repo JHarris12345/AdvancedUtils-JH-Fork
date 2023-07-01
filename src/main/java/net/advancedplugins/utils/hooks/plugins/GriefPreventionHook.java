@@ -1,5 +1,7 @@
 package net.advancedplugins.utils.hooks.plugins;
 
+import me.ryanhamshire.GriefPrevention.Claim;
+import me.ryanhamshire.GriefPrevention.GriefPrevention;
 import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.hooks.PluginHookInstance;
 import org.bukkit.Location;
@@ -18,7 +20,10 @@ public class GriefPreventionHook extends PluginHookInstance {
     }
 
     public boolean canBuild(Player p, Location l) {
-        return true;
+        Claim c = GriefPrevention.instance.dataStore.getClaimAt(l, false, null);
+        if (c == null)
+            return true;
+        return c.allowAccess(p) == null;
     }
 
 }
