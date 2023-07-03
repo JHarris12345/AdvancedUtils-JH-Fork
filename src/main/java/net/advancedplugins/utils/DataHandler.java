@@ -213,6 +213,9 @@ public class DataHandler {
         return ChatColor.translateAlternateColorCodes('&', getString(s));
     }
 
+    public boolean getBoolean(String path, boolean def) {
+        return getConfig().getBoolean(path, def);
+    }
     public boolean getBoolean(String path) {
         return getConfig().getBoolean(path);
     }
