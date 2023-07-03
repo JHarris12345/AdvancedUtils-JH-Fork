@@ -4,6 +4,7 @@ public enum HookPlugin {
     WORLDGUARD("WorldGuard"),
     TOWNY("Towny"),
     LWC("LWC"),
+    LANDS("Lands"),
     GRIEFPREVENTION("GriefPrevention"),
     SLIMEFUN("Slimefun"),
     ADVANCEDPETS("AdvancedPets"),
