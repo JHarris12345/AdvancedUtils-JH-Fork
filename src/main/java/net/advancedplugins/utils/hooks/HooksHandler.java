@@ -55,6 +55,9 @@ public class HooksHandler {
         if (isPluginEnabled(HookPlugin.TOWNY.getPluginName()))
             registerNew(HookPlugin.TOWNY, new MythicMobsHook());
 
+        if (isPluginEnabled(HookPlugin.LANDS.getPluginName()))
+            registerNew(HookPlugin.LANDS, new LandsHook());
+
         // Figure out which factions plugin is loaded and hook into the correct one
 
         if (isPluginEnabled(HookPlugin.FACTIONS.getPluginName())) {
