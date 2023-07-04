@@ -157,18 +157,18 @@ public enum MinecraftVersion {
     }
 
     public static void disableDuplicateUUIDReporting(JavaPlugin plugin) {
-        FileConfiguration fc = plugin.getServer().spigot().getPaperConfig();
-        if (fc.contains("log-duplicate-entity-UUIDs"))
-            return;
-
-        fc.set("log-duplicate-entity-UUIDs", false);
-        File paperConfig = new File(plugin.getServer().getWorldContainer(), "paper.yml");
-
-        try {
-            fc.save(paperConfig);
-            plugin.getLogger().info("Disabled duplicate entity reporting ('log-duplicate-entity-UUIDs') in Paper.yml file...");
-        } catch (Exception ev) {
-            ev.printStackTrace();
-        }
+//        FileConfiguration fc = plugin.getServer().spigot().getPaperConfig();
+//        if (fc.contains("log-duplicate-entity-UUIDs"))
+//            return;
+//
+//        fc.set("log-duplicate-entity-UUIDs", false);
+//        File paperConfig = new File(plugin.getServer().getWorldContainer(), "paper.yml");
+//
+//        try {
+//            fc.save(paperConfig);
+//            plugin.getLogger().info("Disabled duplicate entity reporting ('log-duplicate-entity-UUIDs') in Paper.yml file...");
+//        } catch (Exception ev) {
+//            ev.printStackTrace();
+//        }
     }
 }

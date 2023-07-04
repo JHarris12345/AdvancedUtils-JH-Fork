@@ -5,10 +5,7 @@ import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.nbt.NBTapi;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import net.advancedplugins.utils.text.Text;
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.FireworkEffect;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.configuration.ConfigurationSection;
@@ -318,6 +315,19 @@ public class ItemBuilder {
      */
     public ItemBuilder setItemFlags(ItemFlag... flags) {
         im.addItemFlags(flags);
+        return this;
+    }
+
+
+    /**
+     * Adds ArmorTrim to the item.
+     */
+    public ItemBuilder setArmorTrim(String material, String pattern) {
+        org.bukkit.inventory.meta.ArmorMeta armorMeta = ((org.bukkit.inventory.meta.ArmorMeta) im);
+        org.bukkit.inventory.meta.trim.TrimMaterial trimMaterial = Registry.TRIM_MATERIAL.get(NamespacedKey.minecraft(material.toLowerCase()));
+        org.bukkit.inventory.meta.trim.TrimPattern trimPattern = Registry.TRIM_PATTERN.get(NamespacedKey.minecraft(pattern.toLowerCase()));
+
+        armorMeta.setTrim(new org.bukkit.inventory.meta.trim.ArmorTrim(trimMaterial, trimPattern));
         return this;
     }
 

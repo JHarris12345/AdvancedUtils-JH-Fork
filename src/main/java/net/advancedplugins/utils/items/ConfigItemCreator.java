@@ -51,6 +51,7 @@ public class ConfigItemCreator {
         itemBuilderPaths.put("item-flags", "item-flags");
         itemBuilderPaths.put("custom-model-data", "custom-model-data");
         itemBuilderPaths.put("enchantments", "enchantments");
+        itemBuilderPaths.put("armor-trim", "armor-trim");
         itemBuilderPaths.put("head", "head");
         ConfigItemCreator.setDefaultPaths(itemBuilderPaths);
     }
@@ -110,6 +111,15 @@ public class ConfigItemCreator {
                     builder.addItemFlag(ItemFlag.valueOf(flagStr));
                 }
             }
+        }
+
+        // Armor trims
+        if (config.contains(path + "." + paths.get("armor-trim"))) {
+            String[] split = config.getString(path + "." + paths.get("armor-trim")).split(";");
+            String trimMaterial = split[0];
+            String trimPattern = split[1];
+
+            builder.setArmorTrim(trimMaterial, trimPattern);
         }
 
         // Custom Model Data
