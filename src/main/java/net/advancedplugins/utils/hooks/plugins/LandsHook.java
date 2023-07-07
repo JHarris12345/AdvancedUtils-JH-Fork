@@ -30,7 +30,7 @@ public class LandsHook extends PluginHookInstance {
         return HookPlugin.LANDS.getPluginName();
     }
 
-    public boolean canBuild(@NotNull Player player, Location location) {
+    public boolean canBuild(Player player, Location location) {
         LandWorld world = landsIntegration.getWorld(player.getWorld());
         LandPlayer landPlayer = landsIntegration.getLandPlayer(player.getUniqueId());
         if (world == null) return false;
