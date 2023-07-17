@@ -17,7 +17,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.*;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -55,6 +56,16 @@ public class ASManager {
 
     public static void setInstance(JavaPlugin instance) {
         ASManager.instance = instance;
+    }
+
+    private static final List<Integer> validSizes = new ArrayList<>(Arrays.asList(9, 18, 27, 36, 45, 54));
+
+    public static int getInvSize(int size) {
+        MathUtils.clamp(size, 9, 54);
+        if (size % 9 != 0) {
+            size = MathUtils.getClosestInt(size, validSizes);
+        }
+        return size;
     }
 
     public static boolean isSpawner(Material m) {
