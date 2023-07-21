@@ -21,7 +21,8 @@ public class ItemDurability {
 
     public ItemDurability(ItemStack input) {
         this.item = (input == null) ? new ItemStack(Material.AIR) : input;
-        itemsAdder = HooksHandler.isEnabled(HookPlugin.ITEMSADDER) && ((ItemsAdderHook) HooksHandler.getHook(HookPlugin.ITEMSADDER)).isCustomItem(item);
+        itemsAdder = HooksHandler.isEnabled(HookPlugin.ITEMSADDER) &&
+                ((ItemsAdderHook) HooksHandler.getHook(HookPlugin.ITEMSADDER)).isCustomItem(item);
     }
 
     /**
