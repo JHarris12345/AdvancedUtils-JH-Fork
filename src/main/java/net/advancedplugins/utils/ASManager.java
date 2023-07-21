@@ -1092,10 +1092,10 @@ public class ASManager {
                     amount = MathUtils.randomBetween(2, 6);
                     break;
                 }
-                case "AMETHYST_CLUSTER": {
+                case "CLAY":
+                case "AMETHYST_CLUSTER":
                     amount = 4;
                     break;
-                }
                 case "MELON":
                 case "MELON_BLOCK": {
                     amount = MathUtils.randomBetween(3, 7);
