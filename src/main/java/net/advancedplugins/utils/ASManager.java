@@ -1310,4 +1310,8 @@ public class ASManager {
             return "AIR";
         return itemStack.getType().name();
     }
+
+    public static <T> T getLastFromArray(T[] split) {
+        return split[split.length - 1];
+    }
 }

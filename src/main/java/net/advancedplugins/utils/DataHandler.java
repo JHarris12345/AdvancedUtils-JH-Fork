@@ -94,7 +94,7 @@ public class DataHandler {
     }
 
     public void reloadConfig() {
-        file = new File(instance.getDataFolder(), fileName + ".yml");
+        file = new File(file.getPath());
 
         try {
             fileConfiguration = new YamlConfiguration();
@@ -216,6 +216,7 @@ public class DataHandler {
     public boolean getBoolean(String path, boolean def) {
         return getConfig().getBoolean(path, def);
     }
+
     public boolean getBoolean(String path) {
         return getConfig().getBoolean(path);
     }
