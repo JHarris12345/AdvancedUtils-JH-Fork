@@ -14,7 +14,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -38,6 +40,8 @@ public class ConfigEditorMenu implements Listener {
     private final LinkedList<KeyInfo> keyInfos;
 
     private final String inventoryName;
+
+    private boolean creatingNew = false;
 
     public ConfigEditorMenu(Player player, String inventoryName, LinkedList<KeyInfo> keyInfos, JavaPlugin plugin) {
         this.editor = player;
@@ -66,6 +70,8 @@ public class ConfigEditorMenu implements Listener {
                 builder.addLoreLine(Text.modify(" &7\u24D8 &nRight Click&7 here to read more."));
             }
 
+            builder.addItemFlag(ItemFlag.values());
+
             ItemStack item = builder.toItemStack();
             item = NBTapi.addNBTTag("editKey", keyInfo.name, item);
             item.setAmount(now);
@@ -75,8 +81,16 @@ public class ConfigEditorMenu implements Listener {
         }
 
         for (int i = inv.getSize() - 9; i < inv.getSize(); i++) {
-            inv.setItem(i, new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE)
-                    .setName(" ").toItemStack());
+            inv.setItem(i, new ItemBuilder(Material.matchMaterial(handler.getGlassColor()+"_STAINED_GLASS_PANE"))
+                    .setGlowing(true).setName(" ").toItemStack());
+        }
+
+        if (getHandler().canCreateNewEntries()) {
+            inv.setItem(inv.getSize() - 1, NBTapi.addNBTTag("action", "create",
+                    new ItemBuilder(Material.LIME_WOOL)
+                            .setName(Text.modify("&a&lCreate a new one!"))
+                            .addLoreLine(Text.modify("&e&lClick here to start the creation process."))
+                            .toItemStack()));
         }
 
         if ((page + 1) < totalPages) {
@@ -97,11 +111,29 @@ public class ConfigEditorMenu implements Listener {
                             .toItemStack()));
         }
 
+        placeFiller(inv, editor);
         editor.openInventory(inv);
+    }
+
+    static void placeFiller(Inventory inv, Player editor) {
+        final ItemStack filler = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName(" ").toItemStack();
+        for (int i = 0; i < inv.getSize() - 9; i++) {
+            if (inv.getItem(i) == null) {
+                inv.setItem(i, filler);
+            }
+        }
     }
 
     private KeyInfo matchKeyInfoWithName(String name) {
         return keyInfos.stream().filter(r -> name.equals(r.name)).findFirst().orElse(null);
+    }
+
+    @EventHandler
+    public void onCreate(AsyncPlayerChatEvent e) {
+        if (creatingNew && e.getPlayer().equals(editor)) {
+            handler.create(e.getMessage(), editor);
+            HandlerList.unregisterAll(this);
+        }
     }
 
     @EventHandler
@@ -115,9 +147,13 @@ public class ConfigEditorMenu implements Listener {
                 if (action.equalsIgnoreCase("back")) {
                     page--;
                     open();
-                } else {
+                } else if (action.equalsIgnoreCase("next")) {
                     page++;
                     open();
+                } else if (action.equalsIgnoreCase("create")) {
+                    event.getWhoClicked().closeInventory();
+                    editor.sendMessage(Text.modify("name for new item"));
+                    creatingNew = true;
                 }
                 return;
             } else if (NBTapi.contains("editKey", clickedItem)) {
@@ -125,7 +161,7 @@ public class ConfigEditorMenu implements Listener {
                 editorGui.open(); // todo: enable
                 HandlerList.unregisterAll(this);
             }
-        }
 
+        }
     }
 }

@@ -8,6 +8,7 @@ import net.advancedplugins.utils.text.Text;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -61,7 +62,7 @@ public class ConfigEditorGui implements Listener {
         this.parent = parent;
         this.plugin = plugin;
         this.editObject = editObject;
-        this.inventory = Bukkit.createInventory(null, 18, name);
+        this.inventory = Bukkit.createInventory(null, 18, Text.modify(name));
 
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
@@ -74,20 +75,29 @@ public class ConfigEditorGui implements Listener {
         List<String> keys = new ArrayList<>(config.getKeys(false));
 
         for (int i = inventory.getSize() - 9; i < inventory.getSize(); i++) {
-            inventory.setItem(i, new ItemBuilder(Material.BLACK_STAINED_GLASS_PANE)
-                    .setName(" ").toItemStack());
+            inventory.setItem(i, new ItemBuilder(Material.matchMaterial(ConfigEditorMenu.getHandler().getGlassColor() + "_STAINED_GLASS_PANE"))
+                    .setName(" ").setGlowing(true).toItemStack());
         }
 
         for (int i = start; i < end; i++) {
             String key = keys.get(i);
-            KeyInfo info = keyInfos.get(key);
+            KeyInfo info = keyInfos.get(getKey(key));
 
             inventory.addItem(getItemForKey(key, info));
         }
 
         for (String unsetKey : getNotSetKeys()) {
             KeyInfo info = keyInfos.get(unsetKey);
+            if (ASManager.getKeysByValue(keyInfos, info).stream().findAny().get().endsWith("*"))
+                continue;
             inventory.addItem(getItemForKey(unsetKey, info));
+        }
+
+        if (keyInfos.containsKey(config.getCurrentPath() + ".*")) {
+//        if (!getKeyPath(config.getCurrentPath() + ".X").isEmpty()) {
+            inventory.addItem(new ItemBuilder(Material.GREEN_WOOL)
+                    .setName(Text.modify("&a&lAdd new entry."))
+                    .toItemStack());
         }
 
         if (page > 0) {
@@ -113,15 +123,22 @@ public class ConfigEditorGui implements Listener {
         backButton.setItemMeta(meta);
         inventory.setItem(inventory.getSize() - 1, backButton);
 
-//        final ItemStack filler = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).setName(" ").toItemStack();
-//        for (int i = 0; i < inventory.getSize() - 9; i++) {
-//            if (inventory.getItem(i) == null) {
-//                inventory.setItem(i, filler);
-//            }
-//        }
 
+        ConfigEditorMenu.placeFiller(inventory, editor);
         editor.openInventory(inventory);
         return this;
+    }
+
+    private String getKey(String key) {
+        String path = config.getCurrentPath() + ".*";
+
+        if (!keyInfos.containsKey(key)) {
+            if (!keyInfos.containsKey(path))
+                return key;
+            else
+                return path;
+        }
+        return key;
     }
 
     private Set<String> getNotSetKeys() {
@@ -141,31 +158,30 @@ public class ConfigEditorGui implements Listener {
     }
 
     private ItemStack getItemForKey(String key, KeyInfo info) {
-        ItemStack stack;
+        ItemStack stack = new ItemStack(info != null ? info.displayMaterial : Material.matchMaterial(defaultMaterial));
         String desc = null;
 
-        if (type.equals(EditorType.ENCHANT_MENU)) {
-            stack = new ItemStack(Material.ENCHANTED_BOOK);
-            desc = config.getString(key + ".description");
-        } else {
-            stack = new ItemStack(info != null ? info.displayMaterial : Material.matchMaterial(defaultMaterial));
-            if (hasDesc(key))
-                desc = getDesc(key);
+        if (hasDesc(key))
+            desc = getDesc(key);
+        else if (info != null && info.description != null) {
+            desc = info.description;
         }
 
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName(key);
+        meta.setDisplayName(Text.modify("&a&l" + key));
 
         List<String> lore = new ArrayList<>();
-        if (desc != null)
-            lore.add(Text.modify(" &7&l(!) &7" + desc));
+        if (desc != null) {
+            lore.add(Text.modify(" &f&l\u24D8 &f" + desc));
+//            lore.add(""); space looks weird
+        }
 
         if (config.contains(key)) {
             if (config.get(key) instanceof List) {
                 List<String> values = (List<String>) config.get(key);
                 lore.add(Text.modify("&eCurrent values: "));
                 for (String value : values) {
-                    lore.add(Text.modify("&f - " + value));
+                    lore.add(Text.modify("&6&l \uD83D\uDD39 &f" + ASManager.limit(value, 40, "...")));
                 }
             } else if (!(config.get(key) instanceof ConfigurationSection)) {
                 lore.add(Text.modify("&eCurrent value&f: " + config.get(key).toString()));
@@ -181,10 +197,27 @@ public class ConfigEditorGui implements Listener {
                     }
                 }
             } else {
+                for (String entry : config.getConfigurationSection(key).getKeys(false).stream()
+                        .limit(8).collect(Collectors.toList())) {
+
+                    Object value = config.get(key + "." + entry);
+                    KeyType t = KeyType.getKeyType(value);
+                    if (t == null)
+                        continue;
+
+                    if (t.equals(KeyType.LIST)) {
+                        value = "List";
+                    } else if (t.equals(KeyType.KEY)) {
+                        value = "sub-menu";
+                    } else if (t.equals(KeyType.STRING)) {
+                        value = ((String) value).length() > 32 ? ((String) value).substring(0, 31) + "..." : value;
+                    }
+
+                    lore.add(Text.modify("&e\u2666 &6&l" + entry + " &f" + value));
+                }
+                lore.add("");
                 lore.add(Text.modify("&fOpen a sub-menu to edit."));
             }
-
-
         } else {
             lore.add(Text.modify("&eValue is not set in the configuration."));
         }
@@ -194,10 +227,13 @@ public class ConfigEditorGui implements Listener {
         }
 
         lore.add(" ");
-        lore.add(Text.modify(" &7\u27A4 &nLeft Click&7 here to edit this value."));
+        lore.add(Text.modify(" &7\u27A4 &lLeft Click&7 here to edit this value"));
+        if (config.contains(key)) {
+            lore.add(Text.modify(" &c\u2715 &lShift Left Click&c here to delete this value"));
+        }
 
         if (info != null && info.wikiLink != null) {
-            lore.add(Text.modify(" &7\u24D8 &nRight Click&7 here to read more about this value."));
+            lore.add(Text.modify(" &f\u24D8 &lRight Click&7 here to learn more"));
         }
 
         meta.addItemFlags(ItemFlag.values());
@@ -223,29 +259,47 @@ public class ConfigEditorGui implements Listener {
         if (event.getInventory().equals(listEditor)) {
             event.setCancelled(true);
             ItemStack clickedItem = event.getCurrentItem();
-            String line = clickedItem.getItemMeta().getDisplayName();
-            String key = clickedItem.getItemMeta().getDisplayName();
+            String line = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName());
 
             if ("Go back".equals(clickedItem.getItemMeta().getDisplayName())) {
                 // If the user clicked on the "Go back" item, go back to the previous GUI
                 editor.closeInventory();
                 open();
                 return;
-            } else if ("Add new line".equals(line)) {
-                // If the user clicked on the "Add new line" item, prompt them to enter the new line in chat
-                editingLine = -1;  // Use -1 to indicate that a new line is being added
-            } else {
-                // If the user clicked on a line item, prompt them to edit the line in chat
-                editingLine = list.indexOf(line);
             }
-            editingList = true;
+
+            if (event.isRightClick()) {
+                list.remove(line);
+
+                config.set(editingKey, list);
+                close();
+                editor.closeInventory();
+                ConfigEditorMenu.getHandler().updateFiles(editObject, editor, editingKey, getCurrentPath());
+                return;
+            } else {
+                if ("Add new line".equals(line)) {
+                    // If the user clicked on the "Add new line" item, prompt them to enter the new line in chat
+                    editingLine = -1;  // Use -1 to indicate that a new line is being added
+                } else {
+                    // If the user clicked on a line item, prompt them to edit the line in chat
+                    editingLine = list.indexOf(line);
+                }
+                editingList = true;
+            }
         }
 
         if (event.getInventory().equals(inventory) || editingList) {
             event.setCancelled(true);
             ItemStack clickedItem = event.getCurrentItem();
             if (clickedItem == null) return;
-            String key = clickedItem.getItemMeta().getDisplayName();
+            String key = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName());
+            if (key.equalsIgnoreCase("Add new entry.")) {
+                key = "*";
+            }
+
+            if (key.isEmpty() || key.equals(" "))
+                return;
+
             if ("Back".equals(key)) {
                 close();
                 if (parent != null)
@@ -276,12 +330,22 @@ public class ConfigEditorGui implements Listener {
                 return;
             }
 
+            if (event.isLeftClick() && event.isShiftClick()) {
+                config.set(key, null);
+
+                close();
+                editor.closeInventory();
+                ConfigEditorMenu.getHandler().updateFiles(editObject, editor, editingKey, getCurrentPath());
+                return;
+            }
+
             if (config.get(key) instanceof ConfigurationSection || keyInfos.get(key) != null && keyInfos.get(key).menu) {
                 if (config.get(key) == null) {
                     config.createSection(key);
                 }
 
-                new ConfigEditorGui(key + " editor", config.getConfigurationSection(key), editor, keyInfos, this, editObject, plugin).open();
+                new ConfigEditorGui(ConfigEditorMenu.getHandler().getTextColor() + "&l" + key + ConfigEditorMenu.getHandler().getTextColor() +
+                        " editor", config.getConfigurationSection(key), editor, keyInfos, this, editObject, plugin).open();
             } else {
                 editor.closeInventory();
                 editingKey = !editingList ? key : editingKey;
@@ -495,14 +559,15 @@ public class ConfigEditorGui implements Listener {
         list = config.contains(key) ? config.getStringList(key) : new ArrayList<>();
 
         // Create a new inventory for editing the list
-        listEditor = Bukkit.createInventory(null, ASManager.getInvSize(list.size() + 1), "Edit list: " + key);
+        listEditor = Bukkit.createInventory(null, ASManager.getInvSize(list.size() + 1), "&eEdit list: " + key);
 
         // Add an item for each line in the list
         for (String s : list) {
             ItemStack lineItem = new ItemStack(Material.PAPER);
             ItemMeta meta = lineItem.getItemMeta();
             meta.setDisplayName(s);
-            meta.setLore(Arrays.asList(Text.modify(" &7\u27A4 &nLeft Click&7 here to edit this value.")));
+            meta.setLore(Arrays.asList(Text.modify(" &7\u27A4 &nLeft Click&7 here to edit this line.")
+                    , Text.modify(" &7\u2715 &nRight Click&7 here to remove this line.")));
             lineItem.setItemMeta(meta);
             lineItem = NBTapi.addNBTTag("randomizer", UUID.randomUUID().toString(), lineItem);
             listEditor.addItem(lineItem);

@@ -164,6 +164,8 @@ public enum KeyType {
             return KeyType.LIST;
         } else if (value instanceof String) {
             return KeyType.STRING;
+        } else if (value instanceof ConfigurationSection) {
+            return KeyType.KEY;
         } else {
             return null;
         }

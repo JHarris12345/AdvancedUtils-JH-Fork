@@ -28,6 +28,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.Contract;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -59,6 +60,20 @@ public class ASManager {
     }
 
     private static final List<Integer> validSizes = new ArrayList<>(Arrays.asList(9, 18, 27, 36, 45, 54));
+
+    @Contract("null, _ -> fail")
+    public static void notNull(Object arg, String identifier) {
+        if (arg == null) {
+            throw new IllegalArgumentException(identifier.concat(" cannot be null."));
+        }
+    }
+
+    @Contract("!null, _ -> fail")
+    public static void isNull(Object arg, String message) {
+        if (arg != null) {
+            throw new IllegalArgumentException(message);
+        }
+    }
 
     public static int getInvSize(int size) {
         MathUtils.clamp(size, 9, 54);
@@ -1311,7 +1326,14 @@ public class ASManager {
         return itemStack.getType().name();
     }
 
-    public static <T> T getLastFromArray(T[] split) {
-        return split[split.length - 1];
+    public static <T> T getFromArray(T[] split, int pos) {
+        // if pos = -1, assume it's the last one
+        if (pos == -1)
+            pos = split.length - 1;
+        return split[pos];
+    }
+
+    public static String limit(String value, int i, String endWith) {
+        return value.length() < i ? value : value.substring(0, i - 1) + endWith;
     }
 }

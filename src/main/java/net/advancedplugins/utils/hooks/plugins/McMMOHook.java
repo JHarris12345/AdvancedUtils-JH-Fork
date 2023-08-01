@@ -28,15 +28,17 @@ public class McMMOHook extends PluginHookInstance {
     }
 
     public boolean isFakeBlockBreak(Event e) {
-        return e instanceof com.gmail.nossr50.events.fake.FakeBlockBreakEvent;
+        return false;
+//        return e instanceof com.gmail.nossr50.events.fake.FakeBlockBreakEvent;
     }
 
     public boolean callFakeEvent(Block b, Player p) {
-        com.gmail.nossr50.events.fake.FakeBlockBreakEvent event =
-                new com.gmail.nossr50.events.fake.FakeBlockBreakEvent(b, p);
-        Bukkit.getPluginManager().callEvent(event);
-
-        return !event.isCancelled();
+//        com.gmail.nossr50.events.fake.FakeBlockBreakEvent event =
+//                new com.gmail.nossr50.events.fake.FakeBlockBreakEvent(b, p);
+//        Bukkit.getPluginManager().callEvent(event);
+//
+//        return !event.isCancelled();
+        return true;
     }
 
     @Override

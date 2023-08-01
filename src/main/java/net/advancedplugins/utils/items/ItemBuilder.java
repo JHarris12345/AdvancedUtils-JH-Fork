@@ -358,7 +358,7 @@ public class ItemBuilder {
      *
      * @param flag ItemFlag to add.
      */
-    public ItemBuilder addItemFlag(ItemFlag flag) {
+    public ItemBuilder addItemFlag(ItemFlag... flag) {
         im.addItemFlags(flag);
         return this;
     }
@@ -399,6 +399,9 @@ public class ItemBuilder {
     public ItemBuilder setGlowing(boolean bool) {
         is.setItemMeta(im);
         im = is.getItemMeta();
+        im.addEnchant(Enchantment.DURABILITY, 1, true);
+        im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        is.setItemMeta(im);
         return this;
     }
 
