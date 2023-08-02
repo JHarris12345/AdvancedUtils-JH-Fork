@@ -1,6 +1,7 @@
 package net.advancedplugins.utils.hooks;
 
 public enum HookPlugin {
+    ADVANCEDENCHANTMENTS("AdvancedEnchantments"),
     WORLDGUARD("WorldGuard"),
     TOWNY("Towny"),
     LWC("LWC"),

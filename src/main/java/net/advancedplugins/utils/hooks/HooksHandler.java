@@ -31,6 +31,9 @@ public class HooksHandler {
         if (isPluginEnabled(HookPlugin.MCMMO.getPluginName()))
             registerNew(HookPlugin.MCMMO, new McMMOHook());
 
+        if (isPluginEnabled(HookPlugin.ADVANCEDENCHANTMENTS.getPluginName()))
+            registerNew(HookPlugin.ADVANCEDENCHANTMENTS, new AdvancedEnchantmentsHook());
+
         if (isPluginEnabled(HookPlugin.ITEMSADDER.getPluginName()))
             registerNew(HookPlugin.ITEMSADDER, new ItemsAdderHook());
 
