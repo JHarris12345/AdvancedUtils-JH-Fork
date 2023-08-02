@@ -1158,6 +1158,16 @@ public class ASManager {
         return MathUtils.clamp(amount, Integer.MIN_VALUE, max);
     }
 
+    /**
+     * Turns a Collection of Strings representing Materials into a Set of Materials.
+     *
+     * @param materials Collection of Material names.
+     * @return A Set of Materials from the provided collection, excluding any Materials that don't exist.
+     */
+    public static Set<Material> createMaterialSet(Collection<String> materials) {
+        return materials.stream().map(Material::matchMaterial).filter(Objects::nonNull).collect(Collectors.toSet());
+    }
+
     public static boolean isUnbreakable(ItemStack itemStack) {
         return NBTapi.contains("Unbreakable", itemStack);
     }
