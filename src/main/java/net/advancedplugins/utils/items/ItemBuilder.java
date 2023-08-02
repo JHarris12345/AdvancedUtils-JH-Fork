@@ -67,7 +67,7 @@ public class ItemBuilder {
 
         String displayName = config.isString("name") ? Text.modify(config.getString("name")) : "";
         List<String> description = config.isList("lore") ? config.getStringList("lore") : new ArrayList<>();
-        int customModelData = config.isInt("custom-model-data") && MinecraftVersion.getVersionNumber() > 1_14_0 ? config.getInt("custom-model-data") : 0;
+        int customModelData = config.isInt("custom-model-data") ? config.getInt("custom-model-data") : 0;
         int amount = config.isInt("amount") ? config.getInt("amount") : 1;
         int advancedHeadsId = config.isInt("advanced-heads-id") ? config.getInt("advanced-heads-id") : 0;
         boolean makeGlow = config.isBoolean("force-glow") && config.getBoolean("force-glow");
