@@ -1031,6 +1031,7 @@ public class ASManager {
             case "NETHER_WART":
             case "SWEET_BERRIES":
             case "SEA_LANTERN":
+            case "NETHER_GOLD_ORE":
             case "MELON":
             case "MELON_BLOCK":
                 return true;
