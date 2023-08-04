@@ -1,5 +1,6 @@
 package net.advancedplugins.utils.hooks.plugins;
 
+import lombok.SneakyThrows;
 import net.advancedplugins.utils.hooks.factions.FactionsPluginHook;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -24,12 +25,12 @@ public class FactionsUUIDHook extends FactionsPluginHook {
         return fp.getRelationTo(fp2).toString();
     }
 
+    @SneakyThrows
     @Override
     public String getRelationOfLand(Player p) {
         com.massivecraft.factions.FPlayer fp = com.massivecraft.factions.FPlayers.getInstance().getByPlayer(p);
-        com.massivecraft.factions.perms.Relation rl = fp.getRelationToLocation();
 
-        return rl.toString();
+        return fp.getClass().getMethod("getRelationToLocation").invoke(fp).toString();
     }
 
 }
