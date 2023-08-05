@@ -1,10 +1,20 @@
 package net.advancedplugins.utils.hooks.plugins;
 
+import com.massivecraft.factions.FPlayer;
+import lombok.SneakyThrows;
 import net.advancedplugins.utils.hooks.factions.FactionsPluginHook;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.lang.reflect.Method;
+
 public class FactionsUUIDHook extends FactionsPluginHook {
+
+    private final Method relationToLocationMethod;
+
+    @SneakyThrows
+    public FactionsUUIDHook() {
+        this.relationToLocationMethod = FPlayer.class.getMethod("getRelationToLocation");
+    }
 
     @Override
     public boolean isEnabled() {
@@ -24,12 +34,12 @@ public class FactionsUUIDHook extends FactionsPluginHook {
         return fp.getRelationTo(fp2).toString();
     }
 
+    @SneakyThrows
     @Override
     public String getRelationOfLand(Player p) {
         com.massivecraft.factions.FPlayer fp = com.massivecraft.factions.FPlayers.getInstance().getByPlayer(p);
-        com.massivecraft.factions.perms.Relation rl = fp.getRelationToLocation();
 
-        return rl.toString();
+        return relationToLocationMethod.invoke(fp).toString();
     }
 
 }
