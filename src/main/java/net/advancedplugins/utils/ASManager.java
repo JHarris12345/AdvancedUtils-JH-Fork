@@ -1347,4 +1347,13 @@ public class ASManager {
     public static String limit(String value, int i, String endWith) {
         return value.length() < i ? value : value.substring(0, i - 1) + endWith;
     }
+
+    public static String join(String[] split, String s, int from, int to) {
+        StringBuilder builder = new StringBuilder();
+        to = Math.max(split.length, to);
+        for (int i = from; i < to ; i++) {
+            builder.append(split[i]).append(s);
+        }
+        return builder.substring(0, builder.length() - s.length());
+    }
 }

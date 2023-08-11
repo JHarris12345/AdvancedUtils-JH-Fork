@@ -146,6 +146,11 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder setType(Material m) {
+        is.setType(m);
+        return this;
+    }
+
     /**
      * Set the displayname of the item.
      *

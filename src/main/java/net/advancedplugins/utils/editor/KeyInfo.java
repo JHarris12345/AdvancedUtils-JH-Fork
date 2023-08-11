@@ -22,13 +22,17 @@ public class KeyInfo {
 
     public boolean addKeyToInput = false;
 
-    public KeyInfo(Material displayMaterial, String description, List<String> suggestions) {
+    public String path;
+
+    public KeyInfo(String path, Material displayMaterial, String description, List<String> suggestions) {
+        this.path = path;
         this.displayMaterial = displayMaterial;
         this.description = description;
         this.suggestions = suggestions;
     }
 
-    public KeyInfo(Material displayMaterial, String description, List<String> suggestions, String wikiLink) {
+    public KeyInfo(String path, Material displayMaterial, String description, List<String> suggestions, String wikiLink) {
+        this.path = path;
         this.displayMaterial = displayMaterial;
         this.description = description;
         this.suggestions = suggestions;
