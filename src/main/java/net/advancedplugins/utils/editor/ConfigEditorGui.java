@@ -319,8 +319,6 @@ public class ConfigEditorGui implements Listener {
                 return;
 
             if ("Back".equals(key)) {
-//                close();
-                // todo
 
                 if (baseSection.length() < this.currentSection.length()) {
                     currentSection = getPreviousSection();

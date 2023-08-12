@@ -818,7 +818,10 @@ public class ASManager {
         for (ItemStack item : items) {
             if (!isValid(item)) continue;
             if (!p.getInventory().addItem(item).isEmpty()) {
-                dropItem(p.getLocation(), item);
+                if (!Bukkit.isPrimaryThread()) {
+                    SchedulerUtils.runTaskLater(() -> dropItem(p.getLocation(), item));
+                } else
+                    dropItem(p.getLocation(), item);
             }
         }
     }
@@ -1351,7 +1354,7 @@ public class ASManager {
     public static String join(String[] split, String s, int from, int to) {
         StringBuilder builder = new StringBuilder();
         to = Math.max(split.length, to);
-        for (int i = from; i < to ; i++) {
+        for (int i = from; i < to; i++) {
             builder.append(split[i]).append(s);
         }
         return builder.substring(0, builder.length() - s.length());
