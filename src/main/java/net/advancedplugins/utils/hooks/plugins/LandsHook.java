@@ -27,8 +27,8 @@ public class LandsHook extends PluginHookInstance {
     public boolean canBuild(Player player, Location location) {
         LandWorld world = landsIntegration.getWorld(player.getWorld());
         LandPlayer landPlayer = landsIntegration.getLandPlayer(player.getUniqueId());
-        if (world == null) return false;
-        if (landPlayer == null) return false;
+        if (world == null) return true;
+        if (landPlayer == null) return true;
         return world.hasFlag(player, location, player.getInventory().getItemInMainHand().getType(), Flags.BLOCK_BREAK, false);
     }
 
