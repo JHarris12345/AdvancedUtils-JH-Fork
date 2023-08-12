@@ -787,6 +787,22 @@ public class ASManager {
             return m == Material.valueOf("DOUBLE_PLANT");
     }
 
+    public static List<Location> removeDuplicateLocations(List<Location> locations) {
+        List<Location> uniqueLocations = new ArrayList<>();
+        Set<String> seen = new HashSet<>();
+
+        for (Location loc : locations) {
+            if (loc == null || loc.getWorld() == null)
+                continue;
+            String key = loc.getWorld().getName() + "," + loc.getX() + "," + loc.getY() + "," + loc.getZ();
+            if (!seen.contains(key)) {
+                seen.add(key);
+                uniqueLocations.add(loc);
+            }
+        }
+        return uniqueLocations;
+    }
+
     /**
      * @return True if the material is not null and is not air.
      */
