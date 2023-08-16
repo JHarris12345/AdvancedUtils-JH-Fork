@@ -45,7 +45,7 @@ public class AureliumSkillsHook extends PluginHookInstance implements Listener {
     public void onLoot(PlayerLootDropEvent e) {
         if (e.isCancelled())
             return;
-        
+
         final Player player = e.getPlayer();
         final ItemStack item = e.getItemStack();
         final Location location = e.getLocation().clone();
@@ -99,7 +99,6 @@ public class AureliumSkillsHook extends PluginHookInstance implements Listener {
     }
 
     class CustomLootHandler extends MiningLootHandler {
-
         public CustomLootHandler(AureliumSkills plugin) {
             super(plugin);
         }
