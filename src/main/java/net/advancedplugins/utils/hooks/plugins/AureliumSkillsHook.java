@@ -10,18 +10,15 @@ import net.advancedplugins.utils.abilities.DropsSettings;
 import net.advancedplugins.utils.abilities.SmeltMaterial;
 import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.hooks.PluginHookInstance;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
-import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.plugin.RegisteredListener;
 import org.bukkit.util.Vector;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -44,8 +41,11 @@ public class AureliumSkillsHook extends PluginHookInstance implements Listener {
         return HookPlugin.AURELIUMSKILLS.getPluginName();
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onLoot(PlayerLootDropEvent e) {
+        if (e.isCancelled())
+            return;
+        
         final Player player = e.getPlayer();
         final ItemStack item = e.getItemStack();
         final Location location = e.getLocation().clone();
