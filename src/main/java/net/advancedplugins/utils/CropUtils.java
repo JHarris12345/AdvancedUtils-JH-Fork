@@ -128,6 +128,8 @@ public class CropUtils {
             case "COCOA":
             case "NETHER_WART":
             case "NETHER_WARTS":
+            case "TORCHFLOWER":
+            case "PITCHER_CROP":
                 return true;
         }
         return false;
@@ -138,6 +140,9 @@ public class CropUtils {
      */
     public static boolean isFullyGrown(Block b) {
         if (!ASManager.isValid(b) || !isCrop(b.getType())) return false;
+        if (b.getType() == Material.valueOf("TORCHFLOWER")) {
+            return true;
+        }
         if (!(b.getBlockData() instanceof Ageable))
             return false;
         Ageable a = (Ageable) b.getBlockData();
