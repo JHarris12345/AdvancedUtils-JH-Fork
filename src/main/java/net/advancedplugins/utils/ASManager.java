@@ -787,6 +787,22 @@ public class ASManager {
             return m == Material.valueOf("DOUBLE_PLANT");
     }
 
+    public static List<Location> removeDuplicateLocations(List<Location> locations) {
+        List<Location> uniqueLocations = new ArrayList<>();
+        Set<String> seen = new HashSet<>();
+
+        for (Location loc : locations) {
+            if (loc == null || loc.getWorld() == null)
+                continue;
+            String key = loc.getWorld().getName() + "," + loc.getX() + "," + loc.getY() + "," + loc.getZ();
+            if (!seen.contains(key)) {
+                seen.add(key);
+                uniqueLocations.add(loc);
+            }
+        }
+        return uniqueLocations;
+    }
+
     /**
      * @return True if the material is not null and is not air.
      */
@@ -818,7 +834,10 @@ public class ASManager {
         for (ItemStack item : items) {
             if (!isValid(item)) continue;
             if (!p.getInventory().addItem(item).isEmpty()) {
-                dropItem(p.getLocation(), item);
+                if (!Bukkit.isPrimaryThread()) {
+                    SchedulerUtils.runTaskLater(() -> dropItem(p.getLocation(), item));
+                } else
+                    dropItem(p.getLocation(), item);
             }
         }
     }
@@ -1351,7 +1370,7 @@ public class ASManager {
     public static String join(String[] split, String s, int from, int to) {
         StringBuilder builder = new StringBuilder();
         to = Math.max(split.length, to);
-        for (int i = from; i < to ; i++) {
+        for (int i = from; i < to; i++) {
             builder.append(split[i]).append(s);
         }
         return builder.substring(0, builder.length() - s.length());

@@ -45,6 +45,11 @@ public class DropsSettings {
     private boolean dropExp = true;
 
     /**
+     * Should durability damage be done to tool
+     */
+    private boolean durabilityDamage = true;
+
+    /**
      * The tool to break the blocks with.
      */
     private ItemStack tool = null;
