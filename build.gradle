@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 buildscript {
     repositories {
         jcenter()
@@ -50,19 +52,20 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'org.projectlombok:lombok:1.18.24'
+    compileOnly 'org.projectlombok:lombok:1.18.26'
     compileOnly fileTree(include: ['*.jar'], dir: 'libs') // Add everything in the libs folder.
     compileOnly group: 'com.sk89q.worldguard', name: 'worldguard-bukkit', version: '7.0.5'
     compileOnly group: 'com.sk89q.worldedit', name: 'worldedit-bukkit', version: '7.2.5'
     implementation group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
     compileOnly group: 'com.massivecraft', name: 'Factions', version: '1.6.9.5-U0.6.28'
     compileOnly group: 'com.github.angeschossen', name: 'LandsAPI', version: '6.29.12'
-    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    compileOnly 'com.github.SaberLLC:Saber-Factions:4.1.2-STABLE'
+    annotationProcessor 'org.projectlombok:lombok:1.18.26'
 }
 
 processResources {
     expand project.properties
-    filter org.apache.tools.ant.filters.ReplaceTokens, tokens: [
+    filter ReplaceTokens, tokens: [
             "version": project.property("version"),
             "date": getDate()
     ]
