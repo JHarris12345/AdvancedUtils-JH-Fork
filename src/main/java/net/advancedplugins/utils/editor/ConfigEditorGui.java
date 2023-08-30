@@ -1,6 +1,7 @@
 package net.advancedplugins.utils.editor;
 
 import net.advancedplugins.utils.ASManager;
+import net.advancedplugins.utils.ColorUtils;
 import net.advancedplugins.utils.SchedulerUtils;
 import net.advancedplugins.utils.items.ItemBuilder;
 import net.advancedplugins.utils.nbt.NBTapi;
@@ -282,7 +283,7 @@ public class ConfigEditorGui implements Listener {
         if (event.getInventory().equals(listEditor)) {
             event.setCancelled(true);
             ItemStack clickedItem = event.getCurrentItem();
-            String line = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName());
+            String line = ColorUtils.stripColor(clickedItem.getItemMeta().getDisplayName());
 
             if ("Go back".equals(clickedItem.getItemMeta().getDisplayName())) {
                 // If the user clicked on the "Go back" item, go back to the previous GUI
@@ -313,7 +314,7 @@ public class ConfigEditorGui implements Listener {
             event.setCancelled(true);
             ItemStack clickedItem = event.getCurrentItem();
             if (clickedItem == null) return;
-            String key = ChatColor.stripColor(clickedItem.getItemMeta().getDisplayName());
+            String key = ColorUtils.stripColor(clickedItem.getItemMeta().getDisplayName());
 
             if (key.isEmpty() || key.equals(" "))
                 return;

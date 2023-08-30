@@ -3,6 +3,7 @@ package net.advancedplugins.utils;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.regex.Matcher;
@@ -44,6 +45,15 @@ public class ColorUtils {
         }
         return strings;
     }
+    
+    /**
+     * Removes the colors (including hex) from the string
+     * @param input String to remove the colors from
+     * @return String without any colors
+     */
+    public static String stripColor(@NotNull String input) {
+        return ColorUtils.stripColor(input);
+    }
 
     /**
      * Strips all colors off all elements of a list.
@@ -52,9 +62,7 @@ public class ColorUtils {
      * @return List of strings with no colors.
      */
     public static List<String> stripColor(List<String> strings) {
-        for (int i = 0; i < strings.size(); i++) {
-            strings.set(i, ChatColor.stripColor(strings.get(i)));
-        }
+        strings.replaceAll(ColorUtils::stripColor);
         return strings;
     }
 
