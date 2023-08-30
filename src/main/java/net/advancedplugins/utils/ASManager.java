@@ -29,6 +29,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -936,6 +937,10 @@ public class ASManager {
         return ((int) size / amountPerPage) + (size % amountPerPage == 0 ? 0 : 1);
     }
 
+    public static <T> List<T> getItemsInPage(List<T> items, int page, int itemsPerPage) {
+        return items.subList(page * itemsPerPage, Math.min(items.size(), itemsPerPage * (page + 1)));
+    }
+
     public static void deleteFile(File f) {
         if (f.isDirectory()) {
             for (File f2 : f.listFiles()) {
@@ -1374,5 +1379,19 @@ public class ASManager {
             builder.append(split[i]).append(s);
         }
         return builder.substring(0, builder.length() - s.length());
+    }
+
+    public static int getEmptySlotCountInInventory(@NotNull Player player) {
+        if (player.getInventory().firstEmpty() == -1) {
+            return 0;
+        }
+        int emptySlots = 0;
+        for (int i = 0; i < 36; i++) {
+            ItemStack item = player.getInventory().getItem(i);
+            if (item == null || item.getType().equals(Material.AIR)) {
+                emptySlots++;
+            }
+        }
+        return emptySlots;
     }
 }
