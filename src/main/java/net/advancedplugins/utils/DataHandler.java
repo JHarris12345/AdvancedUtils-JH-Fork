@@ -1,7 +1,6 @@
 package net.advancedplugins.utils;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -210,7 +209,7 @@ public class DataHandler {
     }
 
     public String getStringColored(String s) {
-        return ChatColor.translateAlternateColorCodes('&', getString(s));
+        return ColorUtils.format(getString(s));
     }
 
     public boolean getBoolean(String path, boolean def) {

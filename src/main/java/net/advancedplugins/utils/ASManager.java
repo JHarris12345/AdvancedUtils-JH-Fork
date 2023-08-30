@@ -772,7 +772,7 @@ public class ASManager {
     }
 
     public static String color(String input) {
-        return ChatColor.translateAlternateColorCodes('&', input);
+        return ColorUtils.format(input);
     }
 
     /**
