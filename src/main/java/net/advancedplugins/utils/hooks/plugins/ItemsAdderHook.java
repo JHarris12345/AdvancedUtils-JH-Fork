@@ -4,6 +4,7 @@ import dev.lone.itemsadder.api.CustomStack;
 import dev.lone.itemsadder.api.ItemsAdder;
 import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.hooks.PluginHookInstance;
+import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
 public class ItemsAdderHook extends PluginHookInstance {
@@ -25,6 +26,13 @@ public class ItemsAdderHook extends PluginHookInstance {
     public ItemStack setCustomItemDurability(ItemStack item, int durability) {
         CustomStack stack = CustomStack.byItemStack(item);
         stack.setDurability(durability);
+        return stack.getItemStack();
+    }
+
+    public ItemStack getByName(String name) {
+        CustomStack stack = CustomStack.getInstance(name);
+        if (stack == null)
+            return null;
         return stack.getItemStack();
     }
 

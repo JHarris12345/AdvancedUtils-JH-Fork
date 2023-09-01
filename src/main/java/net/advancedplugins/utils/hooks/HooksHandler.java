@@ -1,7 +1,6 @@
 package net.advancedplugins.utils.hooks;
 
 import com.google.common.collect.ImmutableMap;
-import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.hooks.holograms.CMIHologramHandler;
 import net.advancedplugins.utils.hooks.holograms.DecentHologramsHandler;
 import net.advancedplugins.utils.hooks.holograms.HologramHandler;
@@ -9,8 +8,6 @@ import net.advancedplugins.utils.hooks.plugins.*;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.stream.Collectors;
 
 public class HooksHandler {
 
@@ -25,53 +22,56 @@ public class HooksHandler {
             pluginHookMap = ImmutableMap.<HookPlugin, PluginHookInstance>builder().build();
         }
 
-        HooksHandler.plugin = plugin;
-        holograms();
+        // Do this after server is loaded, so all softdepends that aren't in the plugin.yml file will be enabeld by this time
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+            HooksHandler.plugin = plugin;
+            holograms();
 
-        if (isPluginEnabled(HookPlugin.MCMMO.getPluginName()))
-            registerNew(HookPlugin.MCMMO, new McMMOHook());
+            if (isPluginEnabled(HookPlugin.MCMMO.getPluginName()))
+                registerNew(HookPlugin.MCMMO, new McMMOHook());
 
-        if (isPluginEnabled(HookPlugin.ADVANCEDENCHANTMENTS.getPluginName()))
-            registerNew(HookPlugin.ADVANCEDENCHANTMENTS, new AdvancedEnchantmentsHook());
+            if (isPluginEnabled(HookPlugin.ADVANCEDENCHANTMENTS.getPluginName()))
+                registerNew(HookPlugin.ADVANCEDENCHANTMENTS, new AdvancedEnchantmentsHook());
 
-        if (isPluginEnabled(HookPlugin.ITEMSADDER.getPluginName()))
-            registerNew(HookPlugin.ITEMSADDER, new ItemsAdderHook());
+            if (isPluginEnabled(HookPlugin.ITEMSADDER.getPluginName()))
+                registerNew(HookPlugin.ITEMSADDER, new ItemsAdderHook());
 
-        if (isPluginEnabled(HookPlugin.AURELIUMSKILLS.getPluginName()))
-            registerNew(HookPlugin.AURELIUMSKILLS, new AureliumSkillsHook(), true);
+            if (isPluginEnabled(HookPlugin.AURELIUMSKILLS.getPluginName()))
+                registerNew(HookPlugin.AURELIUMSKILLS, new AureliumSkillsHook(), true);
 
-        if (isPluginEnabled(HookPlugin.WORLDGUARD.getPluginName()))
-            registerNew(HookPlugin.WORLDGUARD, new WorldGuardHook());
+            if (isPluginEnabled(HookPlugin.WORLDGUARD.getPluginName()))
+                registerNew(HookPlugin.WORLDGUARD, new WorldGuardHook());
 
-        if (isPluginEnabled(HookPlugin.GRIEFPREVENTION.getPluginName()))
-            registerNew(HookPlugin.GRIEFPREVENTION, new GriefPreventionHook());
+            if (isPluginEnabled(HookPlugin.GRIEFPREVENTION.getPluginName()))
+                registerNew(HookPlugin.GRIEFPREVENTION, new GriefPreventionHook());
 
-        if (isPluginEnabled(HookPlugin.PLACEHOLDERAPI.getPluginName()))
-            registerNew(HookPlugin.PLACEHOLDERAPI, new PlaceholderAPIHook());
+            if (isPluginEnabled(HookPlugin.PLACEHOLDERAPI.getPluginName()))
+                registerNew(HookPlugin.PLACEHOLDERAPI, new PlaceholderAPIHook());
 
-        if (isPluginEnabled(HookPlugin.SLIMEFUN.getPluginName()))
-            registerNew(HookPlugin.SLIMEFUN, new SlimeFunHook());
+            if (isPluginEnabled(HookPlugin.SLIMEFUN.getPluginName()))
+                registerNew(HookPlugin.SLIMEFUN, new SlimeFunHook());
 
-        if (isPluginEnabled(HookPlugin.MYTHICMOBS.getPluginName()))
-            registerNew(HookPlugin.MYTHICMOBS, new MythicMobsHook());
+            if (isPluginEnabled(HookPlugin.MYTHICMOBS.getPluginName()))
+                registerNew(HookPlugin.MYTHICMOBS, new MythicMobsHook());
 
-        if (isPluginEnabled(HookPlugin.TOWNY.getPluginName()))
-            registerNew(HookPlugin.TOWNY, new MythicMobsHook());
+            if (isPluginEnabled(HookPlugin.TOWNY.getPluginName()))
+                registerNew(HookPlugin.TOWNY, new MythicMobsHook());
 
-        if (isPluginEnabled(HookPlugin.LANDS.getPluginName()))
-            registerNew(HookPlugin.LANDS, new LandsHook());
+            if (isPluginEnabled(HookPlugin.LANDS.getPluginName()))
+                registerNew(HookPlugin.LANDS, new LandsHook());
 
-        // Figure out which factions plugin is loaded and hook into the correct one
+            // Figure out which factions plugin is loaded and hook into the correct one
 
-        if (isPluginEnabled(HookPlugin.FACTIONS.getPluginName())) {
-            if (isPluginEnabled("MassiveCore")) {
-                registerNew(HookPlugin.FACTIONS, new FactionsMCoreHook());
-            } else {
-                registerNew(HookPlugin.FACTIONS, new FactionsUUIDHook());
+            if (isPluginEnabled(HookPlugin.FACTIONS.getPluginName())) {
+                if (isPluginEnabled("MassiveCore")) {
+                    registerNew(HookPlugin.FACTIONS, new FactionsMCoreHook());
+                } else {
+                    registerNew(HookPlugin.FACTIONS, new FactionsUUIDHook());
+                }
             }
-        }
 
-        sendHookMessage(plugin);
+            sendHookMessage(plugin);
+        }, 10);
     }
 
     private static void sendHookMessage(JavaPlugin plugin) {

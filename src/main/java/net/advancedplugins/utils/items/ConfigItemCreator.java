@@ -1,7 +1,9 @@
 package net.advancedplugins.utils.items;
 
 import net.advancedplugins.utils.*;
-
+import net.advancedplugins.utils.hooks.HookPlugin;
+import net.advancedplugins.utils.hooks.HooksHandler;
+import net.advancedplugins.utils.hooks.plugins.ItemsAdderHook;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -48,6 +50,7 @@ public class ConfigItemCreator {
         itemBuilderPaths.put("name", "name");
         itemBuilderPaths.put("lore", "lore");
         itemBuilderPaths.put("force-glow", "force-glow");
+        itemBuilderPaths.put("itemsadder", "itemsadder");
         itemBuilderPaths.put("item-flags", "item-flags");
         itemBuilderPaths.put("custom-model-data", "custom-model-data");
         itemBuilderPaths.put("enchantments", "enchantments");
@@ -215,8 +218,13 @@ public class ConfigItemCreator {
         // Support for custom heads
         String head = config.getString(path + "." + paths.get("head"));
 
+        // Support for itemsadder
+        String itemsadder = config.getString(path + "." + paths.get("itemsadder"));
+
         ItemStack type;
-        if (head != null) {
+        if (itemsadder != null) {
+            type = ((ItemsAdderHook) HooksHandler.getHook(HookPlugin.ITEMSADDER)).getByName(itemsadder);
+        } else if (head != null) {
             type = SkullCreator.itemFromBase64(head);
         } else if (advancedHead != null)
             type = net.advancedplugins.heads.api.AdvancedHeadsAPI.getHead(advancedHead);
