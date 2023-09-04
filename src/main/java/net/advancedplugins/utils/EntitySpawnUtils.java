@@ -32,7 +32,7 @@ public class EntitySpawnUtils implements Listener {
      */
     public static Entity spawnEntity(@NotNull Plugin plugin, @NotNull RegionAccessor regionAccessor, @NotNull Location location, @NotNull EntityType entityType) {
         Entity entity = regionAccessor.spawnEntity(location, entityType);
-        entity.setMetadata(metaDataPrefix + "-entity", new FixedMetadataValue(plugin, ""));
+        entity.setMetadata(metaDataPrefix + "-entity", new FixedMetadataValue(plugin, true));
         return entity;
     }
 
