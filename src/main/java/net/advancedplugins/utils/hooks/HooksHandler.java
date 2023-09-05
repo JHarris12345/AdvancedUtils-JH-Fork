@@ -21,12 +21,15 @@ public class HooksHandler {
         if (!pluginHookMap.isEmpty()) {
             pluginHookMap = ImmutableMap.<HookPlugin, PluginHookInstance>builder().build();
         }
+        HooksHandler.plugin = plugin;
+        holograms();
+
+        // AureliumSKills hook must be loaded instantly without runnable
+        if (isPluginEnabled(HookPlugin.AURELIUMSKILLS.getPluginName()))
+            registerNew(HookPlugin.AURELIUMSKILLS, new AureliumSkillsHook(), true);
 
         // Do this after server is loaded, so all softdepends that aren't in the plugin.yml file will be enabeld by this time
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            HooksHandler.plugin = plugin;
-            holograms();
-
             if (isPluginEnabled(HookPlugin.MCMMO.getPluginName()))
                 registerNew(HookPlugin.MCMMO, new McMMOHook());
 
@@ -35,9 +38,6 @@ public class HooksHandler {
 
             if (isPluginEnabled(HookPlugin.ITEMSADDER.getPluginName()))
                 registerNew(HookPlugin.ITEMSADDER, new ItemsAdderHook());
-
-            if (isPluginEnabled(HookPlugin.AURELIUMSKILLS.getPluginName()))
-                registerNew(HookPlugin.AURELIUMSKILLS, new AureliumSkillsHook(), true);
 
             if (isPluginEnabled(HookPlugin.WORLDGUARD.getPluginName()))
                 registerNew(HookPlugin.WORLDGUARD, new WorldGuardHook());
