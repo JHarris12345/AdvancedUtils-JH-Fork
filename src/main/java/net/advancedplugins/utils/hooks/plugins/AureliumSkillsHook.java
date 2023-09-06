@@ -61,8 +61,11 @@ public class AureliumSkillsHook extends PluginHookInstance implements Listener {
         executorService.schedule(() -> {
             Vector vector = location.getBlock().getLocation().toVector();
             if (!brokenBlocksMap.containsKey(vector)) {
-                SchedulerUtils.runTaskLater(() -> location.getWorld().dropItem(location, item));
-                return;
+                // otherwise some kind of bonus item is dropped into the water on catch
+                if (!e.getCause().name().contains("CATCH")) {
+                    SchedulerUtils.runTaskLater(() -> location.getWorld().dropItem(location, item));
+                    return;
+                }
             }
 
             ItemStack finalItem = item;
