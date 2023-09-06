@@ -1,7 +1,7 @@
 package net.advancedplugins.utils;
 
 import org.bukkit.Location;
-import org.bukkit.RegionAccessor;
+import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
@@ -24,14 +24,14 @@ public class EntitySpawnUtils implements Listener {
      * plugins to detect these mobs
      *
      * @param plugin Plugin instance
-     * @param regionAccessor Region accessor (eg. World)
+     * @param world World
      * @param location Location to spawn the entity at
      * @param entityType Type of the entity
      * @return Entity spawned
      * @implNote <p><b>IT IS HIGHLY SUGGESTED TO REGISTER THIS CLASS AS EVENT LISTENER TO REMOVE THE METADATA ON THE ENTITY DEATH TO PREVENT MEMORY LEAKS</b></p>
      */
-    public static Entity spawnEntity(@NotNull Plugin plugin, @NotNull RegionAccessor regionAccessor, @NotNull Location location, @NotNull EntityType entityType) {
-        Entity entity = regionAccessor.spawnEntity(location, entityType);
+    public static Entity spawnEntity(@NotNull Plugin plugin, @NotNull World world, @NotNull Location location, @NotNull EntityType entityType) {
+        Entity entity = world.spawnEntity(location, entityType);
         entity.setMetadata(metaDataPrefix + "-entity", new FixedMetadataValue(plugin, true));
         return entity;
     }
