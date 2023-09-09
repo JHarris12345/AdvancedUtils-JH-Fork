@@ -12,10 +12,10 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.math3.distribution.UniformIntegerDistribution;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -92,6 +92,17 @@ public class ASManager {
         if (b == null || b.getType() == null)
             return false;
         return isSpawner(b.getType());
+    }
+
+    public static boolean doesBlockFaceMatch(Block b, String endsWith, BlockFace... faces) {
+        for (BlockFace face : faces) {
+            Material material = b.getRelative(face).getType();
+            if (isAir(material))
+                continue;
+            if (material.name().endsWith(endsWith))
+                return true;
+        }
+        return false;
     }
 
     /**
