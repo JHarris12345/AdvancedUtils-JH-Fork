@@ -16,11 +16,14 @@ public class TownyHook extends PluginHookInstance {
 
     @Override
     public String getName() {
-        return HookPlugin.GRIEFPREVENTION.getPluginName();
+        return HookPlugin.TOWNY.getPluginName();
     }
 
     public boolean canBuild(Player p, Location l) {
         return PlayerCacheUtil.getCachePermission(p, l, l.getBlock().getType(), TownyPermission.ActionType.BUILD);
     }
 
+    public boolean canBreak(Player p, Location l) {
+        return PlayerCacheUtil.getCachePermission(p, l, l.getBlock().getType(), TownyPermission.ActionType.DESTROY);
+    }
 }
