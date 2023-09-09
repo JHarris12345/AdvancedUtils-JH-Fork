@@ -1,5 +1,6 @@
 package net.advancedplugins.utils;
 
+import net.advancedplugins.utils.configs.YamlFile;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -44,6 +45,11 @@ public class BreakWholeTree {
                 }
 
                 if (locBlock.hasMetadata("AE_Placed")) continue;
+                // don't break player placed blocks
+                if (locBlock.hasMetadata("non-natural") && YamlFile.CONFIG.getBoolean("settings.respect-player-placed-blocks", true)) {
+                    continue;
+                }
+
 
                 for (final BlockFace face : BlockFace.values()) {
                     final Block toSearch = locBlock.getRelative(face);
@@ -89,6 +95,10 @@ public class BreakWholeTree {
             return;
         }
         if (start.hasMetadata("AE_Placed")) return;
+        // don't break player placed blocks
+        if (start.hasMetadata("non-natural") && YamlFile.CONFIG.getBoolean("settings.respect-player-placed-blocks", true)) {
+            return;
+        }
         if (!ASManager.isLog(start.getType())) {
             if (start.getType().name().endsWith("LEAVES")) {
                 leavesScanned++;
@@ -105,6 +115,9 @@ public class BreakWholeTree {
             return;
         }
         if (start.hasMetadata("AE_Placed")) return;
+        if (start.hasMetadata("non-natural") && YamlFile.CONFIG.getBoolean("settings.respect-player-placed-blocks", true)) {
+            return;
+        }
         if (!ASManager.isLog(start.getType())) {
             if (start.getType().name().endsWith("LEAVES")) {
                 leavesScanned++;
