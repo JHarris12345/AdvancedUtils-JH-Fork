@@ -1,5 +1,6 @@
 package net.advancedplugins.utils;
 
+import net.advancedplugins.utils.configs.YamlFile;
 import net.advancedplugins.utils.evalex.Expression;
 import net.advancedplugins.utils.nbt.NBTapi;
 import net.advancedplugins.utils.nbt.backend.ClassWrapper;
@@ -12,7 +13,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.apache.commons.math3.distribution.UniformIntegerDistribution;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -344,7 +344,7 @@ public class ASManager {
 
     public static boolean isLog(Material material) {
         if (material != null && !isAir(material)) {
-            boolean doStemsCount = false;
+            boolean doStemsCount = YamlFile.CONFIG.getBoolean("settings.stems-count-as-trees", false);;
             boolean isLog = material.name().endsWith("LOG") || material.name().endsWith("LOG_2");
             boolean isStem = material.name().endsWith("STEM");
             if (!isLog && !isStem) {
