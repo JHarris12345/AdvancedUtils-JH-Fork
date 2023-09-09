@@ -1,6 +1,5 @@
 package net.advancedplugins.utils;
 
-import net.advancedplugins.heads.Core;
 import org.bukkit.Bukkit;
 
 public class SchedulerUtils {

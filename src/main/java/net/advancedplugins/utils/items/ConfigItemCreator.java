@@ -235,8 +235,8 @@ public class ConfigItemCreator {
             type = ((ItemsAdderHook) HooksHandler.getHook(HookPlugin.ITEMSADDER)).getByName(itemsadder);
         } else if (head != null) {
             type = SkullCreator.itemFromBase64(head);
-        } else if (advancedHead != null)
-            type = net.advancedplugins.heads.api.AdvancedHeadsAPI.getHead(advancedHead);
+       } // else if (advancedHead != null)
+//            type = net.advancedplugins.heads.api.AdvancedHeadsAPI.getHead(advancedHead);
         else
             type = ASManager.matchMaterial(typeStr, amount, data);
 
