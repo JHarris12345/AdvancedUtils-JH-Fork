@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -72,6 +73,10 @@ public class ConfigItemCreator {
     }
 
     public static ItemStack fromConfigSection(FileConfiguration config, ItemStack baseItem, String path, Map<String, String> placeholders, Map<String, String> pathReplacements) {
+        return fromConfigSection(config.getConfigurationSection(""), baseItem, path, placeholders, pathReplacements);
+    }
+
+    public static ItemStack fromConfigSection(ConfigurationSection config, ItemStack baseItem, String path, Map<String, String> placeholders, Map<String, String> pathReplacements) {
         Map<String, String> paths = (Map<String, String>) cfgPaths.clone();
         String filePath = "config";
 
@@ -198,6 +203,10 @@ public class ConfigItemCreator {
     }
 
     public static ItemStack fromConfigSection(FileConfiguration config, String path, Map<String, String> placeholders, Map<String, String> pathReplacements) {
+        return fromConfigSection(config.getConfigurationSection(""), path, placeholders, pathReplacements);
+    }
+
+    public static ItemStack fromConfigSection(ConfigurationSection config, String path, Map<String, String> placeholders, Map<String, String> pathReplacements) {
         String filePath = "config";
         Map<String, String> paths = (Map<String, String>) cfgPaths.clone();
 
@@ -226,8 +235,8 @@ public class ConfigItemCreator {
             type = ((ItemsAdderHook) HooksHandler.getHook(HookPlugin.ITEMSADDER)).getByName(itemsadder);
         } else if (head != null) {
             type = SkullCreator.itemFromBase64(head);
-        } else if (advancedHead != null)
-            type = net.advancedplugins.heads.api.AdvancedHeadsAPI.getHead(advancedHead);
+       } // else if (advancedHead != null)
+//            type = net.advancedplugins.heads.api.AdvancedHeadsAPI.getHead(advancedHead);
         else
             type = ASManager.matchMaterial(typeStr, amount, data);
 

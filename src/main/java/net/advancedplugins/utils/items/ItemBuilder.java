@@ -1,6 +1,5 @@
 package net.advancedplugins.utils.items;
 
-import net.advancedplugins.heads.api.AdvancedHeadsAPI;
 import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.nbt.NBTapi;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
@@ -96,7 +95,7 @@ public class ItemBuilder {
         this.im = this.is.getItemMeta();
 
         if (advancedHeadsId != 0 && Bukkit.getServer().getPluginManager().isPluginEnabled("AdvancedHeads")) {
-            this.is = AdvancedHeadsAPI.getHead(advancedHeadsId);
+//            this.is = AdvancedHeadsAPI.getHead(advancedHeadsId);
             this.im = this.is.getItemMeta();
         }
     }

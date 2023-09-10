@@ -1,10 +1,12 @@
 package net.advancedplugins.utils.hooks.plugins;
 
 import com.archyx.aureliumskills.AureliumSkills;
+import com.archyx.aureliumskills.api.event.LootDropCause;
 import com.archyx.aureliumskills.api.event.PlayerLootDropEvent;
 import com.archyx.aureliumskills.api.event.TerraformBlockBreakEvent;
 import com.archyx.aureliumskills.skills.mining.MiningLootHandler;
 import net.advancedplugins.utils.ASManager;
+import net.advancedplugins.utils.LocalLocation;
 import net.advancedplugins.utils.SchedulerUtils;
 import net.advancedplugins.utils.abilities.DropsSettings;
 import net.advancedplugins.utils.abilities.SmeltMaterial;
@@ -42,6 +44,8 @@ public class AureliumSkillsHook extends PluginHookInstance implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onLoot(PlayerLootDropEvent e) {
+        if(e.getCause().equals(LootDropCause.EPIC_CATCH))
+            return;
         if (e.isCancelled())
             return;
 
@@ -62,6 +66,7 @@ public class AureliumSkillsHook extends PluginHookInstance implements Listener {
         e.setCancelled(true);
         e.setLocation(e.getLocation().add(0, 10, 0));
 
+        ASManager.debug("[aureliumskills extra loot] Dropped " + item.getType().name() + " for " + player.getName() + " at " + new LocalLocation(location).getEncode());
         executorService.schedule(() -> {
             Vector vector = location.getBlock().getLocation().toVector();
             if (!brokenBlocksMap.containsKey(vector)) {

@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -43,6 +44,15 @@ public class Replacer {
             this.usePlaceholderApi = true;
         }
         return this;
+    }
+
+    public HashMap<String, String> getPlaceholders() {
+        HashMap<String, String> base = new HashMap<>();
+        for (Map.Entry<String, Object> entry : this.variables.entrySet())
+            base.put(entry.getKey(), String.valueOf(entry.getValue()));
+        for (Map.Entry<String, Supplier<Object>> entry : this.retrievableVariables.entrySet())
+            base.put(entry.getKey(), Objects.toString(entry.getValue().get()));
+        return base;
     }
 
     public String applyTo(String string) {
