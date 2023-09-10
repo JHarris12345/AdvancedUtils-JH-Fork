@@ -1,5 +1,6 @@
 package net.advancedplugins.utils;
 
+import net.advancedplugins.utils.configs.YamlFile;
 import net.advancedplugins.utils.evalex.Expression;
 import net.advancedplugins.utils.nbt.NBTapi;
 import net.advancedplugins.utils.nbt.backend.ClassWrapper;
@@ -370,7 +371,7 @@ public class ASManager {
 
     public static boolean isLog(Material material) {
         if (material != null && !isAir(material)) {
-            boolean doStemsCount = false;
+            boolean doStemsCount = YamlFile.CONFIG.getBoolean("settings.stems-count-as-trees", false);;
             boolean isLog = material.name().endsWith("LOG") || material.name().endsWith("LOG_2");
             boolean isStem = material.name().endsWith("STEM");
             if (!isLog && !isStem) {
