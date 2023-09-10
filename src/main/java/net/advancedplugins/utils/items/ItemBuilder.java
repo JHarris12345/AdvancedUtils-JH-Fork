@@ -402,6 +402,7 @@ public class ItemBuilder {
     }
 
     public ItemBuilder setGlowing(boolean bool) {
+        if (!bool) return this;
         is.setItemMeta(im);
         im = is.getItemMeta();
         im.addEnchant(Enchantment.DURABILITY, 1, true);
