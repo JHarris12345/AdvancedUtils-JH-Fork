@@ -14,7 +14,8 @@ public enum HookPlugin {
     FACTIONS("Factions"),
     ITEMSADDER("ItemsAdder"),
     MYTHICMOBS("MythicMobs"),
-    MCMMO("mcMMO");
+    MCMMO("mcMMO"),
+    SUPERIORSKYBLOCK2("SuperiorSkyblock2");
 
     private final String pluginName;
     HookPlugin(String pluginName) {

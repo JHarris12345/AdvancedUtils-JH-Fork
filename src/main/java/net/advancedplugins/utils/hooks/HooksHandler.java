@@ -60,6 +60,10 @@ public class HooksHandler {
             if (isPluginEnabled(HookPlugin.LANDS.getPluginName()))
                 registerNew(HookPlugin.LANDS, new LandsHook());
 
+            if (isPluginEnabled(HookPlugin.SUPERIORSKYBLOCK2.getPluginName()))
+                registerNew(HookPlugin.SUPERIORSKYBLOCK2, new SuperiorSkyblock2Hook());
+
+
             // Figure out which factions plugin is loaded and hook into the correct one
 
             if (isPluginEnabled(HookPlugin.FACTIONS.getPluginName())) {
