@@ -40,9 +40,7 @@ public class ColorUtils {
      * @return List of strings with colors..
      */
     public static List<String> format(List<String> strings) {
-        for (int i = 0; i < strings.size(); i++) {
-            strings.set(i, format(strings.get(i)));
-        }
+        strings.replaceAll(ColorUtils::format);
         return strings;
     }
     
@@ -52,7 +50,7 @@ public class ColorUtils {
      * @return String without any colors
      */
     public static String stripColor(@NotNull String input) {
-        return ColorUtils.stripColor(input);
+        return ChatColor.stripColor(input);
     }
 
     /**
