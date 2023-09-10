@@ -55,7 +55,8 @@ public class HooksHandler {
                 registerNew(HookPlugin.MYTHICMOBS, new MythicMobsHook());
 
             if (isPluginEnabled(HookPlugin.TOWNY.getPluginName()))
-                registerNew(HookPlugin.TOWNY, new MythicMobsHook());
+               // registerNew(HookPlugin.TOWNY, new MythicMobsHook()); // probably a mistake?
+                registerNew(HookPlugin.TOWNY, new TownyHook());
 
             if (isPluginEnabled(HookPlugin.LANDS.getPluginName()))
                 registerNew(HookPlugin.LANDS, new LandsHook());
