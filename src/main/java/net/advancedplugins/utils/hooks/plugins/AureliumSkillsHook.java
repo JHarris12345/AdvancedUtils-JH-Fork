@@ -13,7 +13,6 @@ import net.advancedplugins.utils.abilities.SmeltMaterial;
 import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.hooks.PluginHookInstance;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -50,34 +49,40 @@ public class AureliumSkillsHook extends PluginHookInstance implements Listener {
         if (e.isCancelled())
             return;
 
+        if (e.getCause().name().contains("CATCH")) {
+            return;
+        }
+
         final Player player = e.getPlayer();
         final ItemStack item = e.getItemStack();
         final Location location = e.getLocation().clone();
 
-        e.setItemStack(new ItemStack(Material.AIR));
+        /*
+         if item is set to AIR or null, AureliumSkills will throw either NullException or that AIR cannot be dropped,
+         if the event is cancelled, the ItemStack shouldn't be set however
+         https://github.com/Archy-X/AureliumSkills/blob/master/bukkit/src/main/java/com/archyx/aureliumskills/skills/fishing/FishingAbilities.java#L48
+        */
+        // e.setItemStack(new ItemStack(Material.AIR));
         e.setCancelled(true);
         e.setLocation(e.getLocation().add(0, 10, 0));
 
         ASManager.debug("[aureliumskills extra loot] Dropped " + item.getType().name() + " for " + player.getName() + " at " + new LocalLocation(location).getEncode());
-        executorService.schedule(new Runnable() {
-            @Override
-            public void run() {
-                Vector vector = location.getBlock().getLocation().toVector();
-                if (!brokenBlocksMap.containsKey(vector)) {
-                    SchedulerUtils.runTaskLater(() -> location.getWorld().dropItem(location, item));
-                    return;
-                }
+        executorService.schedule(() -> {
+            Vector vector = location.getBlock().getLocation().toVector();
+            if (!brokenBlocksMap.containsKey(vector)) {
+                SchedulerUtils.runTaskLater(() -> location.getWorld().dropItem(location, item));
+                return;
+            }
 
-                ItemStack finalItem = item;
-                BrokenBlockInformation blockInformation = brokenBlocksMap.get(vector);
+            ItemStack finalItem = item;
+            BrokenBlockInformation blockInformation = brokenBlocksMap.get(vector);
 
-                if (blockInformation.settings.isSmelt()) {
-                    finalItem = SmeltMaterial.material(item, true);
-                }
+            if (blockInformation.settings.isSmelt()) {
+                finalItem = SmeltMaterial.material(item, true);
+            }
 
-                if (blockInformation.settings.isAddToInventory()) {
-                    ASManager.giveItem(blockInformation.player, finalItem);
-                }
+            if (blockInformation.settings.isAddToInventory()) {
+                ASManager.giveItem(blockInformation.player, finalItem);
             }
         }, 20, TimeUnit.MILLISECONDS);
 
