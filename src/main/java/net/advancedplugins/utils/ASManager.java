@@ -1198,7 +1198,10 @@ public class ASManager {
                 if (blockType.name().endsWith("_ORE")) {
                     float r = ThreadLocalRandom.current().nextFloat();
                     if (r > (2.0f / (fortuneLevel + 2.0f))) {
-                        amount = new UniformIntegerDistribution(2, fortuneLevel + 1).sample();
+                        final int previousAmount = amount;
+                        for (int i = 0; i < previousAmount; i++) {
+                            amount += new UniformIntegerDistribution(2, fortuneLevel + 1).sample();
+                        }
                     }
                 } else {
                     amount = new UniformIntegerDistribution(1, Math.min(max, amount * fortuneLevel)).sample();
