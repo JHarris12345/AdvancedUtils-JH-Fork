@@ -2,14 +2,25 @@ package net.advancedplugins.utils.hooks.plugins;
 
 import dev.lone.itemsadder.api.CustomBlock;
 import dev.lone.itemsadder.api.CustomStack;
+import dev.lone.itemsadder.api.Events.CustomBlockBreakEvent;
 import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.hooks.PluginHookInstance;
 import org.bukkit.block.Block;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
 import java.util.List;
 
-public class ItemsAdderHook extends PluginHookInstance {
+public class ItemsAdderHook extends PluginHookInstance implements Listener {
+
+    private final Plugin plugin;
+
+    public ItemsAdderHook(Plugin plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public boolean isEnabled() {
@@ -23,14 +34,10 @@ public class ItemsAdderHook extends PluginHookInstance {
 
     public boolean isCustomItem(ItemStack item) {
         return CustomStack.byItemStack(item) != null;
-        // deprecated
-       // return ItemsAdder.isCustomItem(item);
     }
 
     public boolean isCustomBlock(Block block) {
         return CustomBlock.byAlreadyPlaced(block) != null;
-        // deprecated
-      //  return ItemsAdder.isCustomBlock(block);
     }
 
     public List<ItemStack> getLootForCustomBlock(Block block) {
@@ -57,5 +64,16 @@ public class ItemsAdderHook extends PluginHookInstance {
 
     public int getCustomItemMaxDurability(ItemStack itemStack) {
         return CustomStack.byItemStack(itemStack).getMaxDurability();
+    }
+
+    @EventHandler(priority = EventPriority.LOW)
+    private void onCustomBlockBreak(CustomBlockBreakEvent event) {
+        Block block = event.getBlock();
+        // otherwise the item is put in the inventory and at the same time is
+        if (block.hasMetadata("telepathy-broken-itemsadder")) {
+            block.removeMetadata("telepathy-broken-itemsadder", plugin);
+            event.setCancelled(true);
+            CustomBlock.byAlreadyPlaced(block).remove();
+        }
     }
 }
