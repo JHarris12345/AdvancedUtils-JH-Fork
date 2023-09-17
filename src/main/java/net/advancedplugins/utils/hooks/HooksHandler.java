@@ -52,7 +52,7 @@ public class HooksHandler {
                 registerNew(HookPlugin.SLIMEFUN, new SlimeFunHook());
 
             if (isPluginEnabled(HookPlugin.MYTHICMOBS.getPluginName()))
-                registerNew(HookPlugin.MYTHICMOBS, new MythicMobsHook());
+                registerNew(HookPlugin.MYTHICMOBS, new MythicMobsHook(), true);
 
             if (isPluginEnabled(HookPlugin.TOWNY.getPluginName()))
                // registerNew(HookPlugin.TOWNY, new MythicMobsHook()); // probably a mistake?
