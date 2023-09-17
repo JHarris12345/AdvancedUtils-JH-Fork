@@ -1,5 +1,6 @@
 package net.advancedplugins.utils;
 
+import com.google.common.collect.ImmutableMap;
 import net.advancedplugins.utils.configs.YamlFile;
 import net.advancedplugins.utils.evalex.Expression;
 import net.advancedplugins.utils.nbt.NBTapi;
@@ -563,6 +564,12 @@ public class ASManager {
         }
         return false;
     }
+
+
+    public static <K, V> ImmutableMap<K, V> toImmutable(Map<K, V> data) {
+        return ImmutableMap.<K, V>builder().putAll(data).build();
+    }
+}
 
     /**
      * Turns a String to an int. Will ignore any non-numeric characters.
