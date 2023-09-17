@@ -37,7 +37,7 @@ public class HooksHandler {
                 registerNew(HookPlugin.ADVANCEDENCHANTMENTS, new AdvancedEnchantmentsHook());
 
             if (isPluginEnabled(HookPlugin.ITEMSADDER.getPluginName()))
-                registerNew(HookPlugin.ITEMSADDER, new ItemsAdderHook());
+                registerNew(HookPlugin.ITEMSADDER, new ItemsAdderHook(plugin), true);
 
             if (isPluginEnabled(HookPlugin.WORLDGUARD.getPluginName()))
                 registerNew(HookPlugin.WORLDGUARD, new WorldGuardHook());

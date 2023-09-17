@@ -1,13 +1,26 @@
 package net.advancedplugins.utils.hooks.plugins;
 
+import dev.lone.itemsadder.api.CustomBlock;
 import dev.lone.itemsadder.api.CustomStack;
-import dev.lone.itemsadder.api.ItemsAdder;
+import dev.lone.itemsadder.api.Events.CustomBlockBreakEvent;
 import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.hooks.PluginHookInstance;
-import org.bukkit.Bukkit;
+import org.bukkit.block.Block;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
-public class ItemsAdderHook extends PluginHookInstance {
+import java.util.List;
+
+public class ItemsAdderHook extends PluginHookInstance implements Listener {
+
+    private final Plugin plugin;
+
+    public ItemsAdderHook(Plugin plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public boolean isEnabled() {
@@ -20,7 +33,16 @@ public class ItemsAdderHook extends PluginHookInstance {
     }
 
     public boolean isCustomItem(ItemStack item) {
-        return ItemsAdder.isCustomItem(item);
+        return CustomStack.byItemStack(item) != null;
+    }
+
+    public boolean isCustomBlock(Block block) {
+        return CustomBlock.byAlreadyPlaced(block) != null;
+    }
+
+    public List<ItemStack> getLootForCustomBlock(Block block) {
+        if (!isCustomBlock(block)) return null;
+        return (List<ItemStack>) CustomBlock.byAlreadyPlaced(block).getLoot();
     }
 
     public ItemStack setCustomItemDurability(ItemStack item, int durability) {
@@ -44,4 +66,14 @@ public class ItemsAdderHook extends PluginHookInstance {
         return CustomStack.byItemStack(itemStack).getMaxDurability();
     }
 
+    @EventHandler(priority = EventPriority.LOW)
+    private void onCustomBlockBreak(CustomBlockBreakEvent event) {
+        Block block = event.getBlock();
+        // otherwise the item is put in the inventory and at the same time is
+        if (block.hasMetadata("telepathy-broken-itemsadder")) {
+            block.removeMetadata("telepathy-broken-itemsadder", plugin);
+            event.setCancelled(true);
+            CustomBlock.byAlreadyPlaced(block).remove();
+        }
+    }
 }
