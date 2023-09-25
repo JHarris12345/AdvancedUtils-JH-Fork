@@ -25,10 +25,12 @@ public class MojangToMapping {
             put("net.minecraft.nbt.CompoundTag#getIntArray(java.lang.String)", "n");
             put("net.minecraft.nbt.CompoundTag#remove(java.lang.String)", "r");
             put("net.minecraft.nbt.CompoundTag#get(java.lang.String)", "c");
-            put("net.minecraft.nbt.CompoundTag#put(java.lang.String,net.minecraft.nbt.Tag)", "a");
+            put("net.minecraft.nbt.CompoundTag#merge(net.minecraft.nbt.CompoundTag)", "a");
             put("net.minecraft.nbt.CompoundTag#putBoolean(java.lang.String,boolean)", "a");
             put("net.minecraft.nbt.CompoundTag#getTagType(java.lang.String)", "d");
             put("net.minecraft.nbt.CompoundTag#putLong(java.lang.String,long)", "a");
+            put("net.minecraft.nbt.CompoundTag#putLongArray(java.lang.String,long[])", "a");
+            put("net.minecraft.nbt.CompoundTag#getLongArray(java.lang.String)", "o");
             put("net.minecraft.nbt.CompoundTag#getString(java.lang.String)", "l");
             put("net.minecraft.nbt.CompoundTag#getInt(java.lang.String)", "h");
             put("net.minecraft.nbt.CompoundTag#putString(java.lang.String,java.lang.String)", "a");
@@ -55,23 +57,23 @@ public class MojangToMapping {
             put("net.minecraft.nbt.NbtIo#readCompressed(java.io.InputStream)", "a");
             put("net.minecraft.nbt.NbtIo#writeCompressed(net.minecraft.nbt.CompoundTag,java.io.OutputStream)", "a");
             put("net.minecraft.nbt.NbtUtils#readGameProfile(net.minecraft.nbt.CompoundTag)", "a");
-            put("net.minecraft.nbt.NbtUtils#writeGameProfile(net.minecraft.nbt.CompoundTag,com.mojang.authlib.GameProfile)", "a");
+            put("net.minecraft.nbt.NbtUtils#writeGameProfile(net.minecraft.nbt.CompoundTag,com.mojang.authlib.GameProfile)",
+                    "a");
             put("net.minecraft.nbt.TagParser#parseTag(java.lang.String)", "a");
-
             put("net.minecraft.world.entity.Entity#getEncodeId()", "bk");
             put("net.minecraft.world.entity.Entity#load(net.minecraft.nbt.CompoundTag)", "g");
             put("net.minecraft.world.entity.Entity#saveWithoutId(net.minecraft.nbt.CompoundTag)", "f");
-
             put("net.minecraft.world.item.ItemStack#setTag(net.minecraft.nbt.CompoundTag)", "c");
             put("net.minecraft.world.item.ItemStack#getTag()", "s");
             put("net.minecraft.world.item.ItemStack#save(net.minecraft.nbt.CompoundTag)", "b");
             put("net.minecraft.world.level.block.entity.BlockEntity#saveWithId()", "n");
             put("net.minecraft.world.level.block.entity.BlockEntity#getBlockState()", "q");
             put("net.minecraft.world.level.block.entity.BlockEntity#load(net.minecraft.nbt.CompoundTag)", "a");
-            put("net.minecraft.server.level.ServerLevel#getBlockEntity(net.minecraft.core.BlockPos)", "c_");
+            put("net.minecraft.server.level.ServerLevel#getBlockState(net.minecraft.core.BlockPos)", "c_");
         }
 
     };
+
     @SuppressWarnings("serial")
     private static Map<String, String> MC1_18R2 = new HashMap<String, String>() {
 
@@ -116,21 +118,36 @@ public class MojangToMapping {
 
     };
 
+    @SuppressWarnings("serial")
+    private static Map<String, String> MC1_20R2 = new HashMap<String, String>() {
+
+        {
+            putAll(MC1_20R1);
+
+            put("net.minecraft.world.entity.Entity#getEncodeId()", "bu");
+        }
+
+    };
+
     public static Map<String, String> getMapping() {
         switch (MinecraftVersion.getVersion()) {
-            case MC1_19_R1:
-                return MC1_19R1;
+            case MC1_20_R2:
+                return MC1_20R2;
             case MC1_20_R1:
                 return MC1_20R1;
+            case MC1_19_R2:
+                return MC1_19R2;
+            case MC1_19_R1:
+                return MC1_19R1;
             case MC1_18_R2:
                 return MC1_18R2;
             case MC1_18_R1:
                 return MC1_18R1;
-            case MC1_19_R2:
-                return MC1_19R2;
             default:
-                return MC1_20R1;//throw new NbtApiException("This version of the NBTAPI is not compatible with this server version!");
+                return MC1_20R2;// throw new NbtApiException("This version of the NBTAPI is not compatible with
+            // this server version!");
         }
     }
+
 
 }
