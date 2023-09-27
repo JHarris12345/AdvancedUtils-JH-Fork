@@ -18,6 +18,8 @@ public class SmeltMaterial {
             material = ASManager.matchMaterial(material, 1, 0, true, false).getType().name();
 
         switch (material) {
+            case "COBBLED_DEEPSLATE":
+                return new ItemStack(Material.getMaterial("DEEPSLATE"));
             case "COBBLESTONE":
                 return new ItemStack(Material.STONE);
             case "DEEPSLATE_COAL_ORE":
