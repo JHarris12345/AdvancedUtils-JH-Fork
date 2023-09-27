@@ -78,7 +78,7 @@ public class AureliumSkillsHook extends PluginHookInstance implements Listener {
             BrokenBlockInformation blockInformation = brokenBlocksMap.get(vector);
 
             if (blockInformation.settings.isSmelt()) {
-                finalItem = SmeltMaterial.material(item, true);
+                finalItem = SmeltMaterial.material(item);
             }
 
             if (blockInformation.settings.isAddToInventory()) {
