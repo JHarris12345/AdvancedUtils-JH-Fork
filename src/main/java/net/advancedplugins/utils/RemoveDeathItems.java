@@ -36,10 +36,14 @@ public class RemoveDeathItems implements Listener {
             for (ItemStack i : item) {
                 ItemStack iClone = i.clone();
 
+                /*
                 dropClone.setDurability((short) 0);
                 iClone.setDurability((short) 0);
 
+                // they won't ever match like this!
                 boolean areEqual = dropClone.equals(iClone);
+                 */
+                boolean areEqual = iClone.getType() == dropClone.getType();
                 if (areEqual)
                     e.getDrops().remove(drop);
             }
