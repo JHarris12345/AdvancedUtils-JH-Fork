@@ -9,7 +9,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class SmeltMaterial {
 
-    public static ItemStack material(ItemStack i, boolean isSmelt) {
+    public static ItemStack material(ItemStack i) {
         if (!ASManager.isValid(i))
             return null;
 
@@ -28,13 +28,6 @@ public class SmeltMaterial {
             case "DEEPSLATE_IRON_ORE":
             case "RAW_IRON":
             case "IRON_ORE":
-                if (!isSmelt) {
-                    if (MinecraftVersion.getVersionNumber() > 1_16_5) {
-                        return new ItemStack(Material.RAW_IRON);
-                    } else  {
-                        return new ItemStack(Material.getMaterial("IRON_ORE"));
-                    }
-                }
                 return new ItemStack(Material.IRON_INGOT);
             case "DEEPSLATE_COPPER_ORE":
             case "RAW_COPPER":
@@ -43,13 +36,6 @@ public class SmeltMaterial {
             case "DEEPSLATE_GOLD_ORE":
             case "RAW_GOLD":
             case "GOLD_ORE":
-                if (!isSmelt) {
-                    if (MinecraftVersion.getVersionNumber() > 1_16_5) {
-                        return new ItemStack(Material.RAW_GOLD);
-                    } else  {
-                        return new ItemStack(Material.getMaterial("GOLD_ORE"));
-                    }
-                }
                 return new ItemStack(Material.GOLD_INGOT);
             case "DEEPSLATE_LAPIS_ORE":
             case "LAPIS_ORE":
@@ -66,24 +52,29 @@ public class SmeltMaterial {
             case "QUARTZ_ORE":
                 return new ItemStack(Material.QUARTZ);
             case "ANCIENT_DEBRIS":
-                if (!isSmelt) return new ItemStack(Material.ANCIENT_DEBRIS);
                 return new ItemStack(Material.NETHERITE_SCRAP);
+            case "RED_SAND":
             case "SAND":
-                if (!isSmelt) return new ItemStack(Material.SAND);
                 return new ItemStack(Material.GLASS);
+            case "SANDSTONE":
+                return new ItemStack(Material.getMaterial("SMOOTH_SANDSTONE"));
+            case "BASALT":
+                return new ItemStack(Material.getMaterial("SMOOTH_BASALT"));
             case "NETHERRACK":
                 return new ItemStack(Material.matchMaterial("NETHER_BRICK"));
             case "CLAY":
             case "CLAY_ITEM":
                 return new ItemStack(Material.matchMaterial("BRICK"));
+            case "WET_SPONGE":
+                return new ItemStack(Material.getMaterial("SPONGE"));
             default:
                 return new ItemStack(i);
         }
     }
 
-    public static ItemStack material(Material m, boolean isSmelt) {
+    public static ItemStack material(Material m) {
         if (m == null)
             return new ItemStack(Material.AIR);
-        return material(new ItemStack(m), isSmelt);
+        return material(new ItemStack(m));
     }
 }
