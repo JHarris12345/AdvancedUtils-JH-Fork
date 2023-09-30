@@ -1,10 +1,14 @@
 package net.advancedplugins.utils.hooks.plugins;
 
+import com.gmail.nossr50.datatypes.meta.BonusDropMeta;
+import com.gmail.nossr50.datatypes.player.McMMOPlayer;
+import com.gmail.nossr50.util.MetadataConstants;
+import com.gmail.nossr50.util.player.UserManager;
 import net.advancedplugins.utils.hooks.PluginHookInstance;
-import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.block.BlockBreakEvent;
 
 import java.util.List;
 
@@ -39,6 +43,29 @@ public class McMMOHook extends PluginHookInstance {
 //
 //        return !event.isCancelled();
         return true;
+    }
+
+    /**
+     * Will set the correct metadata for the blocks,
+     * so they can be handled later
+     *
+     * @param player Player that broke the blocks
+     * @param event The event
+     */
+    public void processHerbalismBlockBreakEvent(Player player, BlockBreakEvent event) {
+        McMMOPlayer mmoPlayer = UserManager.getPlayer(player);
+        if (mmoPlayer == null) return;
+
+        mmoPlayer.getHerbalismManager().processHerbalismBlockBreakEvent(event);
+    }
+
+    public boolean blockHasHerbalismBonusDrops(Block block) {
+        return block.hasMetadata(MetadataConstants.METADATA_KEY_BONUS_DROPS);
+    }
+
+    public int getHerbalismBonusDropMultiplier(Block block) {
+        BonusDropMeta dropMeta = (BonusDropMeta) block.getMetadata(MetadataConstants.METADATA_KEY_BONUS_DROPS).get(0);
+        return dropMeta.asInt();
     }
 
     @Override
