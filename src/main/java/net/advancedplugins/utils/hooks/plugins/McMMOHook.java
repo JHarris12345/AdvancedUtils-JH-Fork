@@ -1,7 +1,6 @@
 package net.advancedplugins.utils.hooks.plugins;
 
 import net.advancedplugins.utils.hooks.PluginHookInstance;
-import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -14,9 +13,8 @@ public class McMMOHook extends PluginHookInstance {
         return com.gmail.nossr50.api.ExperienceAPI.getLevel(p, skill);
     }
 
-    @SuppressWarnings("deprecation")
     public void addSkillExperience(Player p, String skill, int skillExperience) {
-        com.gmail.nossr50.api.ExperienceAPI.addXP(p, skill, skillExperience);
+        com.gmail.nossr50.api.ExperienceAPI.addXP(p, skill, skillExperience, "UNKNOWN");
     }
 
     public boolean isBleeding(Player p) {

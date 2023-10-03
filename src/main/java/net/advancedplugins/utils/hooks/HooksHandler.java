@@ -28,43 +28,43 @@ public class HooksHandler {
         if (isPluginEnabled(HookPlugin.AURELIUMSKILLS.getPluginName()))
             registerNew(HookPlugin.AURELIUMSKILLS, new AureliumSkillsHook(), true);
 
+        // these should be fine loading rn as well, as they are softdepend in plugin.yml (Wega)
+        if (isPluginEnabled(HookPlugin.MCMMO.getPluginName()))
+            registerNew(HookPlugin.MCMMO, new McMMOHook());
+
+        if (isPluginEnabled(HookPlugin.ADVANCEDENCHANTMENTS.getPluginName()))
+            registerNew(HookPlugin.ADVANCEDENCHANTMENTS, new AdvancedEnchantmentsHook());
+
+        if (isPluginEnabled(HookPlugin.ITEMSADDER.getPluginName()))
+            registerNew(HookPlugin.ITEMSADDER, new ItemsAdderHook(plugin), true);
+
+        if (isPluginEnabled(HookPlugin.WORLDGUARD.getPluginName()))
+            registerNew(HookPlugin.WORLDGUARD, new WorldGuardHook());
+
+        if (isPluginEnabled(HookPlugin.GRIEFPREVENTION.getPluginName()))
+            registerNew(HookPlugin.GRIEFPREVENTION, new GriefPreventionHook());
+
+        if (isPluginEnabled(HookPlugin.PLACEHOLDERAPI.getPluginName()))
+            registerNew(HookPlugin.PLACEHOLDERAPI, new PlaceholderAPIHook());
+
+        if (isPluginEnabled(HookPlugin.SLIMEFUN.getPluginName()))
+            registerNew(HookPlugin.SLIMEFUN, new SlimeFunHook());
+
+        if (isPluginEnabled(HookPlugin.MYTHICMOBS.getPluginName()))
+            registerNew(HookPlugin.MYTHICMOBS, new MythicMobsHook(), true);
+
+        if (isPluginEnabled(HookPlugin.TOWNY.getPluginName()))
+            // registerNew(HookPlugin.TOWNY, new MythicMobsHook()); // probably a mistake?
+            registerNew(HookPlugin.TOWNY, new TownyHook());
+
+        if (isPluginEnabled(HookPlugin.LANDS.getPluginName()))
+            registerNew(HookPlugin.LANDS, new LandsHook());
+
+        if (isPluginEnabled(HookPlugin.SUPERIORSKYBLOCK2.getPluginName()))
+            registerNew(HookPlugin.SUPERIORSKYBLOCK2, new SuperiorSkyblock2Hook());
+
         // Do this after server is loaded, so all softdepends that aren't in the plugin.yml file will be enabeld by this time
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            if (isPluginEnabled(HookPlugin.MCMMO.getPluginName()))
-                registerNew(HookPlugin.MCMMO, new McMMOHook());
-
-            if (isPluginEnabled(HookPlugin.ADVANCEDENCHANTMENTS.getPluginName()))
-                registerNew(HookPlugin.ADVANCEDENCHANTMENTS, new AdvancedEnchantmentsHook());
-
-            if (isPluginEnabled(HookPlugin.ITEMSADDER.getPluginName()))
-                registerNew(HookPlugin.ITEMSADDER, new ItemsAdderHook(plugin), true);
-
-            if (isPluginEnabled(HookPlugin.WORLDGUARD.getPluginName()))
-                registerNew(HookPlugin.WORLDGUARD, new WorldGuardHook());
-
-            if (isPluginEnabled(HookPlugin.GRIEFPREVENTION.getPluginName()))
-                registerNew(HookPlugin.GRIEFPREVENTION, new GriefPreventionHook());
-
-            if (isPluginEnabled(HookPlugin.PLACEHOLDERAPI.getPluginName()))
-                registerNew(HookPlugin.PLACEHOLDERAPI, new PlaceholderAPIHook());
-
-            if (isPluginEnabled(HookPlugin.SLIMEFUN.getPluginName()))
-                registerNew(HookPlugin.SLIMEFUN, new SlimeFunHook());
-
-            if (isPluginEnabled(HookPlugin.MYTHICMOBS.getPluginName()))
-                registerNew(HookPlugin.MYTHICMOBS, new MythicMobsHook(), true);
-
-            if (isPluginEnabled(HookPlugin.TOWNY.getPluginName()))
-               // registerNew(HookPlugin.TOWNY, new MythicMobsHook()); // probably a mistake?
-                registerNew(HookPlugin.TOWNY, new TownyHook());
-
-            if (isPluginEnabled(HookPlugin.LANDS.getPluginName()))
-                registerNew(HookPlugin.LANDS, new LandsHook());
-
-            if (isPluginEnabled(HookPlugin.SUPERIORSKYBLOCK2.getPluginName()))
-                registerNew(HookPlugin.SUPERIORSKYBLOCK2, new SuperiorSkyblock2Hook());
-
-
             // Figure out which factions plugin is loaded and hook into the correct one
 
             if (isPluginEnabled(HookPlugin.FACTIONS.getPluginName())) {
