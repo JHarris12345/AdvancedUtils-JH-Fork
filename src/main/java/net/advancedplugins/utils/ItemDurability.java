@@ -4,7 +4,6 @@ import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.hooks.HooksHandler;
 import net.advancedplugins.utils.hooks.plugins.ItemsAdderHook;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -111,9 +110,9 @@ public class ItemDurability {
 
     public ItemDurability handleDurabilityChange(int amount) {
         if (amount < 0) {
-            return healItem((short) amount);
-        } else {
             return damageItem((short) amount);
+        } else {
+            return healItem((short) amount);
         }
     }
 
