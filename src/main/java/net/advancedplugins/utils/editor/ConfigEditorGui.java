@@ -9,7 +9,6 @@ import net.advancedplugins.utils.text.Text;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -616,6 +615,10 @@ public class ConfigEditorGui implements Listener {
 
     public LinkedList<KeyInfo> getKeyInfos() {
         return keyInfos;
+    }
+
+    public ConfigurationSection getConfig() {
+        return this.config;
     }
 
 //    public Map<String, KeyInfo> getKeyInfos() {
