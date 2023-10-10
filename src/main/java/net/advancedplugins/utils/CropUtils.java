@@ -35,7 +35,14 @@ public class CropUtils {
      * @return 1.13+ {@link Material} if on 1.13+, or legacy equivalent if on a legacy version.
      */
     public static Material convertToMaterial(String mat) {
-        if (MinecraftVersion.isNew()) return Material.valueOf(mat);
+        if (MinecraftVersion.isNew()) {
+            try {
+                return Material.valueOf(mat);
+                // PITCHER_POD AND TORCHFLOWER IS ONLY AVAILABLE FROM 1.20
+            } catch (IllegalArgumentException ignored) {
+                return Material.AIR;
+            }
+        }
         for (Map.Entry<String, String> entry : materialConversions.entrySet()) {
             if (!mat.equals(entry.getKey()))
                 continue;
@@ -128,9 +135,15 @@ public class CropUtils {
             case "COCOA":
             case "NETHER_WART":
             case "NETHER_WARTS":
-            case "TORCHFLOWER":
-            case "PITCHER_CROP":
                 return true;
+        }
+
+        if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R1)) {
+            switch (name) {
+                case "TORCHFLOWER":
+                case "PITCHER_CROP":
+                    return true;
+            }
         }
         return false;
     }
@@ -140,7 +153,7 @@ public class CropUtils {
      */
     public static boolean isFullyGrown(Block b) {
         if (!ASManager.isValid(b) || !isCrop(b.getType())) return false;
-        if (b.getType() == Material.valueOf("TORCHFLOWER")) {
+        if (b.getType().name().equals("TORCHFLOWER")) {
             return true;
         }
         if (!(b.getBlockData() instanceof Ageable))
