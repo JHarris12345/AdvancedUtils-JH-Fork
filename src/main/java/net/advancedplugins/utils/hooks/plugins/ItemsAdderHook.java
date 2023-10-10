@@ -66,7 +66,7 @@ public class ItemsAdderHook extends PluginHookInstance implements Listener {
         return CustomStack.byItemStack(itemStack).getMaxDurability();
     }
 
-    @EventHandler(priority = EventPriority.LOW)
+    @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     private void onCustomBlockBreak(CustomBlockBreakEvent event) {
         Block block = event.getBlock();
         // otherwise the item is put in the inventory and at the same time is
