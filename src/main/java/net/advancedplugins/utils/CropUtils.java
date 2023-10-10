@@ -135,16 +135,11 @@ public class CropUtils {
             case "COCOA":
             case "NETHER_WART":
             case "NETHER_WARTS":
+            case "TORCHFLOWER":
+            case "PITCHER_CROP":
                 return true;
         }
 
-        if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R1)) {
-            switch (name) {
-                case "TORCHFLOWER":
-                case "PITCHER_CROP":
-                    return true;
-            }
-        }
         return false;
     }
 
