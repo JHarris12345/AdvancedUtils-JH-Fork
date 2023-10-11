@@ -1,10 +1,7 @@
 package net.advancedplugins.utils.nbt.utils;
 
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.io.File;
 
 public enum MinecraftVersion {
     Unknown(Integer.MAX_VALUE),//Use the newest known mappings
@@ -29,7 +26,7 @@ public enum MinecraftVersion {
     MC1_19_R2(1_19_2, true),
     MC1_19_R3(1_19_4, true),
     MC1_20_R1(1_20_1, true),
-    MC1_20_R2(1201, true);
+    MC1_20_R2(1_20_2, true);
 
     private final int versionId;
     public final boolean mojangMapping;
