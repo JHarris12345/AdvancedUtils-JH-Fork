@@ -1,5 +1,7 @@
 package net.advancedplugins.utils;
 
+import com.google.common.collect.ImmutableMap;
+import ia.m.V;
 import net.advancedplugins.utils.configs.YamlFile;
 import net.advancedplugins.utils.evalex.Expression;
 import net.advancedplugins.utils.nbt.NBTapi;
@@ -371,7 +373,8 @@ public class ASManager {
 
     public static boolean isLog(Material material) {
         if (material != null && !isAir(material)) {
-            boolean doStemsCount = YamlFile.CONFIG.getBoolean("settings.stems-count-as-trees", false);;
+            boolean doStemsCount = YamlFile.CONFIG.getBoolean("settings.stems-count-as-trees", false);
+            ;
             boolean isLog = material.name().endsWith("LOG") || material.name().endsWith("LOG_2");
             boolean isStem = material.name().endsWith("STEM");
             if (!isLog && !isStem) {
@@ -1423,5 +1426,9 @@ public class ASManager {
             }
         }
         return emptySlots;
+    }
+
+    public static <K, V> ImmutableMap<K, V> toImmutable(Map<K, V> data) {
+        return ImmutableMap.<K, V>builder().putAll(data).build();
     }
 }

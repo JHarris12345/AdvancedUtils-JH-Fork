@@ -1,5 +1,6 @@
 package net.advancedplugins.utils;
 
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -231,4 +232,8 @@ public class DataHandler {
     public boolean isEnabled() {
         return getBoolean("enabled");
     }
+
+    @Getter
+    private List<Integer> activeTasks = new ArrayList<>();
+
 }
