@@ -2,7 +2,6 @@ package net.advancedplugins.utils.commands;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import jdk.internal.joptsimple.internal.Strings;
 import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.commands.argument.ArgumentHandler;
 import net.advancedplugins.utils.commands.argument.ArgumentType;

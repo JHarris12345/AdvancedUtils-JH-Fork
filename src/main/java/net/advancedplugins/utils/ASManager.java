@@ -1,5 +1,6 @@
 package net.advancedplugins.utils;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import ia.m.V;
 import net.advancedplugins.utils.configs.YamlFile;
@@ -1430,5 +1431,48 @@ public class ASManager {
 
     public static <K, V> ImmutableMap<K, V> toImmutable(Map<K, V> data) {
         return ImmutableMap.<K, V>builder().putAll(data).build();
+    }
+
+    private static final ImmutableList<String> vegetationBlockNames = ImmutableList.<String>builder().addAll((Arrays.asList(
+            "GRASS",
+            "TALL_GRASS",
+            "FERN",
+            "LARGE_FERN",
+            "SEAGRASS",
+            "TALL_SEAGRASS",
+            "DANDELION",
+            "POPPY",
+            "BLUE_ORCHID",
+            "ALLIUM",
+            "AZURE_BLUET",
+            "RED_TULIP",
+            "ORANGE_TULIP",
+            "WHITE_TULIP",
+            "PINK_TULIP",
+            "OXEYE_DAISY",
+            "CORNFLOWER",
+            "LILY_OF_THE_VALLEY",
+            "WITHER_ROSE",
+            "SUNFLOWER",
+            "LILAC",
+            "ROSE_BUSH",
+            "PEONY"
+    ))).build();
+
+
+    public static boolean isVegetation(Material type) {
+        return vegetationBlockNames.contains(type.name());
+    }
+
+    public static <V> List<String> toStringList(V... values) {
+        List<String> list = new ArrayList<>();
+        for(V v : values) {
+            list.add(v.toString());
+        }
+        return list;
+    }
+
+    public static boolean isDay(long time) {
+        return time > 0 && time < 12300;
     }
 }
