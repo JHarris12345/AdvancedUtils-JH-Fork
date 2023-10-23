@@ -3,15 +3,20 @@ package net.advancedplugins.utils.menus.item;
 import lombok.Getter;
 import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.items.ConfigItemCreator;
+import net.advancedplugins.utils.items.ItemBuilder;
+import net.advancedplugins.utils.text.Replace;
 import net.advancedplugins.utils.text.Replacer;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
 public class AdvancedMenuItem {
 
     private ConfigurationSection section;
-    private Replacer replace;
+    private Replace replace;
     private int[] slots;
 
     @Getter
@@ -19,8 +24,31 @@ public class AdvancedMenuItem {
 
     private ItemStack item;
 
-    public AdvancedMenuItem(String slots, ConfigurationSection section, Replacer replace) {
+    private boolean glow = false;
+    private int amount = 0;
+
+    public AdvancedMenuItem(String slots, ConfigurationSection section, Replace replace) {
         this.slots = ASManager.getSlots(slots);
+        this.replace = replace;
+        this.section = section;
+
+        if (section.contains("action")) {
+            action = section.getString("action");
+        }
+    }
+
+    public AdvancedMenuItem(int slot, ConfigurationSection section, Replace replace) {
+        this.slots = new int[]{slot};
+        this.replace = replace;
+        this.section = section;
+
+        if (section.contains("action")) {
+            action = section.getString("action");
+        }
+    }
+
+    public AdvancedMenuItem(int[] slots, ConfigurationSection section, Replace replace) {
+        this.slots = slots;
         this.replace = replace;
         this.section = section;
 
@@ -40,10 +68,33 @@ public class AdvancedMenuItem {
         }
     }
 
+    public AdvancedMenuItem setGlow() {
+        glow = true;
+        return this;
+    }
+
+    public AdvancedMenuItem setAmount(int amount) {
+        this.amount = amount;
+        return this;
+    }
+
     public ItemStack getItem() {
         if (item != null)
             return item;
 
-        return ConfigItemCreator.fromConfigSection(section, "", replace == null ? null : replace.getPlaceholders(), null);
+        ItemStack item = ConfigItemCreator.fromConfigSection(section, "",
+                replace == null ? null : replace.apply(new Replacer()).getPlaceholders(), null);
+        if (glow) {
+            ItemBuilder builder = new ItemBuilder(item);
+            builder.addUnsafeEnchantment(Enchantment.LOOT_BONUS_MOBS, 1);
+            builder.addItemFlag(ItemFlag.HIDE_ENCHANTS);
+            item = builder.toItemStack();
+        }
+
+        if (amount != 0) {
+            item.setAmount(amount);
+        }
+        return item;
     }
+
 }

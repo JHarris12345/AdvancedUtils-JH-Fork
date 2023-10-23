@@ -538,6 +538,10 @@ public class ASManager {
     public static int[] getSlots(String slotString) {
         int[] slots = new int[1];
 
+        if (slotString.equalsIgnoreCase("filler")) {
+            return slots;
+        }
+
         if (slotString.contains(",")) {
             slots = Arrays.stream(slotString.split(",")).mapToInt(Integer::parseInt).toArray();
         } else if (slotString.contains("-")) {
@@ -1466,13 +1470,33 @@ public class ASManager {
 
     public static <V> List<String> toStringList(V... values) {
         List<String> list = new ArrayList<>();
-        for(V v : values) {
+        for (V v : values) {
             list.add(v.toString());
         }
         return list;
     }
 
+    public static int[] subarray(int[] array, int from, int to) {
+        if (array == null || from < 0 || to > array.length || from > to) {
+            throw new IllegalArgumentException("Invalid arguments");
+        }
+        return Arrays.copyOfRange(array, from, to);
+    }
+
+    public static <V> V[] subarray(V[] array, int from, int to) {
+        if (array == null || from < 0 || to > array.length || from > to) {
+            throw new IllegalArgumentException("Invalid arguments");
+        }
+        return Arrays.copyOfRange(array, from, to);
+    }
+
     public static boolean isDay(long time) {
         return time > 0 && time < 12300;
+    }
+
+    public static void fillEmptyInventorySlots(Inventory inventory, ItemStack itemStack) {
+        IntStream.range(0, inventory.getSize())
+                .filter(slot -> inventory.getItem(slot) == null)
+                .forEach(slot -> inventory.setItem(slot, itemStack));
     }
 }
