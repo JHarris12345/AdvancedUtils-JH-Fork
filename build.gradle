@@ -59,7 +59,7 @@ dependencies {
     implementation group: 'org.apache.commons', name: 'commons-math3', version: '3.6.1'
     compileOnly group: 'com.massivecraft', name: 'Factions', version: '1.6.9.5-U0.6.28'
     compileOnly group: 'com.github.angeschossen', name: 'LandsAPI', version: '6.29.12'
-    compileOnly 'com.github.SaberLLC:Saber-Factions:4.1.2-STABLE'
+//    compileOnly 'com.github.SaberLLC:Saber-Factions:4.1.2-STABLE'
     annotationProcessor 'org.projectlombok:lombok:1.18.26'
 }
 
