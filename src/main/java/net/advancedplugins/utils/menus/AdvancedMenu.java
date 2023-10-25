@@ -130,7 +130,6 @@ public class AdvancedMenu implements InventoryHolder {
         ConfigurationSection itemConfigSection = itemsConfigSection.getConfigurationSection(itemKey);
 
         ASManager.debug = true;
-        Bukkit.broadcastMessage(itemPath + " " + itemKey);
         ASManager.debug(itemPath + " " + itemKey);
 
         if (itemKey.equalsIgnoreCase("filler")) {
