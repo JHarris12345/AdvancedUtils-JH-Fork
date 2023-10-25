@@ -53,5 +53,4 @@ public class DropsSettings {
      * The tool to break the blocks with.
      */
     private ItemStack tool = null;
-
 }
