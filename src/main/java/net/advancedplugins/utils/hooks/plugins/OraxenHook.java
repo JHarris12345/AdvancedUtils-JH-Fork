@@ -5,15 +5,8 @@ import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.hooks.PluginHookInstance;
 import org.bukkit.block.Block;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.Plugin;
 
 public class OraxenHook extends PluginHookInstance implements Listener {
-
-    private final Plugin plugin;
-
-    public OraxenHook(Plugin plugin) {
-        this.plugin = plugin;
-    }
 
     @Override
     public boolean isEnabled() {

@@ -1,5 +1,8 @@
 package net.advancedplugins.utils.hooks;
 
+import lombok.Getter;
+
+@Getter
 public enum HookPlugin {
     ADVANCEDENCHANTMENTS("AdvancedEnchantments"),
     WORLDGUARD("WorldGuard"),
@@ -15,14 +18,11 @@ public enum HookPlugin {
     ITEMSADDER("ItemsAdder"),
     MYTHICMOBS("MythicMobs"),
     MCMMO("mcMMO"),
-    SUPERIORSKYBLOCK2("SuperiorSkyblock2");
+    SUPERIORSKYBLOCK2("SuperiorSkyblock2"),
+    ORAXEN("Oraxen");
 
     private final String pluginName;
     HookPlugin(String pluginName) {
         this.pluginName = pluginName;
-    }
-
-    public String getPluginName() {
-        return pluginName;
     }
 }
