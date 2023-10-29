@@ -1,6 +1,7 @@
 package net.advancedplugins.utils.hooks;
 
 import com.google.common.collect.ImmutableMap;
+import lombok.Getter;
 import net.advancedplugins.utils.hooks.holograms.CMIHologramHandler;
 import net.advancedplugins.utils.hooks.holograms.DecentHologramsHandler;
 import net.advancedplugins.utils.hooks.holograms.HologramHandler;
@@ -10,7 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class HooksHandler {
-
+    @Getter
     private static HologramHandler holograms;
     private static JavaPlugin plugin;
 
@@ -62,6 +63,9 @@ public class HooksHandler {
 
         if (isPluginEnabled(HookPlugin.SUPERIORSKYBLOCK2.getPluginName()))
             registerNew(HookPlugin.SUPERIORSKYBLOCK2, new SuperiorSkyblock2Hook());
+
+        if (isPluginEnabled(HookPlugin.ORAXEN.getPluginName()))
+            registerNew(HookPlugin.ORAXEN, new OraxenHook());
 
         // Do this after server is loaded, so all softdepends that aren't in the plugin.yml file will be enabeld by this time
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
@@ -126,10 +130,6 @@ public class HooksHandler {
 
     private static boolean isPluginEnabled(String plugin) {
         return Bukkit.getPluginManager().isPluginEnabled(plugin);
-    }
-
-    public static HologramHandler getHolograms() {
-        return holograms;
     }
 
     public static boolean isEnabled(HookPlugin hookPlugin) {
