@@ -3,11 +3,9 @@ package net.advancedplugins.utils.economy;
 import org.bukkit.entity.Player;
 
 public interface AdvancedEconomy {
+    String getName();
+    boolean chargeUser(Player p, double amount);
+    double getBalance(Player p);
 
-    public String getName();
-
-    public boolean chargeUser(Player p, double amount);
-    public double getBalance(Player p);
-
-    void giveUser(Player stealer, int bal);
+    boolean giveUser(Player stealer, double bal);
 }

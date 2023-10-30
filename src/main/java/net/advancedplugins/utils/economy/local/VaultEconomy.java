@@ -1,8 +1,6 @@
 package net.advancedplugins.utils.economy.local;
 
-import net.advancedplugins.utils.ExperienceManager;
 import net.advancedplugins.utils.economy.AdvancedEconomy;
-import net.milkbowl.vault.Vault;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -29,8 +27,8 @@ public class VaultEconomy implements AdvancedEconomy {
     }
 
     @Override
-    public void giveUser(Player stealer, int bal) {
-        econ.depositPlayer(stealer, bal);
+    public boolean giveUser(Player stealer, double bal) {
+        return econ.depositPlayer(stealer, bal).transactionSuccess();
     }
 
     @Override

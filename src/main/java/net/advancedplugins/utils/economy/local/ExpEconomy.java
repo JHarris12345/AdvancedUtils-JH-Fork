@@ -27,9 +27,10 @@ public class ExpEconomy implements AdvancedEconomy {
     }
 
     @Override
-    public void giveUser(Player p, int bal) {
+    public boolean giveUser(Player p, double bal) {
         ExperienceManager exp = new ExperienceManager(p);
 
         exp.setTotalExperience((int) (exp.getTotalExperience() - bal));
+        return true;
     }
 }
