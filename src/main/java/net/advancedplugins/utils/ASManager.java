@@ -2,7 +2,6 @@ package net.advancedplugins.utils;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import ia.m.V;
 import net.advancedplugins.utils.configs.YamlFile;
 import net.advancedplugins.utils.evalex.Expression;
 import net.advancedplugins.utils.nbt.NBTapi;
@@ -598,6 +597,7 @@ public class ASManager {
         }
     }
 
+    // TODO this is broken!
     public static double parseDouble(String toparse, double def) {
         try {
             if (toparse.split("-").length > 1 && !toparse.substring(0, 1).equalsIgnoreCase("-")) {
