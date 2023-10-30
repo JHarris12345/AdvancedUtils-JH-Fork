@@ -1,10 +1,8 @@
 package net.advancedplugins.utils.hooks.plugins;
 
-import com.archyx.aureliumskills.AureliumSkills;
 import com.archyx.aureliumskills.api.event.LootDropCause;
 import com.archyx.aureliumskills.api.event.PlayerLootDropEvent;
 import com.archyx.aureliumskills.api.event.TerraformBlockBreakEvent;
-import com.archyx.aureliumskills.skills.mining.MiningLootHandler;
 import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.LocalLocation;
 import net.advancedplugins.utils.SchedulerUtils;
@@ -16,7 +14,6 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
@@ -44,7 +41,7 @@ public class AureliumSkillsHook extends PluginHookInstance implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onLoot(PlayerLootDropEvent e) {
-        if(e.getCause().equals(LootDropCause.EPIC_CATCH))
+        if (e.getCause().equals(LootDropCause.EPIC_CATCH))
             return;
         if (e.isCancelled())
             return;
@@ -63,8 +60,11 @@ public class AureliumSkillsHook extends PluginHookInstance implements Listener {
          https://github.com/Archy-X/AureliumSkills/blob/master/bukkit/src/main/java/com/archyx/aureliumskills/skills/fishing/FishingAbilities.java#L48
         */
         // e.setItemStack(new ItemStack(Material.AIR));
+
+        // YES, if you are wondering, the event does NOT cancel properly and the items are still dropped
         e.setCancelled(true);
-        e.setLocation(e.getLocation().add(0, 10, 0));
+        // so let's just yeet it to the f*cking void 👍 (Wega 30.10.2023)
+        e.setLocation(e.getLocation().clone().subtract(0, 10000, 0));
 
         ASManager.debug("[aureliumskills extra loot] Dropped " + item.getType().name() + " for " + player.getName() + " at " + new LocalLocation(location).getEncode());
         executorService.schedule(() -> {
@@ -82,7 +82,11 @@ public class AureliumSkillsHook extends PluginHookInstance implements Listener {
             }
 
             if (blockInformation.settings.isAddToInventory()) {
-                ASManager.giveItem(blockInformation.player, finalItem);
+                // need to drop at block location, so don't use this as it drops on player loc
+                // ASManager.giveItem(blockInformation.player, finalItem);
+                if (!player.getInventory().addItem(finalItem).isEmpty()) {
+                    ASManager.dropItem(location, finalItem);
+                }
             }
         }, 20, TimeUnit.MILLISECONDS);
 
@@ -105,18 +109,6 @@ public class AureliumSkillsHook extends PluginHookInstance implements Listener {
         public BrokenBlockInformation(Player player, DropsSettings settings) {
             this.player = player;
             this.settings = settings;
-        }
-    }
-
-    class CustomLootHandler extends MiningLootHandler {
-        public CustomLootHandler(AureliumSkills plugin) {
-            super(plugin);
-        }
-
-        @EventHandler(priority = EventPriority.LOW)
-        @Override
-        public void onBreak(BlockBreakEvent event) {
-            super.onBreak(event);
         }
     }
 }
