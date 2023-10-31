@@ -10,6 +10,7 @@ import net.advancedplugins.utils.abilities.DropsSettings;
 import net.advancedplugins.utils.abilities.SmeltMaterial;
 import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.hooks.PluginHookInstance;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -85,7 +86,11 @@ public class AureliumSkillsHook extends PluginHookInstance implements Listener {
                 // need to drop at block location, so don't use this as it drops on player loc
                 // ASManager.giveItem(blockInformation.player, finalItem);
                 if (!player.getInventory().addItem(finalItem).isEmpty()) {
-                    ASManager.dropItem(location, finalItem);
+                    if (!Bukkit.isPrimaryThread()) {
+                        ItemStack finalItem1 = finalItem;
+                        SchedulerUtils.runTaskLater(() -> ASManager.dropItem(location, finalItem1));
+                    } else
+                        ASManager.dropItem(location, finalItem);
                 }
             }
         }, 20, TimeUnit.MILLISECONDS);
