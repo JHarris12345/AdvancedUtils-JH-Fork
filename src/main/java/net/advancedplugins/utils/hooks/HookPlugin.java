@@ -19,7 +19,8 @@ public enum HookPlugin {
     MYTHICMOBS("MythicMobs"),
     MCMMO("mcMMO"),
     SUPERIORSKYBLOCK2("SuperiorSkyblock2"),
-    ORAXEN("Oraxen");
+    ORAXEN("Oraxen"),
+    PROTECTIONSTONES("ProtectionStones");
 
     private final String pluginName;
     HookPlugin(String pluginName) {
