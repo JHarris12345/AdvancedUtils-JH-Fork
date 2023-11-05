@@ -854,7 +854,7 @@ public class ASManager {
     }
 
     /**
-     * @return True if the block is not null and is not air.
+     * @return True if the block  is not null and is not air.
      */
     public static boolean isValid(Block b) {
         if (b == null || isAir(b.getType())) return false;
