@@ -36,3 +36,6 @@ gradle-app.setting
 # MacOS
 .DS_Store
 /.idea/
+
+# License
+src/main/java/net/advancedplugins/utils/Registry.java

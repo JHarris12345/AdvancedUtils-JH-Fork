@@ -64,7 +64,7 @@ public class AureliumSkillsHook extends PluginHookInstance implements Listener {
 
         // YES, if you are wondering, the event does NOT cancel properly and the items are still dropped
         e.setCancelled(true);
-        // so let's just yeet it to the f*cking void 👍 (Wega 30.10.2023)
+        // so let's just yeet it to the f*cking void (Wega 30.10.2023)
         e.setLocation(e.getLocation().clone().subtract(0, 10000, 0));
 
         ASManager.debug("[aureliumskills extra loot] Dropped " + item.getType().name() + " for " + player.getName() + " at " + new LocalLocation(location).getEncode());
