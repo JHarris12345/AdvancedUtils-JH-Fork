@@ -172,7 +172,7 @@ public class ConfigItemCreator {
 
 
         // RGB Color
-        if (typeStr.contains("LEATHER_") || typeStr.contains("FIREWORK_STAR")) {
+        if ((typeStr.contains("LEATHER_") || typeStr.contains("FIREWORK_STAR")) && config.contains(path + "." + paths.get("rgb-color"))) {
             String rgbStr = format(config.getString(path + "." + paths.get("rgb-color")), placeholders);
             String[] rgb = rgbStr.split(";");
             if (rgb.length != 3) {
@@ -235,7 +235,7 @@ public class ConfigItemCreator {
             type = ((ItemsAdderHook) HooksHandler.getHook(HookPlugin.ITEMSADDER)).getByName(itemsadder);
         } else if (head != null) {
             type = SkullCreator.itemFromBase64(head);
-       } // else if (advancedHead != null)
+        } // else if (advancedHead != null)
 //            type = net.advancedplugins.heads.api.AdvancedHeadsAPI.getHead(advancedHead);
         else
             type = ASManager.matchMaterial(typeStr, amount, data);
