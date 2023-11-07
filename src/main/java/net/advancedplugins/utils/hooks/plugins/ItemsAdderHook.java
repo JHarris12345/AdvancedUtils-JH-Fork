@@ -3,9 +3,12 @@ package net.advancedplugins.utils.hooks.plugins;
 import dev.lone.itemsadder.api.CustomBlock;
 import dev.lone.itemsadder.api.CustomStack;
 import dev.lone.itemsadder.api.Events.CustomBlockBreakEvent;
+import net.advancedplugins.utils.ASManager;
+import net.advancedplugins.utils.SchedulerUtils;
 import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.hooks.PluginHookInstance;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -67,13 +70,20 @@ public class ItemsAdderHook extends PluginHookInstance implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
-    private void onCustomBlockBreak(CustomBlockBreakEvent event) {
+    public void onCustomBlockBreak(CustomBlockBreakEvent event) {
+        Player player = event.getPlayer();
         Block block = event.getBlock();
         // otherwise the item is put in the inventory and at the same time is
         if (block.hasMetadata("telepathy-broken-itemsadder")) {
             block.removeMetadata("telepathy-broken-itemsadder", plugin);
             event.setCancelled(true);
-            CustomBlock.byAlreadyPlaced(block).remove();
+            SchedulerUtils.runTaskLater(() -> {
+                CustomBlock customBlock = CustomBlock.byAlreadyPlaced(block);
+                ItemStack[] drops = ((List<ItemStack>) customBlock.getLoot()).toArray(new ItemStack[0]);
+                if (customBlock.remove()) {
+                    ASManager.giveItem(player, drops);
+                }
+            });
         }
     }
 }
