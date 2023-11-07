@@ -17,6 +17,7 @@ import org.apache.commons.math3.distribution.UniformIntegerDistribution;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.type.Bed;
@@ -529,6 +530,16 @@ public class ASManager {
         return keys;
     }
 
+    public static <T, E> T getKeyByValue(Map<T, E> map, E value) {
+        Set<T> keys = new HashSet<T>();
+        for (Map.Entry<T, E> entry : map.entrySet()) {
+            if (Objects.equals(value, entry.getValue())) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
     public static List<String> replace(List<String> list, String from, String to) {
         list.replaceAll(line -> line.replace(from, to));
         return list;
@@ -637,7 +648,7 @@ public class ASManager {
         }
     }
 
-    public static void playEffect(String pe, int offSet, int amount, Location l) {
+    public static void playEffect(String pe, float offSet, int amount, Location l) {
         if (MinecraftVersion.getVersion().getVersionNumber() < 1130) {
             try {
                 Class<Enum> cls = ((Class<Enum>) Class.forName("org.bukkit.Effect"));
@@ -1499,4 +1510,14 @@ public class ASManager {
                 .filter(slot -> inventory.getItem(slot) == null)
                 .forEach(slot -> inventory.setItem(slot, itemStack));
     }
+
+    public static Location offsetToLookingLocation(Location loc, double distance) {
+        Location newLoc = loc.clone();
+        Vector direction = newLoc.getDirection();
+        direction.normalize();
+        direction.multiply(distance);
+        newLoc.add(direction);
+        return newLoc;
+    }
+
 }
