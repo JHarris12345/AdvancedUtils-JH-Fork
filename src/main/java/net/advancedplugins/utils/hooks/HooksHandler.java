@@ -36,9 +36,6 @@ public class HooksHandler {
         if (isPluginEnabled(HookPlugin.ADVANCEDENCHANTMENTS.getPluginName()))
             registerNew(HookPlugin.ADVANCEDENCHANTMENTS, new AdvancedEnchantmentsHook());
 
-        if (isPluginEnabled(HookPlugin.ITEMSADDER.getPluginName()))
-            registerNew(HookPlugin.ITEMSADDER, new ItemsAdderHook(plugin), true);
-
         if (isPluginEnabled(HookPlugin.WORLDGUARD.getPluginName()))
             registerNew(HookPlugin.WORLDGUARD, new WorldGuardHook());
 
@@ -81,6 +78,9 @@ public class HooksHandler {
                     registerNew(HookPlugin.FACTIONS, new FactionsUUIDHook());
                 }
             }
+
+            if (isPluginEnabled(HookPlugin.ITEMSADDER.getPluginName()))
+                registerNew(HookPlugin.ITEMSADDER, new ItemsAdderHook(plugin), true);
 
             sendHookMessage(plugin);
         }, 10);
