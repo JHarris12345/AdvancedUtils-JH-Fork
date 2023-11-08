@@ -129,9 +129,6 @@ public class AdvancedMenu implements InventoryHolder {
     private void processItemKey(String itemKey, String itemPath, ConfigurationSection itemsConfigSection, HashMap<Integer, AdvancedMenuItem> itemMap, Replace replace) {
         ConfigurationSection itemConfigSection = itemsConfigSection.getConfigurationSection(itemKey);
 
-        ASManager.debug = true;
-        ASManager.debug(itemPath + " " + itemKey);
-
         if (itemKey.equalsIgnoreCase("filler")) {
             fillerItem = new AdvancedMenuItem(itemKey, itemConfigSection, replace);
             return;
