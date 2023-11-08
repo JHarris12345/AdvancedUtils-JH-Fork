@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -37,8 +38,7 @@ public class DataHandler {
 
     public DataHandler(String fileName, JavaPlugin plugin, boolean createNewFile) {
         instance = plugin;
-        if (fileName == null)
-            return;
+        if (fileName == null) return;
 
         this.fileName = fileName;
 
@@ -145,8 +145,7 @@ public class DataHandler {
     }
 
     public Set<String> getKeys(String path) {
-        if (!fileConfiguration.isConfigurationSection(path))
-            return Collections.emptySet();
+        if (!fileConfiguration.isConfigurationSection(path)) return Collections.emptySet();
 
         return fileConfiguration.getConfigurationSection(path).getKeys(false);
     }
@@ -236,4 +235,7 @@ public class DataHandler {
     @Getter
     private List<Integer> activeTasks = new ArrayList<>();
 
+    public void registerListener(Listener l) {
+        Bukkit.getPluginManager().registerEvents(l, ASManager.getInstance());
+    }
 }
