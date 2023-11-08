@@ -1,0 +1,70 @@
+package net.advancedplugins.utils.plugin;
+
+import lombok.Getter;
+import net.advancedplugins.utils.ASManager;
+import net.advancedplugins.utils.text.Text;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.IOException;
+
+public class AdvancedPlugin extends JavaPlugin implements Listener {
+
+    @Getter
+    private static JavaPlugin plugin;
+
+    private String startupError = null;
+    private String pluginName = "";
+
+    public void startup() throws Exception {
+    }
+
+    @Override
+    public void onEnable() {
+        plugin = this;
+        ASManager.setInstance(this);
+
+        super.onEnable();
+        pluginName = getDescription().getName();
+
+        try {
+            startup();
+        } catch (Exception ev) {
+            ev.printStackTrace();
+            updateError(ev);
+        }
+
+        if (startupError != null)
+            getServer().getPluginManager().registerEvents(this, this);
+    }
+
+    private void updateError(Exception ev) {
+        if (ev.getClass().equals(ClassCastException.class)) {
+            startupError = "Configuration error: A value of the wrong type was found. Please check your config files.";
+        } else if (ev.getClass().equals(IOException.class)) {
+            startupError = "File I/O error while loading configurations. Please check file permissions and paths, whether configuration file is not missing.";
+        } else if (ev.getClass().equals(InvalidConfigurationException.class)) {
+            startupError = "The configuration file is improperly formatted. Please verify the syntax of your config files (tools: https://yaml.helpch.at)";
+        } else {
+            startupError = "An unexpected error occurred while loading the plugin. ";
+        }
+    }
+
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e) {
+        if (!e.getPlayer().isOp()) return;
+
+        if (startupError == null) return;
+
+        Bukkit.getScheduler().runTaskLater(this, () -> {
+            e.getPlayer().sendMessage(Text.modify("&c[" + pluginName + "] Unable to load the plugin correctly due to errors:"));
+            e.getPlayer().sendMessage(Text.modify("&c&o" + startupError));
+            e.getPlayer().sendMessage(Text.modify("&cIf the problem persists after checking the config files, please seek assistance at: https://discord.gg/advancedplugins"));
+        }, 20);
+    }
+}
