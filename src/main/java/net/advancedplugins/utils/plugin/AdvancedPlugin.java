@@ -15,7 +15,7 @@ import java.io.IOException;
 public class AdvancedPlugin extends JavaPlugin implements Listener {
 
     @Getter
-    private static JavaPlugin plugin;
+    private static JavaPlugin instance;
 
     private String startupError = null;
     private String pluginName = "";
@@ -25,7 +25,7 @@ public class AdvancedPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        plugin = this;
+        instance = this;
         ASManager.setInstance(this);
 
         super.onEnable();
