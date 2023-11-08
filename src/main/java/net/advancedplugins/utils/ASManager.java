@@ -17,10 +17,10 @@ import org.apache.commons.math3.distribution.UniformIntegerDistribution;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.type.Bed;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -47,6 +47,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.zip.ZipEntry;
@@ -94,31 +95,25 @@ public class ASManager {
     }
 
     public static boolean isSpawner(Block b) {
-        if (b == null || b.getType() == null)
-            return false;
+        if (b == null || b.getType() == null) return false;
         return isSpawner(b.getType());
     }
 
     public static boolean doesBlockFaceMatch(Block b, String endsWith, BlockFace... faces) {
         for (BlockFace face : faces) {
             Material material = b.getRelative(face).getType();
-            if (isAir(material))
-                continue;
-            if (material.name().endsWith(endsWith))
-                return true;
+            if (isAir(material)) continue;
+            if (material.name().endsWith(endsWith)) return true;
         }
         return false;
     }
 
     public static Block getOtherHalfOfBed(Block b) {
-        if (!b.getType().name().endsWith("_BED"))
-            return null;
+        if (!b.getType().name().endsWith("_BED")) return null;
         Bed bed = (Bed) b.getBlockData();
         Block face;
-        if (bed.getPart() == Bed.Part.HEAD)
-            face = b.getRelative(bed.getFacing().getOppositeFace());
-        else
-            face = b.getRelative(bed.getFacing());
+        if (bed.getPart() == Bed.Part.HEAD) face = b.getRelative(bed.getFacing().getOppositeFace());
+        else face = b.getRelative(bed.getFacing());
 
         if (!(face.getBlockData() instanceof Bed)) return null;
         return face;
@@ -140,8 +135,7 @@ public class ASManager {
     }
 
     public static List<Block> getBlocksFlat(Block start, int radius) {
-        if (radius < 1)
-            return (radius == 0) ? Collections.singletonList(start) : Collections.emptyList();
+        if (radius < 1) return (radius == 0) ? Collections.singletonList(start) : Collections.emptyList();
         int iterations = (radius << 1) + 1;
         List<Block> blocks = new ArrayList<>(iterations * iterations * iterations);
         for (int x = -radius; x <= radius; x++) {
@@ -162,10 +156,8 @@ public class ASManager {
     public static int getAmount(Player player, Material material) {
         int count = 0;
         for (ItemStack item : player.getInventory().getStorageContents()) {
-            if (item == null)
-                continue;
-            if (item.getType() != material)
-                continue;
+            if (item == null) continue;
+            if (item.getType() != material) continue;
 
             count += item.getAmount();
         }
@@ -183,15 +175,12 @@ public class ASManager {
      */
     public static boolean hasAmount(Player p, Material m, int count) {
         for (ItemStack item : p.getInventory().getContents()) {
-            if (item == null)
-                continue;
+            if (item == null) continue;
 
-            if (item.getType() != m)
-                continue;
+            if (item.getType() != m) continue;
 
             count -= item.getAmount();
-            if (count <= 0)
-                return true;
+            if (count <= 0) return true;
         }
 
         return false;
@@ -206,10 +195,8 @@ public class ASManager {
      * @return True if all items were removed, false otherwise.
      */
     public static boolean removeItems(Inventory inventory, Material material, int amount) {
-        if (material == null || inventory == null)
-            return false;
-        if (amount <= 0)
-            return false;
+        if (material == null || inventory == null) return false;
+        if (amount <= 0) return false;
 
         if (amount == Integer.MAX_VALUE) {
             inventory.remove(material);
@@ -220,14 +207,12 @@ public class ASManager {
         if (MinecraftVersion.getVersionNumber() >= 1_9_0 && inventory instanceof PlayerInventory) {
             PlayerInventory pInv = (PlayerInventory) inventory;
             ItemStack item = pInv.getItemInOffHand();
-            if (item.getType() == material)
-                toDelete = removeItem(inventory, item, 45, toDelete);
+            if (item.getType() == material) toDelete = removeItem(inventory, item, 45, toDelete);
         }
 
         for (int i = 0; i < inventory.getSize(); i++) {
             int first = inventory.first(material);
-            if (first == -1)
-                return false;
+            if (first == -1) return false;
             ItemStack item = inventory.getItem(first);
             assert item != null;
             toDelete = removeItem(inventory, item, first, toDelete);
@@ -247,10 +232,8 @@ public class ASManager {
      * @return True if all items were removed, false otherwise.
      */
     public static boolean removeItems(Inventory inventory, ItemStack itemStack, int amount) {
-        if (itemStack == null || inventory == null)
-            return false;
-        if (amount <= 0)
-            return false;
+        if (itemStack == null || inventory == null) return false;
+        if (amount <= 0) return false;
 
         if (amount == Integer.MAX_VALUE) {
             inventory.remove(itemStack);
@@ -261,14 +244,12 @@ public class ASManager {
         if (MinecraftVersion.getVersionNumber() >= 1_9_0 && inventory instanceof PlayerInventory) {
             PlayerInventory pInv = (PlayerInventory) inventory;
             ItemStack item = pInv.getItemInOffHand();
-            if (item.isSimilar(itemStack))
-                toDelete = removeItem(inventory, item, 45, toDelete);
+            if (item.isSimilar(itemStack)) toDelete = removeItem(inventory, item, 45, toDelete);
         }
 
         for (int i = 0; i < inventory.getSize(); i++) {
             int first = inventory.first(itemStack);
-            if (first == -1)
-                return false;
+            if (first == -1) return false;
             ItemStack item = inventory.getItem(first);
             assert item != null;
             toDelete = removeItem(inventory, item, first, toDelete);
@@ -317,8 +298,7 @@ public class ASManager {
             toDelete -= itemStack.getAmount();
             if (slot == 45 && inventory instanceof PlayerInventory)
                 ((PlayerInventory) inventory).setItemInOffHand(null);
-            else
-                inventory.clear(slot);
+            else inventory.clear(slot);
         } else {
             itemStack.setAmount(itemStack.getAmount() - toDelete);
             inventory.setItem(slot, itemStack);
@@ -357,8 +337,7 @@ public class ASManager {
      * @param slot      slot to use
      */
     public static void giveItemAtSlot(final Player player, ItemStack itemStack, final int slot) {
-        if (!isValid(itemStack))
-            return;
+        if (!isValid(itemStack)) return;
 
         player.getInventory().setItem(slot, itemStack);
         player.updateInventory();
@@ -366,8 +345,7 @@ public class ASManager {
 
     public static boolean hasPotionEffect(LivingEntity entity, PotionEffectType potionEffectType, int amplifier) {
         for (PotionEffect pe : entity.getActivePotionEffects()) {
-            if (pe.getType() == potionEffectType && pe.getAmplifier() == amplifier)
-                return true;
+            if (pe.getType() == potionEffectType && pe.getAmplifier() == amplifier) return true;
         }
         return false;
     }
@@ -398,10 +376,8 @@ public class ASManager {
 
     public static void reduceHeldItems(Player p, EquipmentSlot slot, int byAmount) {
         ItemStack item = p.getInventory().getItem(slot);
-        if (item.getAmount() - byAmount <= 0)
-            item = null;
-        else
-            item.setAmount(item.getAmount() - byAmount);
+        if (item.getAmount() - byAmount <= 0) item = null;
+        else item.setAmount(item.getAmount() - byAmount);
 
         p.getInventory().setItem(slot, item);
     }
@@ -416,9 +392,7 @@ public class ASManager {
     }
 
     public static String formatMaterialName(String input) {
-        String output = input
-                .toLowerCase()
-                .replaceAll("_", " ");
+        String output = input.toLowerCase().replaceAll("_", " ");
         output = capitalize(output);
         return output;
     }
@@ -431,8 +405,7 @@ public class ASManager {
      */
     public static Material getItemFromBlock(Material material) {
         if (MinecraftVersion.getVersionNumber() >= 1_12_0 && material.isItem()) return material;
-        if (isWallBlock(material))
-            return getItemFromBlock(getItemFromBlock(material));
+        if (isWallBlock(material)) return getItemFromBlock(getItemFromBlock(material));
 
         switch (material.name()) {
             case "CARROTS":
@@ -455,10 +428,8 @@ public class ASManager {
     public static boolean isWallBlock(Material material) {
         if (!isValid(material)) return false;
         String name = material.name();
-        if (name.contains("SKULL") || name.contains("HEAD"))
-            return false;
-        return name.contains("WALL_") || name.equals("TRIPWIRE_HOOK") || name.equals("LADDER") || name.equals("LEVER")
-                || name.contains("BUTTON") || name.contains("BANNER") || name.equals("COCOA");
+        if (name.contains("SKULL") || name.contains("HEAD")) return false;
+        return name.contains("WALL_") || name.equals("TRIPWIRE_HOOK") || name.equals("LADDER") || name.equals("LEVER") || name.contains("BUTTON") || name.contains("BANNER") || name.equals("COCOA");
     }
 
     public static Object extractFromDataArray(String array, String query, String split, Object defaultTo) {
@@ -599,8 +570,7 @@ public class ASManager {
                 int max = Integer.parseInt(toparse.split("-")[1]);
                 return ThreadLocalRandom.current().nextInt(max - min) + min;
             }
-            return (int) Double.parseDouble(toparse.replaceAll("\"[^0-9.-]\"", "")
-                    .replaceAll(" ", ""));
+            return (int) Double.parseDouble(toparse.replaceAll("\"[^0-9.-]\"", "").replaceAll(" ", ""));
         } catch (Exception e) {
             instance.getLogger().warning("Failed to parse " + toparse + " from String to Integer.");
             e.printStackTrace();
@@ -653,9 +623,7 @@ public class ASManager {
             try {
                 Class<Enum> cls = ((Class<Enum>) Class.forName("org.bukkit.Effect"));
                 Enum effect = Enum.valueOf((cls), pe);
-                Method method = l.getWorld().spigot().getClass().getMethod("playEffect", Location.class,
-                        cls,
-                        int.class, int.class, float.class, float.class, float.class, float.class, int.class, int.class);
+                Method method = l.getWorld().spigot().getClass().getMethod("playEffect", Location.class, cls, int.class, int.class, float.class, float.class, float.class, float.class, int.class, int.class);
 
                 if (!method.isAccessible()) {
                     method.setAccessible(true);
@@ -668,8 +636,7 @@ public class ASManager {
             try {
                 Class<Enum> cls = ((Class<Enum>) Class.forName("org.bukkit.Particle"));
                 Enum particle = Enum.valueOf((cls), pe);
-                Method method = l.getWorld().getClass().getMethod("spawnParticle", cls, Location.class,
-                        int.class, double.class, double.class, double.class, double.class);
+                Method method = l.getWorld().getClass().getMethod("spawnParticle", cls, Location.class, int.class, double.class, double.class, double.class, double.class);
 
                 if (!method.isAccessible()) {
                     method.setAccessible(true);
@@ -725,8 +692,7 @@ public class ASManager {
 
     private static boolean startsWithColor(String input) {
         for (String color : damages.values()) {
-            if (input.startsWith(color))
-                return true;
+            if (input.startsWith(color)) return true;
         }
         return false;
     }
@@ -734,22 +700,13 @@ public class ASManager {
 
     private static String addColor(String input, int damage) {
         String color = damages.get(damage);
-        if (color == null)
-            return input;
+        if (color == null) return input;
 
         return color + "_" + input;
     }
 
     private static boolean canAddColor(String input) {
-        return input.contains("STAINED_GLASS") ||
-                input.contains("SHULKER") ||
-                input.contains("TERRACOTTA") ||
-                input.contains("WOOL") ||
-                input.contains("BANNER") ||
-                input.contains("DYE") ||
-                input.contains("CONCRETE") ||
-                input.contains("CARPET") ||
-                input.contains("BED");
+        return input.contains("STAINED_GLASS") || input.contains("SHULKER") || input.contains("TERRACOTTA") || input.contains("WOOL") || input.contains("BANNER") || input.contains("DYE") || input.contains("CONCRETE") || input.contains("CARPET") || input.contains("BED");
     }
 
     public static ItemStack matchMaterial(String material, int amount, int damage) {
@@ -760,11 +717,7 @@ public class ASManager {
         boolean newVer = MinecraftVersion.getVersion().getVersionNumber() > 1121;
         if (newVer) {
             // Fix gold -> golden rename
-            if (material.startsWith("GOLD_")
-                    && !material.contains("BLOCK")
-                    && !material.contains("NUGGET")
-                    && !material.contains("INGOT")
-                    && !material.contains("ORE")) {
+            if (material.startsWith("GOLD_") && !material.contains("BLOCK") && !material.contains("NUGGET") && !material.contains("INGOT") && !material.contains("ORE")) {
                 material = material.replace("GOLD_", "GOLDEN_");
             }
 
@@ -795,8 +748,7 @@ public class ASManager {
             }
 
             if (reportError) {
-                Bukkit.getLogger().info("�cFailed to match '" + material + "' material, check your configuration or use materials.txt " +
-                        " to find needed material. �7�oFurther information has been pasted to console...");
+                Bukkit.getLogger().info("�cFailed to match '" + material + "' material, check your configuration or use materials.txt " + " to find needed material. �7�oFurther information has been pasted to console...");
                 ev.printStackTrace();
             }
             return null;
@@ -826,12 +778,10 @@ public class ASManager {
      * @return True if the material is 2 blocks tall when placed as a block, false otherwise.
      */
     public static boolean isTall(Material m) {
-        if (m.name().endsWith("_DOOR"))
-            return true;
+        if (m.name().endsWith("_DOOR")) return true;
         if (MinecraftVersion.isNew())
             return m == Material.SUNFLOWER || m == Material.LILAC || m == Material.ROSE_BUSH || m == Material.PEONY;
-        else
-            return m == Material.valueOf("DOUBLE_PLANT");
+        else return m == Material.valueOf("DOUBLE_PLANT");
     }
 
     public static List<Location> removeDuplicateLocations(List<Location> locations) {
@@ -839,8 +789,7 @@ public class ASManager {
         Set<String> seen = new HashSet<>();
 
         for (Location loc : locations) {
-            if (loc == null || loc.getWorld() == null)
-                continue;
+            if (loc == null || loc.getWorld() == null) continue;
             String key = loc.getWorld().getName() + "," + loc.getX() + "," + loc.getY() + "," + loc.getZ();
             if (!seen.contains(key)) {
                 seen.add(key);
@@ -870,10 +819,8 @@ public class ASManager {
     public static boolean isValid(Block b) {
         if (b == null || isAir(b.getType())) return false;
         String m = b.getType().name();
-        if (m.endsWith("_PORTAL"))
-            return false;
-        if (m.contains("PISTON_"))
-            return m.contains("PISTON_BASE") || m.contains("PISTON_STICKY_BASE");
+        if (m.endsWith("_PORTAL")) return false;
+        if (m.contains("PISTON_")) return m.contains("PISTON_BASE") || m.contains("PISTON_STICKY_BASE");
         return !m.equals("FIRE") && !m.equals("SOUL_FIRE") && !m.equals("TALL_SEAGRASS") && !m.equals("SWEET_BERRY_BUSH") && !m.equals("BUBBLE_COLUMN") && !m.equals("LAVA");
     }
 
@@ -883,8 +830,7 @@ public class ASManager {
             if (!p.getInventory().addItem(item).isEmpty()) {
                 if (!Bukkit.isPrimaryThread()) {
                     SchedulerUtils.runTaskLater(() -> dropItem(p.getLocation(), item));
-                } else
-                    dropItem(p.getLocation(), item);
+                } else dropItem(p.getLocation(), item);
             }
         }
     }
@@ -951,8 +897,7 @@ public class ASManager {
         } else {
             String nmsVersion = "v1_8_R3";
             try {
-                Class<?> craftPlayerClass = Class.forName("org.bukkit.craftbukkit." + nmsVersion
-                        + ".entity.CraftPlayer");
+                Class<?> craftPlayerClass = Class.forName("org.bukkit.craftbukkit." + nmsVersion + ".entity.CraftPlayer");
                 Object craftPlayer = craftPlayerClass.cast(p);
 
                 Class<?> ppoc = Class.forName("net.minecraft.server." + nmsVersion + ".PacketPlayOutChat");
@@ -997,8 +942,7 @@ public class ASManager {
     }
 
     public static void unZip(File zip, File des) throws Exception {
-        if (!des.exists() || !des.isDirectory())
-            des.mkdirs();
+        if (!des.exists() || !des.isDirectory()) des.mkdirs();
         ZipFile zipFile = new ZipFile(zip);
         ZipEntry entry = null;
         byte[] buffer = new byte[1024];
@@ -1015,8 +959,7 @@ public class ASManager {
                 File file = new File(des, entry.getName());
                 FileOutputStream outStream = new FileOutputStream(file);
                 int read = 0;
-                while ((read = fileStream.read(buffer)) > -1)
-                    outStream.write(buffer, 0, read);
+                while ((read = fileStream.read(buffer)) > -1) outStream.write(buffer, 0, read);
                 outStream.close();
                 fileStream.close();
             }
@@ -1092,8 +1035,7 @@ public class ASManager {
         boolean ore = typeName.endsWith("_ORE");
         boolean fortuneOnIronGold = false;
         boolean ironOrGold = ore && typeName.contains("GOLD") || typeName.contains("IRON");
-        if (ore && !ironOrGold || (ore && ironOrGold && fortuneOnIronGold))
-            return true;
+        if (ore && !ironOrGold || (ore && ironOrGold && fortuneOnIronGold)) return true;
         switch (typeName) {
             case "SEEDS":
             case "WHEAT_SEEDS":
@@ -1125,8 +1067,7 @@ public class ASManager {
         // If it's a block that requires Silk Touch and the item doesn't
         // have Silk Touch, return -1, so we know to skip it.
         boolean silkRequired = silkOnly.contains(typeName);
-        if (silkRequired && !silk)
-            return -1;
+        if (silkRequired && !silk) return -1;
 
         boolean allowFortune = true;
         boolean fortuneBlock = ASManager.isFortuneBlock(blockType);
@@ -1165,8 +1106,7 @@ public class ASManager {
                     break;
                 }
                 case "SEA_LANTERN":
-                    if (dropType == blockType)
-                        break;
+                    if (dropType == blockType) break;
                     max = 5;
                     break;
                 case "DEEPSLATE_REDSTONE_ORE":
@@ -1272,8 +1212,7 @@ public class ASManager {
             return;
         }
 
-        if (compareTo.isSimilar(ent.getEquipment().getItemInOffHand()))
-            ent.getEquipment().setItemInOffHand(item);
+        if (compareTo.isSimilar(ent.getEquipment().getItemInOffHand())) ent.getEquipment().setItemInOffHand(item);
     }
 
     /**
@@ -1301,8 +1240,7 @@ public class ASManager {
     }
 
     public static String getBlockMaterial(Block clickedBlock) {
-        if (clickedBlock == null)
-            return "AIR";
+        if (clickedBlock == null) return "AIR";
         return clickedBlock.getType().name();
     }
 
@@ -1311,8 +1249,7 @@ public class ASManager {
         int now = 0;
         for (String split : input.split(start)) {
             now++;
-            if (now == 1)
-                continue;
+            if (now == 1) continue;
             rt.add(split.split(end)[0]);
         }
         return rt;
@@ -1363,15 +1300,12 @@ public class ASManager {
     }
 
     public static boolean notNullAndTrue(Boolean value) {
-        if (value == null)
-            return false;
+        if (value == null) return false;
         return value;
     }
 
     public static boolean sameBlock(Location locationOne, Location locationTwo) {
-        return locationOne.getBlockX() == locationTwo.getBlockX()
-                && locationOne.getBlockY() == locationTwo.getBlockY()
-                && locationOne.getBlockZ() == locationTwo.getBlockZ();
+        return locationOne.getBlockX() == locationTwo.getBlockX() && locationOne.getBlockY() == locationTwo.getBlockY() && locationOne.getBlockZ() == locationTwo.getBlockZ();
     }
 
     public static boolean debug = false;
@@ -1379,9 +1313,7 @@ public class ASManager {
     public static void debug(String string) {
         if (!debug) return;
         Bukkit.getLogger().info(string);
-        Bukkit.getOnlinePlayers().stream()
-                .filter(player -> player.hasPermission("advancedplugins.admin") || player.isOp())
-                .forEach(player -> player.sendMessage(ColorUtils.format(string)));
+        Bukkit.getOnlinePlayers().stream().filter(player -> player.hasPermission("advancedplugins.admin") || player.isOp()).forEach(player -> player.sendMessage(ColorUtils.format(string)));
     }
 
     public static String join(String[] args, String s) {
@@ -1405,15 +1337,13 @@ public class ASManager {
     }
 
     public static String getMaterial(ItemStack itemStack) {
-        if (itemStack == null)
-            return "AIR";
+        if (itemStack == null) return "AIR";
         return itemStack.getType().name();
     }
 
     public static <T> T getFromArray(T[] split, int pos) {
         // if pos = -1, assume it's the last one
-        if (pos == -1)
-            pos = split.length - 1;
+        if (pos == -1) pos = split.length - 1;
         return split[pos];
     }
 
@@ -1448,31 +1378,7 @@ public class ASManager {
         return ImmutableMap.<K, V>builder().putAll(data).build();
     }
 
-    private static final ImmutableList<String> vegetationBlockNames = ImmutableList.<String>builder().addAll((Arrays.asList(
-            "GRASS",
-            "TALL_GRASS",
-            "FERN",
-            "LARGE_FERN",
-            "SEAGRASS",
-            "TALL_SEAGRASS",
-            "DANDELION",
-            "POPPY",
-            "BLUE_ORCHID",
-            "ALLIUM",
-            "AZURE_BLUET",
-            "RED_TULIP",
-            "ORANGE_TULIP",
-            "WHITE_TULIP",
-            "PINK_TULIP",
-            "OXEYE_DAISY",
-            "CORNFLOWER",
-            "LILY_OF_THE_VALLEY",
-            "WITHER_ROSE",
-            "SUNFLOWER",
-            "LILAC",
-            "ROSE_BUSH",
-            "PEONY"
-    ))).build();
+    private static final ImmutableList<String> vegetationBlockNames = ImmutableList.<String>builder().addAll((Arrays.asList("GRASS", "TALL_GRASS", "FERN", "LARGE_FERN", "SEAGRASS", "TALL_SEAGRASS", "DANDELION", "POPPY", "BLUE_ORCHID", "ALLIUM", "AZURE_BLUET", "RED_TULIP", "ORANGE_TULIP", "WHITE_TULIP", "PINK_TULIP", "OXEYE_DAISY", "CORNFLOWER", "LILY_OF_THE_VALLEY", "WITHER_ROSE", "SUNFLOWER", "LILAC", "ROSE_BUSH", "PEONY"))).build();
 
 
     public static boolean isVegetation(Material type) {
@@ -1506,9 +1412,7 @@ public class ASManager {
     }
 
     public static void fillEmptyInventorySlots(Inventory inventory, ItemStack itemStack) {
-        IntStream.range(0, inventory.getSize())
-                .filter(slot -> inventory.getItem(slot) == null)
-                .forEach(slot -> inventory.setItem(slot, itemStack));
+        IntStream.range(0, inventory.getSize()).filter(slot -> inventory.getItem(slot) == null).forEach(slot -> inventory.setItem(slot, itemStack));
     }
 
     public static Location offsetToLookingLocation(Location loc, double distance) {
@@ -1518,6 +1422,15 @@ public class ASManager {
         direction.multiply(distance);
         newLoc.add(direction);
         return newLoc;
+    }
+
+    public static <K, V> ImmutableMap<K, V> configToImmutableMap(FileConfiguration config, String section, Function<String, K> keyTransformer, Class<V> valueType) {
+        ImmutableMap.Builder<K, V> builder = ImmutableMap.builder();
+        for (String key : config.getConfigurationSection(section).getKeys(false)) {
+            V value = valueType.cast(config.get(section + "." + key));
+            builder.put(keyTransformer.apply(key), value);
+        }
+        return builder.build();
     }
 
 }
