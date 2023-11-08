@@ -4,7 +4,7 @@ import me.angeschossen.lands.api.LandsIntegration;
 import me.angeschossen.lands.api.flags.Flags;
 import me.angeschossen.lands.api.land.LandWorld;
 import me.angeschossen.lands.api.player.LandPlayer;
-import net.advancedplugins.ae.Core;
+import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.hooks.PluginHookInstance;
 import org.bukkit.Location;
@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 
 public class LandsHook extends PluginHookInstance {
 
-    LandsIntegration landsIntegration = LandsIntegration.of(Core.getInstance());
+    LandsIntegration landsIntegration = LandsIntegration.of(ASManager.getInstance());
 
     @Override
     public boolean isEnabled() {
