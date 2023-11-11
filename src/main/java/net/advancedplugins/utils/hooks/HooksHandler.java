@@ -19,9 +19,9 @@ public class HooksHandler {
 
     public static void hook(JavaPlugin plugin) {
         // This shouldn't be loaded more than once, but if it is - clear pluginHookMap
-        if (!pluginHookMap.isEmpty()) {
+        if (!pluginHookMap.isEmpty())
             pluginHookMap = ImmutableMap.<HookPlugin, PluginHookInstance>builder().build();
-        }
+        
         HooksHandler.plugin = plugin;
         holograms();
 
