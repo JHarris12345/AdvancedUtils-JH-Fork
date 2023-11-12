@@ -1,5 +1,6 @@
 package net.advancedplugins.utils;
 
+import lombok.Getter;
 import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.hooks.HooksHandler;
 import net.advancedplugins.utils.hooks.plugins.ItemsAdderHook;
@@ -14,6 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class ItemDurability {
 
     private ItemStack item;
+    @Getter
     private int dealtDamage = 0;
 
     private final boolean itemsAdder;
@@ -75,10 +77,6 @@ public class ItemDurability {
         return this;
     }
 
-    public int getDealtDamage() {
-        return dealtDamage;
-    }
-
     /**
      * @return True if the item is broken, false otherwise.
      */
@@ -110,9 +108,9 @@ public class ItemDurability {
 
     public ItemDurability handleDurabilityChange(int amount) {
         if (amount < 0) {
-            return damageItem((short) amount);
+            return damageItem((short) -amount);
         } else {
-            return healItem((short) amount);
+            return healItem((short) (amount));
         }
     }
 
