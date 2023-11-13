@@ -40,6 +40,7 @@ public class ItemsAdderHook extends PluginHookInstance implements Listener {
     }
 
     public boolean isCustomBlock(Block block) {
+        if (block == null) return false;
         return CustomBlock.byAlreadyPlaced(block) != null;
     }
 
