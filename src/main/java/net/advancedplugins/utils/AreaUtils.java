@@ -80,7 +80,7 @@ public class AreaUtils {
                 break;
             case MOBS:
                 for (Entity entity : p.getNearbyEntities(radius, radius, radius)) {
-                    if (entity instanceof LivingEntity && !(entity instanceof Player) && !(entity instanceof ArmorStand)) {
+                    if (entity instanceof LivingEntity && isDamageable(entity) && !(entity instanceof Player) && !(entity instanceof ArmorStand)) {
                         playersList.add((LivingEntity) entity);
                     }
                 }
