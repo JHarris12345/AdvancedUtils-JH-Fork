@@ -23,6 +23,18 @@ public class AdvancedPlugin extends JavaPlugin implements Listener {
     public void startup() throws Exception {
     }
 
+    public void unload() throws Exception {
+    }
+
+    @Override
+    public void onDisable() {
+        try {
+            unload();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void onEnable() {
         instance = this;
