@@ -38,6 +38,9 @@ public class VaultEconomy implements AdvancedEconomy {
 
     @Override
     public boolean chargeUser(Player p, double amount) {
+        if (this.getBalance(p) < amount) {
+            return false;
+        }
         return econ.withdrawPlayer(p, amount).transactionSuccess();
     }
 
