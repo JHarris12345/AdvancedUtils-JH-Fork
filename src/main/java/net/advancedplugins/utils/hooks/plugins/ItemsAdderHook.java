@@ -55,6 +55,11 @@ public class ItemsAdderHook extends PluginHookInstance implements Listener {
         return stack.getItemStack();
     }
 
+    public boolean canBeBrokenWith(ItemStack tool, Block block) {
+        // if the block cannot be broken with that tool it should not return any drops!
+        return !CustomBlock.byAlreadyPlaced(block).getLoot(tool, false).isEmpty();
+    }
+
     public ItemStack getByName(String name) {
         CustomStack stack = CustomStack.getInstance(name);
         if (stack == null)
