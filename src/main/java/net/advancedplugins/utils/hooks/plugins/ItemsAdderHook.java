@@ -15,6 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
+import java.util.Collections;
 import java.util.List;
 
 public class ItemsAdderHook extends PluginHookInstance implements Listener {
@@ -46,11 +47,14 @@ public class ItemsAdderHook extends PluginHookInstance implements Listener {
 
     public boolean removeBlock(Block block) {
         if (!this.isCustomBlock(block)) return false;
+        System.out.println("REMOVE");
         return CustomBlock.byAlreadyPlaced(block).remove();
     }
 
     public List<ItemStack> getLootForCustomBlock(Block block) {
-        if (!isCustomBlock(block)) return null;
+        if (!isCustomBlock(block)) {
+            return Collections.emptyList();
+        }
         return (List<ItemStack>) CustomBlock.byAlreadyPlaced(block).getLoot();
     }
 
