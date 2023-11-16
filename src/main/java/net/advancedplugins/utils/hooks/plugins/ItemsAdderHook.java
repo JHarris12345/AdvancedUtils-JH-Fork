@@ -44,6 +44,11 @@ public class ItemsAdderHook extends PluginHookInstance implements Listener {
         return CustomBlock.byAlreadyPlaced(block) != null;
     }
 
+    public boolean removeBlock(Block block) {
+        if (!this.isCustomBlock(block)) return false;
+        return CustomBlock.byAlreadyPlaced(block).remove();
+    }
+
     public List<ItemStack> getLootForCustomBlock(Block block) {
         if (!isCustomBlock(block)) return null;
         return (List<ItemStack>) CustomBlock.byAlreadyPlaced(block).getLoot();
