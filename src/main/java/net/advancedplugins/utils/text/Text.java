@@ -1,12 +1,16 @@
 package net.advancedplugins.utils.text;
 
 import com.google.common.collect.Lists;
+import com.palmergames.adventure.text.minimessage.MiniMessage;
+import com.palmergames.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.ChatMessageType;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -52,6 +56,33 @@ public class Text {
                 sendMessage(commandSender, line);
             }
         }
+    }
+
+    public static void sendToastMessage(Player recipient, String message) {
+        if (message.startsWith("[ACTION_BAR]")) {
+            sendActionBarMessage(recipient, message.substring("[ACTION_BAR]".length()));
+        } else if (message.startsWith("[TITLE]")) {
+            sendTitleMessage(recipient, message.substring("[TITLE]".length()));
+        } else if (message.startsWith("[BOSS_BAR]")) {
+            sendBossBarMessage(recipient, message.substring("[BOSS_BAR]".length()));
+        } else {
+            sendDefaultMessage(recipient, message);
+        }
+    }
+
+    private static void sendActionBarMessage(Player recipient, String message) {
+        recipient.spigot().sendMessage(ChatMessageType.ACTION_BAR, BungeeComponentSerializer.get().serialize(
+                MiniMessage.miniMessage().deserialize(message)
+        ));
+    }
+
+    private static void sendTitleMessage(Player recipient, String message) {
+    }
+
+    private static void sendBossBarMessage(Player recipient, String message) {
+    }
+
+    private static void sendDefaultMessage(Player recipient, String message) {
     }
 
     /**
