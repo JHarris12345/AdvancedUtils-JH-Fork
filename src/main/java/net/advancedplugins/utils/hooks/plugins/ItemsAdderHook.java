@@ -80,7 +80,7 @@ public class ItemsAdderHook extends PluginHookInstance implements Listener {
             event.setCancelled(true);
             SchedulerUtils.runTaskLater(() -> {
                 CustomBlock customBlock = CustomBlock.byAlreadyPlaced(block);
-                ItemStack[] drops = ((List<ItemStack>) customBlock.getLoot()).toArray(new ItemStack[0]);
+                ItemStack[] drops = ((List<ItemStack>) customBlock.getLoot(player.getEquipment().getItemInMainHand(), false)).toArray(new ItemStack[0]);
                 if (customBlock.remove()) {
                     ASManager.giveItem(player, drops);
                 }
