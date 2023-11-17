@@ -5,15 +5,20 @@ import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.hooks.HooksHandler;
 import net.advancedplugins.utils.hooks.plugins.ItemsAdderHook;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings({"UnusedReturnValue", "deprecation"})
 public class ItemDurability {
-
+    private @Nullable LivingEntity itemHolder;
     private ItemStack item;
     @Getter
     private int dealtDamage = 0;
@@ -21,6 +26,11 @@ public class ItemDurability {
     private final boolean itemsAdder;
 
     public ItemDurability(ItemStack input) {
+        this(null, input);
+    }
+
+    public ItemDurability(@Nullable LivingEntity itemHolder, ItemStack input) {
+        this.itemHolder = itemHolder;
         this.item = (input == null) ? new ItemStack(Material.AIR) : input;
         itemsAdder = HooksHandler.isEnabled(HookPlugin.ITEMSADDER) &&
                 ((ItemsAdderHook) HooksHandler.getHook(HookPlugin.ITEMSADDER)).isCustomItem(item);
@@ -144,6 +154,10 @@ public class ItemDurability {
             ((ItemsAdderHook) HooksHandler.getHook(HookPlugin.ITEMSADDER)).setCustomItemDurability(item,
                     amount < getMaxDurability() ? getMaxDurability() - amount : -1);
             return this;
+        }
+
+        if (amount >= this.getMaxDurability() && this.itemHolder != null && this.itemHolder instanceof Player && item.getItemMeta() instanceof Damageable) {
+            Bukkit.getPluginManager().callEvent(new PlayerItemBreakEvent((Player) this.itemHolder, this.item));
         }
 
         this.setDurabilityVersionSave(amount);
