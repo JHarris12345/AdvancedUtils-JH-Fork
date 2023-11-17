@@ -47,7 +47,6 @@ public class ItemsAdderHook extends PluginHookInstance implements Listener {
 
     public boolean removeBlock(Block block) {
         if (!this.isCustomBlock(block)) return false;
-        System.out.println("REMOVE");
         return CustomBlock.byAlreadyPlaced(block).remove();
     }
 
@@ -56,6 +55,13 @@ public class ItemsAdderHook extends PluginHookInstance implements Listener {
             return Collections.emptyList();
         }
         return (List<ItemStack>) CustomBlock.byAlreadyPlaced(block).getLoot();
+    }
+
+    public List<ItemStack> getLootForCustomBlock(ItemStack tool, Block block) {
+        if (!isCustomBlock(block)) {
+            return Collections.emptyList();
+        }
+        return (List<ItemStack>) CustomBlock.byAlreadyPlaced(block).getLoot(tool, false);
     }
 
     public ItemStack setCustomItemDurability(ItemStack item, int durability) {
