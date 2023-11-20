@@ -15,6 +15,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
+import java.util.Collections;
 import java.util.List;
 
 public class ItemsAdderHook extends PluginHookInstance implements Listener {
@@ -44,15 +45,34 @@ public class ItemsAdderHook extends PluginHookInstance implements Listener {
         return CustomBlock.byAlreadyPlaced(block) != null;
     }
 
+    public boolean removeBlock(Block block) {
+        if (!this.isCustomBlock(block)) return false;
+        return CustomBlock.byAlreadyPlaced(block).remove();
+    }
+
     public List<ItemStack> getLootForCustomBlock(Block block) {
-        if (!isCustomBlock(block)) return null;
+        if (!isCustomBlock(block)) {
+            return Collections.emptyList();
+        }
         return (List<ItemStack>) CustomBlock.byAlreadyPlaced(block).getLoot();
+    }
+
+    public List<ItemStack> getLootForCustomBlock(ItemStack tool, Block block) {
+        if (!isCustomBlock(block)) {
+            return Collections.emptyList();
+        }
+        return (List<ItemStack>) CustomBlock.byAlreadyPlaced(block).getLoot(tool, false);
     }
 
     public ItemStack setCustomItemDurability(ItemStack item, int durability) {
         CustomStack stack = CustomStack.byItemStack(item);
         stack.setDurability(durability);
         return stack.getItemStack();
+    }
+
+    public boolean canBeBrokenWith(ItemStack tool, Block block) {
+        // if the block cannot be broken with that tool it should not return any drops!
+        return !CustomBlock.byAlreadyPlaced(block).getLoot(tool, false).isEmpty();
     }
 
     public ItemStack getByName(String name) {
