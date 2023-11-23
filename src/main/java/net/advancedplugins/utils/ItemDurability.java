@@ -151,7 +151,7 @@ public class ItemDurability {
      */
     public ItemDurability setDurability(int amount) {
         if (itemsAdder) {
-            ((ItemsAdderHook) HooksHandler.getHook(HookPlugin.ITEMSADDER)).setCustomItemDurability(item,
+            this.item = ((ItemsAdderHook) HooksHandler.getHook(HookPlugin.ITEMSADDER)).setCustomItemDurability(item,
                     amount < getMaxDurability() ? getMaxDurability() - amount : -1);
             return this;
         }
