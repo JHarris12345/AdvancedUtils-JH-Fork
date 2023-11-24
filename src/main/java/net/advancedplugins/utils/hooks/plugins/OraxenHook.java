@@ -2,8 +2,6 @@ package net.advancedplugins.utils.hooks.plugins;
 
 import io.th0rgal.oraxen.api.OraxenBlocks;
 import io.th0rgal.oraxen.api.events.noteblock.OraxenNoteBlockBreakEvent;
-import io.th0rgal.oraxen.mechanics.provided.gameplay.noteblock.NoteBlockMechanic;
-import io.th0rgal.oraxen.mechanics.provided.gameplay.stringblock.StringBlockMechanic;
 import io.th0rgal.oraxen.utils.drops.Loot;
 import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.hooks.HookPlugin;
@@ -15,6 +13,10 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class OraxenHook extends PluginHookInstance implements Listener {
     private final Plugin plugin;
@@ -54,23 +56,41 @@ public class OraxenHook extends PluginHookInstance implements Listener {
             block.removeMetadata("telepathy-broken-oraxen", plugin);
             event.setCancelled(true);
 
-            ItemStack[] loot = new ItemStack[0];
-            if (isCustomNoteBlock(block)) {
-                NoteBlockMechanic customBlock = OraxenBlocks.getNoteBlockMechanic(block.getBlockData());
-                loot = customBlock.getDrop().getLoots().stream()
-                        .map(Loot::getItemStack)
-                        .toArray(ItemStack[]::new);
-            } else if (isCustomStringBlock(block)) {
-                StringBlockMechanic customBlock = OraxenBlocks.getStringMechanic(block.getBlockData());
-                loot = customBlock.getDrop().getLoots().stream()
-                        .map(Loot::getItemStack)
-                        .toArray(ItemStack[]::new);
-            }
-
+            ItemStack[] loot = this.getLootForCustomBlock(block).toArray(new ItemStack[0]);
             // if player is not null, the remove method will drop item automatically
-            if (OraxenBlocks.remove(block.getLocation(), null)) {
+            if (this.removeBlock(block)) {
                 ASManager.giveItem(player, loot);
             }
         }
+    }
+
+    public boolean canBeBrokenWith(ItemStack tool, Block block) {
+        // if the block cannot be broken with that tool it should not return any drops!
+        if (this.isCustomNoteBlock(block)) {
+            return OraxenBlocks.getNoteBlockMechanic(block).getDrop().isToolEnough(tool);
+        } else if (this.isCustomStringBlock(block)) {
+            return OraxenBlocks.getStringMechanic(block).getDrop().isToolEnough(tool);
+        }
+
+        return false;
+    }
+
+    public List<ItemStack> getLootForCustomBlock(Block block) {
+        if (this.isCustomNoteBlock(block)) {
+            return OraxenBlocks.getNoteBlockMechanic(block).getDrop().getLoots().stream()
+                    .map(Loot::getItemStack)
+                    .collect(Collectors.toList());
+        } else if (this.isCustomStringBlock(block)) {
+            return OraxenBlocks.getStringMechanic(block).getDrop().getLoots().stream()
+                    .map(Loot::getItemStack)
+                    .collect(Collectors.toList());
+        }
+
+        return new ArrayList<>();
+    }
+
+    public boolean removeBlock(Block block) {
+        if (!this.isCustomBlock(block)) return false;
+        return OraxenBlocks.remove(block.getLocation(), null);
     }
 }
