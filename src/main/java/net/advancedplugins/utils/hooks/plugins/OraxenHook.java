@@ -3,7 +3,6 @@ package net.advancedplugins.utils.hooks.plugins;
 import io.th0rgal.oraxen.api.OraxenBlocks;
 import io.th0rgal.oraxen.api.events.noteblock.OraxenNoteBlockBreakEvent;
 import io.th0rgal.oraxen.utils.drops.Loot;
-import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.hooks.PluginHookInstance;
 import org.bukkit.block.Block;
@@ -49,23 +48,15 @@ public class OraxenHook extends PluginHookInstance implements Listener {
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onCustomBlockBreak(OraxenNoteBlockBreakEvent event) {
-        Player player = event.getPlayer();
         Block block = event.getBlock();
         // otherwise the item is put in the inventory and at the same time is
-        if (block.hasMetadata("telepathy-broken-oraxen")) {
-            block.removeMetadata("telepathy-broken-oraxen", plugin);
+        if (block.hasMetadata("ae-oraxen-cancel")) {
+            block.removeMetadata("ae-oraxen-cancel", plugin);
             event.setCancelled(true);
-
-            ItemStack[] loot = this.getLootForCustomBlock(block).toArray(new ItemStack[0]);
-            // if player is not null, the remove method will drop item automatically
-            if (this.removeBlock(block)) {
-                ASManager.giveItem(player, loot);
-            }
         }
     }
 
     public boolean canBeBrokenWith(ItemStack tool, Block block) {
-        // if the block cannot be broken with that tool it should not return any drops!
         if (this.isCustomNoteBlock(block)) {
             return OraxenBlocks.getNoteBlockMechanic(block).getDrop().isToolEnough(tool);
         } else if (this.isCustomStringBlock(block)) {
