@@ -62,12 +62,12 @@ public class HooksHandler {
             registerNew(HookPlugin.SUPERIORSKYBLOCK2, new SuperiorSkyblock2Hook());
 
         if (isPluginEnabled(HookPlugin.ORAXEN.getPluginName()))
-            registerNew(HookPlugin.ORAXEN, new OraxenHook());
+            registerNew(HookPlugin.ORAXEN, new OraxenHook(plugin), true);
 
         if (isPluginEnabled(HookPlugin.PROTECTIONSTONES.getPluginName()))
             registerNew(HookPlugin.PROTECTIONSTONES, new ProtectionStonesHook());
 
-        // Do this after server is loaded, so all softdepends that aren't in the plugin.yml file will be enabeld by this time
+        // Do this after server is loaded, so all softdepends that aren't in the plugin.yml file will be enabled by this time
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
             // Figure out which factions plugin is loaded and hook into the correct one
 
