@@ -44,7 +44,7 @@ public class PlayASound {
     }
 
     public static void playSound(String sound, Player p) {
-        playSound(sound, p, 10.0f, 1.0f);
+        playSound(sound, p, 1.0f, 1.0f);
     }
 
     public static void playSound(String sound, Player p, float pitch, float volume) {
