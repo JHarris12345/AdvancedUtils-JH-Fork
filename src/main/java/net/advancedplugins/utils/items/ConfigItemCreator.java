@@ -56,6 +56,7 @@ public class ConfigItemCreator {
         itemBuilderPaths.put("custom-model-data", "custom-model-data");
         itemBuilderPaths.put("enchantments", "enchantments");
         itemBuilderPaths.put("armor-trim", "armor-trim");
+        itemBuilderPaths.put("unbreakable", "unbreakable");
         itemBuilderPaths.put("head", "head");
         ConfigItemCreator.setDefaultPaths(itemBuilderPaths);
     }
@@ -136,6 +137,11 @@ public class ConfigItemCreator {
                 int modelData = config.getInt(path + "." + paths.get("custom-model-data"));
                 builder.setCustomModelData(modelData);
             }
+
+        }
+        // Custom Model Data
+        if (config.contains(path + "." + paths.get("unbreakable"))) {
+           builder.setUnbreakable(config.getBoolean(path + "." + paths.get("unbreakable")));
         }
 
         if (config.contains(path + "." + paths.get("force-glow"))) {
