@@ -22,7 +22,9 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.type.Bed;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
@@ -1378,6 +1380,10 @@ public class ASManager {
         return ImmutableMap.<K, V>builder().putAll(data).build();
     }
 
+    public static <V> ImmutableList<V> toImmutableList(List<V> list) {
+        return new ImmutableList.Builder<V>().addAll(list).build();
+    }
+
     private static final ImmutableList<String> vegetationBlockNames = ImmutableList.<String>builder().addAll((Arrays.asList("GRASS", "TALL_GRASS", "FERN", "LARGE_FERN", "SEAGRASS", "TALL_SEAGRASS", "DANDELION", "POPPY", "BLUE_ORCHID", "ALLIUM", "AZURE_BLUET", "RED_TULIP", "ORANGE_TULIP", "WHITE_TULIP", "PINK_TULIP", "OXEYE_DAISY", "CORNFLOWER", "LILY_OF_THE_VALLEY", "WITHER_ROSE", "SUNFLOWER", "LILAC", "ROSE_BUSH", "PEONY"))).build();
 
 
@@ -1433,4 +1439,16 @@ public class ASManager {
         return builder.build();
     }
 
+    public static boolean isHostile(EntityType type) {
+        return Monster.class.isAssignableFrom(type.getEntityClass());
+    }
+
+    public static Map<String, String> stringToMap(String... s) {
+        Map<String, String> map = new HashMap<>();
+        for (String s1 : s) {
+            String[] split = s1.split(";");
+            map.put(split[0], split[1]);
+        }
+        return map;
+    }
 }

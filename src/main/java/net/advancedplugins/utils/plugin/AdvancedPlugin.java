@@ -67,6 +67,11 @@ public class AdvancedPlugin extends JavaPlugin implements Listener {
     }
 
 
+    public void registerEvents(Listener l) {
+        Bukkit.getPluginManager().registerEvents(l, instance);
+    }
+
+
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         if (!e.getPlayer().isOp()) return;
