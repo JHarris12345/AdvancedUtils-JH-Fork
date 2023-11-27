@@ -1,5 +1,6 @@
 package net.advancedplugins.utils.menus;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,7 +23,7 @@ public class AdvancedMenuClick implements Listener {
         e.setCancelled(true);
 
         int rawSlot = e.getRawSlot();
-        if (action.equals(ClickType.UNKNOWN) || rawSlot < inventory.getSize())
+        if (action.equals(ClickType.UNKNOWN) || rawSlot > inventory.getSize())
             return;
 
         menu.onClick(((Player) e.getWhoClicked()), rawSlot, action);

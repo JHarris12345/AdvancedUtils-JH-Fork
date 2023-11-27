@@ -1,6 +1,7 @@
 package net.advancedplugins.utils.menus.item;
 
 import lombok.Getter;
+import lombok.Setter;
 import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.items.ConfigItemCreator;
 import net.advancedplugins.utils.items.ItemBuilder;
@@ -17,6 +18,7 @@ public class AdvancedMenuItem {
 
     private ConfigurationSection section;
     private Replace replace;
+    @Setter
     private int[] slots;
 
     @Getter

@@ -6,7 +6,6 @@ import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.menus.item.AdvancedMenuItem;
 import net.advancedplugins.utils.menus.item.ClickAction;
 import net.advancedplugins.utils.text.Replace;
-import net.advancedplugins.utils.text.Replacer;
 import net.advancedplugins.utils.text.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -14,12 +13,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Objects;
 
 public class AdvancedMenu implements InventoryHolder {
 
@@ -38,7 +34,7 @@ public class AdvancedMenu implements InventoryHolder {
 
     @Getter
     @Setter
-    private Replacer replace;
+    private Replace replace;
 
     @Getter
     @Setter
@@ -56,7 +52,7 @@ public class AdvancedMenu implements InventoryHolder {
         this.player = player;
         this.title = Text.modify(section.getString(handler.getPath("name")), (Replace) replace);
         this.invSize = section.getInt(handler.getPath("size"));
-        ASManager.debug(section.getInt("size") + ", " + this.invSize);
+        this.replace = replace;
 
         populateItemHashMap(section, itemHashMap, replace);
     }
@@ -115,6 +111,9 @@ public class AdvancedMenu implements InventoryHolder {
 
     private void populateItemHashMap(ConfigurationSection section, HashMap<Integer, AdvancedMenuItem> itemMap, Replace replace) {
         String itemsPath = handler.getPath("items");
+        if (!section.isConfigurationSection("items"))
+            return;
+
         ConfigurationSection itemsConfigSection = section.getConfigurationSection(itemsPath);
 
         for (String itemKey : itemsConfigSection.getKeys(false)) {
@@ -124,6 +123,14 @@ public class AdvancedMenu implements InventoryHolder {
 
     private void processItemKey(String itemKey, ConfigurationSection itemsConfigSection, HashMap<Integer, AdvancedMenuItem> itemMap, Replace replace) {
         processItemKey(itemKey, itemsConfigSection.getCurrentPath() + "." + itemKey, itemsConfigSection, itemMap, replace);
+    }
+
+    public void processItem(String itemKey, ConfigurationSection itemsConfigSection, Replace replace) {
+        processItemKey(itemKey, itemsConfigSection.getCurrentPath() + "." + itemKey, itemsConfigSection, this.itemHashMap, replace);
+    }
+
+    public void processItem(String itemKey, ConfigurationSection itemsConfigSection) {
+        processItemKey(itemKey, itemsConfigSection.getCurrentPath() + "." + itemKey, itemsConfigSection, this.itemHashMap, replace);
     }
 
     private void processItemKey(String itemKey, String itemPath, ConfigurationSection itemsConfigSection, HashMap<Integer, AdvancedMenuItem> itemMap, Replace replace) {
