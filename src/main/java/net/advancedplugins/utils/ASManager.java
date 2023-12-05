@@ -70,6 +70,10 @@ public class ASManager {
 
     private static final List<Integer> validSizes = new ArrayList<>(Arrays.asList(9, 18, 27, 36, 45, 54));
 
+    public static int hexToDecimal(String s) {
+        return Integer.parseInt(s, 16);
+    }
+
     @Contract("null, _ -> fail")
     public static void notNull(Object arg, String identifier) {
         if (arg == null) {

@@ -1,6 +1,7 @@
 package net.advancedplugins.utils.plugin;
 
 import lombok.Getter;
+import lombok.Setter;
 import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.text.Text;
 import org.bukkit.Bukkit;
@@ -10,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.io.IOException;
 
 public class AdvancedPlugin extends JavaPlugin implements Listener {
@@ -19,6 +21,9 @@ public class AdvancedPlugin extends JavaPlugin implements Listener {
 
     private String startupError = null;
     private String pluginName = "";
+    @Getter
+    @Setter
+    private boolean loaded = false;
 
     public void startup() throws Exception {
     }
@@ -75,7 +80,6 @@ public class AdvancedPlugin extends JavaPlugin implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         if (!e.getPlayer().isOp()) return;
-
         if (startupError == null) return;
 
         Bukkit.getScheduler().runTaskLater(this, () -> {
@@ -83,5 +87,10 @@ public class AdvancedPlugin extends JavaPlugin implements Listener {
             e.getPlayer().sendMessage(Text.modify("&c&o" + startupError));
             e.getPlayer().sendMessage(Text.modify("&cIf the problem persists after checking the config files, please seek assistance at: https://discord.gg/advancedplugins"));
         }, 20);
+    }
+
+    public void saveResource(String resourcePath) {
+        if (new File(getDataFolder(), resourcePath).exists()) return;
+        saveResource(resourcePath, false);
     }
 }

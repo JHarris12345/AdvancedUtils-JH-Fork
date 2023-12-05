@@ -2,6 +2,7 @@ package net.advancedplugins.utils.menus;
 
 import lombok.Getter;
 import net.advancedplugins.utils.menus.item.ClickAction;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -15,6 +16,8 @@ public class AdvancedMenusHandler {
     @Getter
     private final HashMap<String, ClickAction> defaultActions = new HashMap<>();
 
+    private final AdvancedMenuClick clickHandler = new AdvancedMenuClick();
+
     public AdvancedMenusHandler(JavaPlugin plugin) {
         instance = this;
 
@@ -25,7 +28,7 @@ public class AdvancedMenusHandler {
         loadDefaultActions();
 
         // Register inventory click handler
-        plugin.getServer().getPluginManager().registerEvents(new AdvancedMenuClick(), plugin);
+        plugin.getServer().getPluginManager().registerEvents(clickHandler, plugin);
     }
 
     private void loadDefaultActions() {
@@ -39,5 +42,9 @@ public class AdvancedMenusHandler {
 
     public static AdvancedMenusHandler getInstance() {
         return instance;
+    }
+
+    public void unload() {
+        HandlerList.unregisterAll(clickHandler);
     }
 }
