@@ -143,8 +143,12 @@ public enum ReflectionMethod {
             new Since(MinecraftVersion.MC1_19_R2, "E"), new Since(MinecraftVersion.MC1_19_R3, "G"),
             new Since(MinecraftVersion.MC1_20_R1, "J"),
             new Since(MinecraftVersion.MC1_20_R2, "L")),
-    NMS_ENTITY_CLEARPATH(ClassWrapper.NMS_ENTITY_INSENTIENT.getClazz(), new Class[]{}, MinecraftVersion.MC1_13_R1, new Since(MinecraftVersion.MC1_13_R1, "D"), new Since(MinecraftVersion.MC1_17_R1, "getNavigation"), new Since(MinecraftVersion.MC1_18_R2, "D"), new Since(MinecraftVersion.MC1_19_R2, "E")),
-    ;
+    NMS_ENTITY_CLEARPATH(ClassWrapper.NMS_ENTITY_INSENTIENT.getClazz(), new Class[]{}, MinecraftVersion.MC1_13_R1,
+            new Since(MinecraftVersion.MC1_13_R1, "D"), new Since(MinecraftVersion.MC1_17_R1, "getNavigation"),
+            new Since(MinecraftVersion.MC1_18_R2, "D"), new Since(MinecraftVersion.MC1_19_R2, "E")),
+
+    NMS_REGISTER_BIOME(ClassWrapper.NMS_REGISTRYMATERIALS.getClazz(), new Class[]{}, MinecraftVersion.MC1_20_R1, new Since(MinecraftVersion.MC1_20_R1, "m"));
+
 
     private MinecraftVersion removedAfter;
     private Since targetVersion;
