@@ -26,7 +26,8 @@ public enum MinecraftVersion {
     MC1_19_R2(1_19_2, true),
     MC1_19_R3(1_19_4, true),
     MC1_20_R1(1_20_1, true),
-    MC1_20_R2(1_20_2, true);
+    MC1_20_R2(1_20_2, true),
+    MC1_20_R3(1_20_3, true);
 
     private final int versionId;
     public final boolean mojangMapping;
