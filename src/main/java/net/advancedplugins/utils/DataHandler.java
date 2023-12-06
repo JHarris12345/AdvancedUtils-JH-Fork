@@ -45,6 +45,10 @@ public class DataHandler {
         populateFile(createNewFile);
     }
 
+    public DataHandler() {
+
+    }
+
     private void populateFile(boolean createNewFile) {
         fileConfiguration = new YamlConfiguration();
 
@@ -186,6 +190,9 @@ public class DataHandler {
     }
 
     public void unload() {
+        for(int id : activeTasks) {
+            Bukkit.getScheduler().cancelTask(id);
+        }
     }
 
     public UUID stringToId(String input) {
@@ -234,6 +241,10 @@ public class DataHandler {
 
     @Getter
     private List<Integer> activeTasks = new ArrayList<>();
+
+    public void addTask(int id) {
+        this.activeTasks.add(id);
+    }
 
     public void registerListener(Listener l) {
         Bukkit.getPluginManager().registerEvents(l, ASManager.getInstance());

@@ -14,7 +14,7 @@ import java.util.List;
 public class AreaUtils {
 
     private static final List<EntityType> ignoredEntities = Collections.unmodifiableList(Arrays.asList(EntityType.ARMOR_STAND,
-            EntityType.PLAYER, EntityType.ITEM_FRAME, EntityType.PAINTING, EntityType.LEASH_HITCH, EntityType.MINECART,
+            EntityType.ITEM_FRAME, EntityType.PAINTING, EntityType.LEASH_HITCH, EntityType.MINECART,
             EntityType.MINECART_CHEST, EntityType.MINECART_COMMAND, EntityType.MINECART_FURNACE, EntityType.MINECART_HOPPER,
             EntityType.MINECART_MOB_SPAWNER, EntityType.MINECART_TNT, EntityType.BOAT, EntityType.FISHING_HOOK,
             EntityType.DROPPED_ITEM, EntityType.ARROW, EntityType.SPECTRAL_ARROW, EntityType.EGG, EntityType.ENDER_PEARL,
