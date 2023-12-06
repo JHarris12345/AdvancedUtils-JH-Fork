@@ -36,11 +36,15 @@ public class PDCHandler {
         holder.getPersistentDataContainer().set(getNamespace(key), type, value);
     }
 
+    public static void remove(PersistentDataHolder holder, String key) {
+        holder.getPersistentDataContainer().remove(getNamespace(key));
+    }
+
     private static Object get(PersistentDataHolder holder, String key, PersistentDataType type) {
         return holder.getPersistentDataContainer().get(getNamespace(key), type);
     }
 
-    private static boolean has(PersistentDataHolder holder, String key, PersistentDataType type) {
+    public static boolean has(PersistentDataHolder holder, String key, PersistentDataType type) {
         return holder.getPersistentDataContainer().has(getNamespace(key), type);
     }
 

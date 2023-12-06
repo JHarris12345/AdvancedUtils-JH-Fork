@@ -4,7 +4,7 @@ import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.PlaceholderHook;
 import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.hooks.PluginHookInstance;
-import org.bukkit.entity.Player;
+import org.bukkit.OfflinePlayer;
 
 public class PlaceholderAPIHook extends PluginHookInstance {
 
@@ -18,7 +18,7 @@ public class PlaceholderAPIHook extends PluginHookInstance {
         return HookPlugin.PLACEHOLDERAPI.getPluginName();
     }
 
-    public String parsePlaceholder(Player p, String s) {
+    public String parsePlaceholder(OfflinePlayer p, String s) {
         return me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(p, s);
     }
 
