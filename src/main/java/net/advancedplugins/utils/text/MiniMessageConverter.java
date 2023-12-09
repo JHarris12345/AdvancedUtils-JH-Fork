@@ -74,8 +74,6 @@ public class MiniMessageConverter {
             legacyString = legacyString.replace(entry.getKey(), entry.getValue());
         for (Map.Entry<String, String> entry : magicMap.entrySet())
             legacyString = legacyString.replace(entry.getKey(), entry.getValue());
-        System.out.println(colorMap);
-        System.out.println("LEGACY = " + legacyString);
         return legacyString;
     }
 
