@@ -1,5 +1,6 @@
 package net.advancedplugins.utils.text;
 
+import lombok.Getter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.jetbrains.annotations.NotNull;
@@ -7,10 +8,15 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Mapping of Minecraft color codes to MiniMessage tags
+  */
 public class MiniMessageConverter {
 
-    // Mapping of Minecraft color codes to MiniMessage tags
+    @Getter
     private static final Map<String, String> colorMap = new HashMap<>();
+    @Getter
+    private static final Map<String, String> magicMap = new HashMap<>();
 
     static {
         colorMap.put("&0", "<black>");
@@ -29,17 +35,19 @@ public class MiniMessageConverter {
         colorMap.put("&d", "<light_purple>");
         colorMap.put("&e", "<yellow>");
         colorMap.put("&f", "<white>");
-        colorMap.put("&l", "<bold>");
-        colorMap.put("&m", "<strikethrough>");
-        colorMap.put("&n", "<underlined>");
-        colorMap.put("&o", "<italic>");
-        colorMap.put("&r", "<reset>");
+
+        magicMap.put("&l", "<bold>");
+        magicMap.put("&m", "<strikethrough>");
+        magicMap.put("&n", "<underlined>");
+        magicMap.put("&o", "<italic>");
+        magicMap.put("&r", "<reset>");
     }
 
     public static String convertLegacy(@NotNull String legacyString) {
-        for (Map.Entry<String, String> entry : colorMap.entrySet()) {
+        for (Map.Entry<String, String> entry : colorMap.entrySet())
             legacyString = legacyString.replace(entry.getKey(), entry.getValue());
-        }
+        for (Map.Entry<String, String> entry : magicMap.entrySet())
+            legacyString = legacyString.replace(entry.getKey(), entry.getValue());
         return legacyString;
     }
 
