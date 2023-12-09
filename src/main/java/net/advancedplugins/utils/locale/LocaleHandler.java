@@ -2,6 +2,7 @@ package net.advancedplugins.utils.locale;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import lombok.Getter;
 import net.advancedplugins.utils.locale.subclass.LocaleFile;
 import net.advancedplugins.utils.text.Text;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -12,13 +13,17 @@ import java.util.stream.Collectors;
 
 public class LocaleHandler {
 
+    @Getter
     private String locale;
     private String langFolder;
+    @Getter
     private final JavaPlugin instance;
 
     private ImmutableMap<String, LocaleFile> localeMap;
+    @Getter
     private static LocaleHandler handler = null;
 
+    @Getter
     private String prefix;
 
     public LocaleHandler(JavaPlugin plugin) {
@@ -27,24 +32,12 @@ public class LocaleHandler {
         localeMap = ImmutableMap.<String, LocaleFile>builder().build();
     }
 
-    public String getPrefix() {
-        return prefix;
-    }
-
     public void setPrefix(String prefix) {
         this.prefix = color(getString(prefix));
     }
 
     public ImmutableSet<String> getAvailableLocales() {
         return localeMap.keySet();
-    }
-
-    public static LocaleHandler getHandler() {
-        return handler;
-    }
-
-    public String getLocale() {
-        return locale;
     }
 
     public void setLocale(String locale) {
@@ -100,9 +93,4 @@ public class LocaleHandler {
                 .stream().map(this::color)
                 .collect(Collectors.toList());
     }
-
-    public JavaPlugin getInstance() {
-        return instance;
-    }
-
 }

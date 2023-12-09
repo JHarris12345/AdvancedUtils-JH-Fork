@@ -1,5 +1,7 @@
 package net.advancedplugins.utils.locale.subclass;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.advancedplugins.utils.locale.LocaleHandler;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -11,8 +13,11 @@ import java.nio.charset.StandardCharsets;
 public class LocaleFile {
 
     private File file;
+    @Getter
     private final String locale;
 
+    @Getter
+    @Setter
     private FileConfiguration configuration = null;
 
     public LocaleFile(String locale, JavaPlugin plugin) {
@@ -20,8 +25,9 @@ public class LocaleFile {
         saveFile(plugin);
     }
 
-    public String getLocale() {
-        return locale;
+    public void reloadLocaleConfig() {
+        // because in getLocaleConfig() we check for null and create new instance if needed, this is enough to reload to config
+        this.configuration = null;
     }
 
     public FileConfiguration getLocaleConfig() {
@@ -41,10 +47,6 @@ public class LocaleFile {
             }
         }
 
-        return configuration;
-    }
-
-    public FileConfiguration getConfiguration() {
         return configuration;
     }
 
