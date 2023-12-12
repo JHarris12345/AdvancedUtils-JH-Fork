@@ -27,6 +27,7 @@ public abstract class SimpleCommand<T extends CommandSender> extends Command<T> 
 
     @Getter
     private LinkedList<SubCommand<? extends CommandSender>> subCommands = new LinkedList<>();
+    // TODO MISSING TAB COMPLETION FOR ARGUMENTS
     private List<Argument<?>> arguments = new ArrayList<>();
 
     public SimpleCommand(JavaPlugin plugin, String command, String permission, boolean isConsole) {
