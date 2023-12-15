@@ -35,4 +35,8 @@ public class LandsHook extends PluginHookInstance {
     public boolean canAttack(Player attacker, Player defender) {
         return landsIntegration.canPvP(attacker, defender, defender.getLocation(), false, false);
     }
+
+    public boolean isProtected(Location loc) {
+        return landsIntegration.getArea(loc) != null;
+    }
 }

@@ -38,4 +38,14 @@ public class WorldGuardHook extends PluginHookInstance {
         return false;
     }
 
+    public boolean isProtected(Location loc) {
+        try {
+            return com.sk89q.worldguard.WorldGuard.getInstance().getPlatform().getRegionContainer()
+                    .get(com.sk89q.worldedit.bukkit.BukkitAdapter.adapt(loc.getWorld()))
+                    .getApplicableRegions(com.sk89q.worldedit.bukkit.BukkitAdapter.asBlockVector(loc)).size() > 0;
+        } catch (Exception ev) {
+            return false;
+        }
+    }
+
 }
