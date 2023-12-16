@@ -28,6 +28,8 @@ public abstract class SimpleCommand<T extends CommandSender> extends Command<T> 
     @Getter
     private LinkedList<SubCommand<? extends CommandSender>> subCommands = new LinkedList<>();
     // TODO MISSING TAB COMPLETION FOR ARGUMENTS
+
+    @Getter
     private List<Argument<?>> arguments = new ArrayList<>();
 
     public SimpleCommand(JavaPlugin plugin, String command, String permission, boolean isConsole) {
@@ -78,6 +80,26 @@ public abstract class SimpleCommand<T extends CommandSender> extends Command<T> 
         Text.sendMessage(sendTo, "  &2<> &f- Required Arguments&7; &9[] &f- Optional Arguments");
 
         Text.sendMessage(sendTo, color + "[<] &8+-------< " + color + "&l" + description.getName().concat(" &7v" + description.getVersion() + " &8>-------+ " + color + "[>]"));
+    }
+
+    public void sendUsage(CommandSender sender) {
+        Text.sendMessage(sender, Text.modify("&cUsage: "+getFormatted()));
+    }
+
+    public String getFormatted() {
+        StringBuilder builder = new StringBuilder().append("/").append(this.command).append(" ");
+        for (Argument arg : this.arguments) {
+            if (arg.getType() == null) {
+                builder.append(arg.getArgument());
+            } else {
+                if (arg.isOptional())
+                    builder.append("[").append(arg.getArgument()).append("]&");
+                else
+                    builder.append("<").append(arg.getArgument()).append(">");
+            }
+            builder.append(" ");
+        }
+        return builder.toString();
     }
 
     public void setArguments(List<Argument<?>> arguments) {
@@ -162,6 +184,7 @@ public abstract class SimpleCommand<T extends CommandSender> extends Command<T> 
         }
         return true;
     }
+
 
     public List<String> tabCompletionSuggestion(CommandSender commandSender, int index) {
         if (index > this.arguments.size() - 1) {
