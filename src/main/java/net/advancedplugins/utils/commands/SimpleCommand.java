@@ -27,8 +27,6 @@ public abstract class SimpleCommand<T extends CommandSender> extends Command<T> 
 
     @Getter
     private LinkedList<SubCommand<? extends CommandSender>> subCommands = new LinkedList<>();
-    // TODO MISSING TAB COMPLETION FOR ARGUMENTS
-
     @Getter
     private List<Argument<?>> arguments = new ArrayList<>();
 
@@ -149,7 +147,6 @@ public abstract class SimpleCommand<T extends CommandSender> extends Command<T> 
         return this.arguments.size();
     }
 
-    @SuppressWarnings("unchecked")
     public <U> U parseArgument(String[] args, int index) {
         return parseArgument(args, index, null);
     }
