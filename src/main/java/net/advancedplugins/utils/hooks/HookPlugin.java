@@ -21,6 +21,7 @@ public enum HookPlugin {
     SUPERIORSKYBLOCK2("SuperiorSkyblock2"),
     ORAXEN("Oraxen"),
     PROTECTIONSTONES("ProtectionStones"),
+    PROTOCOLLIB("ProtocolLib"),
     FACTIONSKORE("FactionsKore");
 
     private final String pluginName;
