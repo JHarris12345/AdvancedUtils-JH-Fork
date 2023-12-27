@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public abstract class SubCommand<T extends CommandSender> extends Command<T> {
@@ -119,6 +120,13 @@ public abstract class SubCommand<T extends CommandSender> extends Command<T> {
         String arg = args.length - 1 < index ? null : args[index];
         if (arg == null)
             return def;
+        return ((Argument<U>) this.arguments.get(index)).getType().parse(arg);
+    }
+
+    public <U> U parseArgument(String[] args, int index, Supplier<U> def) {
+        String arg = args.length - 1 < index ? null : args[index];
+        if (arg == null)
+            return def == null ? null : def.get();
         return ((Argument<U>) this.arguments.get(index)).getType().parse(arg);
     }
 
