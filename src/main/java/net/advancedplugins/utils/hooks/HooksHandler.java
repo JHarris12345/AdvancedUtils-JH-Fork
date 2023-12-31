@@ -1,5 +1,6 @@
 package net.advancedplugins.utils.hooks;
 
+import com.bgsoftware.superiorskyblock.external.ProtocolLibHook;
 import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
 import net.advancedplugins.utils.hooks.holograms.CMIHologramHandler;
@@ -24,6 +25,9 @@ public class HooksHandler {
         
         HooksHandler.plugin = plugin;
         holograms();
+
+        if(isPluginEnabled(HookPlugin.PROTOCOLLIB.getPluginName()))
+            registerNew(HookPlugin.PROTOCOLLIB, new PluginHookInstance()); // Generic plugin hook
 
         // AureliumSKills hook must be loaded instantly without runnable
         if (isPluginEnabled(HookPlugin.AURELIUMSKILLS.getPluginName()))

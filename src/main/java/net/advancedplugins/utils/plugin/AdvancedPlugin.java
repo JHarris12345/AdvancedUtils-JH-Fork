@@ -90,7 +90,7 @@ public class AdvancedPlugin extends JavaPlugin implements Listener {
     }
 
     public void saveResource(String resourcePath) {
-        if (new File(getDataFolder(), resourcePath).exists()) return;
+        if (new File(getDataFolder(), resourcePath).isFile()) return;
         saveResource(resourcePath, false);
     }
 }

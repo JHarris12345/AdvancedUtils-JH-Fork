@@ -1438,7 +1438,7 @@ public class ASManager {
         ImmutableMap.Builder<K, V> builder = ImmutableMap.builder();
         for (String key : config.getConfigurationSection(section).getKeys(false)) {
             V value = valueType.cast(config.get(section + "." + key));
-            builder.put(keyTransformer.apply(key), value);
+            builder.put(keyTransformer.apply(key.toUpperCase(Locale.ROOT)), value);
         }
         return builder.build();
     }

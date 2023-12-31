@@ -1,5 +1,8 @@
 package net.advancedplugins.utils;
 
+import net.advancedplugins.utils.hooks.HookPlugin;
+import net.advancedplugins.utils.hooks.HooksHandler;
+import net.advancedplugins.utils.hooks.factions.FactionsPluginHook;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -84,7 +87,7 @@ public class AreaUtils {
                 break;
             case MOBS:
                 for (Entity entity : p.getNearbyEntities(radius, radius, radius)) {
-                    if (entity instanceof LivingEntity && isDamageable(entity)
+                    if (entity instanceof LivingEntity && isDamageable(p, entity)
                             && !ignoredEntities.contains(entity.getType()) && !(entity instanceof Player)) {
                         playersList.add((LivingEntity) entity);
                     }
@@ -92,14 +95,14 @@ public class AreaUtils {
                 break;
             case DAMAGEABLE:
                 for (Entity entity : p.getNearbyEntities(radius, radius, radius)) {
-                    if (entity instanceof LivingEntity && isDamageable(entity) && !ignoredEntities.contains(entity.getType())) {
+                    if (entity instanceof LivingEntity && isDamageable(p, entity) && !ignoredEntities.contains(entity.getType())) {
                         playersList.add((LivingEntity) entity);
                     }
                 }
                 break;
             case UNDAMAGEABLE:
                 for (Entity entity : p.getNearbyEntities(radius, radius, radius)) {
-                    if (entity instanceof LivingEntity && !isDamageable(entity) && !ignoredEntities.contains(entity.getType())) {
+                    if (entity instanceof LivingEntity && !isDamageable(p, entity) && !ignoredEntities.contains(entity.getType())) {
                         playersList.add((LivingEntity) entity);
                     }
                 }
@@ -109,11 +112,19 @@ public class AreaUtils {
         return playersList;
     }
 
-    private static boolean isDamageable(Entity entity) {
+    private static boolean isDamageable(Entity initiator, Entity entity) {
         entity.setMetadata("ae_ignore", new FixedMetadataValue(ASManager.getInstance(), true));
         EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(entity, entity, EntityDamageEvent.DamageCause.CUSTOM, 0);
         Bukkit.getPluginManager().callEvent(event);
         entity.removeMetadata("ae_ignore", ASManager.getInstance());
+
+        if (entity instanceof Player && initiator instanceof Player) {
+            if (HooksHandler.isEnabled(HookPlugin.FACTIONS)) {
+                FactionsPluginHook factionsHook = ((FactionsPluginHook) HooksHandler.getHook(HookPlugin.FACTIONS));
+                String rel = factionsHook.getRelation(((Player) entity), ((Player) initiator));
+                if (rel.equals("member")) return false;
+            }
+        }
         return !event.isCancelled();
     }
 
