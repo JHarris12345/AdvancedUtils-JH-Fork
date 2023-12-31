@@ -4,13 +4,11 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.advancedplugins.utils.commands.argument.Argument;
 import net.advancedplugins.utils.commands.argument.ArgumentHandler;
-import net.advancedplugins.utils.commands.argument.ArgumentType;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
@@ -162,9 +160,13 @@ public abstract class SubCommand<T extends CommandSender> extends Command<T> {
     }
 
     private boolean isArgumentValid(String[] arguments, int index) {
-        if (getArgumentsSize() - 1 < index && this.endless) {
-            return true;
+        if (getArgumentsSize() - 1 < index) {
+            if (this.endless) {
+                return true;
+            }
+            return false;
         }
+
         Argument<?> argument = this.arguments.get(index);
         if (argument.getType() == null) {
             String matchTo = arguments[index];

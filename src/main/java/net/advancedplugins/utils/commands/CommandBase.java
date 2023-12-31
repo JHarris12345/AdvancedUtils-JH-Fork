@@ -2,7 +2,7 @@ package net.advancedplugins.utils.commands;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import net.advancedplugins.utils.ASManager;
+import lombok.Getter;
 import net.advancedplugins.utils.commands.argument.ArgumentHandler;
 import net.advancedplugins.utils.commands.argument.ArgumentType;
 import net.advancedplugins.utils.text.Text;
@@ -23,6 +23,7 @@ import java.util.logging.Level;
 
 public class CommandBase implements CommandExecutor, TabCompleter {
     private final JavaPlugin plugin;
+    @Getter
     private Set<SimpleCommand<? extends CommandSender>> commands = Sets.newHashSet();
 
     public CommandBase(JavaPlugin plugin) {
@@ -60,10 +61,19 @@ public class CommandBase implements CommandExecutor, TabCompleter {
                 sender.sendMessage("The console can not execute this command.");
                 return true;
             }
+
+            // Checks if the command has any sub commands
+            if (simpleCommand.getSubCommands().isEmpty() && simpleCommand.getArgumentsSize() > args.length) {
+                // If the command does not have sub commands, has arguments and the user didn't specify any, send the usage (ignores optional arguments)
+                simpleCommand.sendUsage(sender);
+                return true;
+            }
+
             if (args.length == 0) {
                 simpleCommand.middleMan(sender, args);
                 return true;
             }
+
             SubCommand<? extends CommandSender> subResult = null;
             for (SubCommand<? extends CommandSender> subCommand : simpleCommand.getSubCommands()) {
                 if ((args.length > subCommand.getArgumentsSize() && subCommand.isEndless())
@@ -106,23 +116,30 @@ public class CommandBase implements CommandExecutor, TabCompleter {
             if (args.length == 0) {
                 continue;
             }
-            Set<SubCommand<? extends CommandSender>> subResults = Sets.newHashSet();
-            for (SubCommand<? extends CommandSender> subCommand : simpleCommand.getSubCommands()) {
-                if (subCommand.isMatchUntilIndex(args, args.length - 1)) {
-                    subResults.add(subCommand);
+
+            // Handle commands without any subcommands (only arguments)
+            if (simpleCommand.getSubCommands().isEmpty()) {
+                // If the command does not have sub commands, has arguments and the user didn't specify any, send the usage (ignores optional arguments)
+                tabCompleteSuggestions.addAll(simpleCommand.tabCompletionSuggestion(sender, args.length - 1));
+            } else {
+                Set<SubCommand<? extends CommandSender>> subResults = Sets.newHashSet();
+                for (SubCommand<? extends CommandSender> subCommand : simpleCommand.getSubCommands()) {
+                    if (subCommand.isMatchUntilIndex(args, args.length - 1)) {
+                        subResults.add(subCommand);
+                    }
                 }
-            }
-            if (subResults.isEmpty()) {
-                continue;
-            }
-            for (SubCommand<? extends CommandSender> subResult : subResults) {
-                if (!subResult.doesInheritPermission() && subResult.getPermission() != null && !sender.hasPermission(subResult.getPermission()) && !simpleCommand.getPermission().isEmpty()) {
+                if (subResults.isEmpty()) {
                     continue;
                 }
-                if (!subResult.isConsole() && sender instanceof ConsoleCommandSender) {
-                    continue;
+                for (SubCommand<? extends CommandSender> subResult : subResults) {
+                    if (!subResult.doesInheritPermission() && subResult.getPermission() != null && !sender.hasPermission(subResult.getPermission()) && !simpleCommand.getPermission().isEmpty()) {
+                        continue;
+                    }
+                    if (!subResult.isConsole() && sender instanceof ConsoleCommandSender) {
+                        continue;
+                    }
+                    tabCompleteSuggestions.addAll(subResult.tabCompletionSuggestion(sender, args.length - 1));
                 }
-                tabCompleteSuggestions.addAll(subResult.tabCompletionSuggestion(sender, args.length - 1));
             }
         }
 
@@ -130,10 +147,6 @@ public class CommandBase implements CommandExecutor, TabCompleter {
         StringUtil.copyPartialMatches(args[args.length - 1], tabCompleteSuggestions, sortedArgs);
         Collections.sort(sortedArgs);
         return sortedArgs;
-    }
-
-    public Set<SimpleCommand<? extends CommandSender>> getCommands() {
-        return this.commands;
     }
 
     private void registerArgumentTypes() {
