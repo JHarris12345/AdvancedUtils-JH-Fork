@@ -1,6 +1,8 @@
 package net.advancedplugins.utils.text;
 
 import com.google.common.collect.Lists;
+import net.advancedplugins.utils.hooks.HookPlugin;
+import net.advancedplugins.utils.hooks.HooksHandler;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import net.md_5.bungee.api.ChatColor;
 import org.apache.commons.lang.StringUtils;
@@ -37,6 +39,13 @@ public class Text {
             return message;
         };
         recipient.sendMessage(modify(processor.get()));
+    }
+
+    public static String parsePapi(String message, OfflinePlayer player) {
+        if (HooksHandler.isEnabled(HookPlugin.PROTOCOLLIB)) {
+            return me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, message);
+        }
+        return message;
     }
 
     /**
