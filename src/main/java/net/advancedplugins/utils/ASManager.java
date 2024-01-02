@@ -1455,4 +1455,29 @@ public class ASManager {
         }
         return map;
     }
+
+    public static <T> ImmutableMap<String, T> configObjecstToImmutableMap(Class<T> clazz, FileConfiguration config, String path) {
+        ImmutableMap.Builder<String, T> immutableMap = ImmutableMap.builder();
+
+        Set<String> keys = config.getConfigurationSection(path).getKeys(false);
+        for (String key : keys) {
+            try {
+                T instance = clazz.getDeclaredConstructor().newInstance();
+                for (Field field : clazz.getDeclaredFields()) {
+                    field.setAccessible(true);
+                    Object value = config.get(path + "." + key + "." + field.getName());
+                    field.set(instance, value);
+                }
+                immutableMap.put(key, instance);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return immutableMap.build();
+    }
+
+    public static void log(String s) {
+        instance.getLogger().warning(s);
+    }
 }
