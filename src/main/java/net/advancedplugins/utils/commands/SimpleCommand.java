@@ -2,22 +2,22 @@ package net.advancedplugins.utils.commands;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import net.advancedplugins.utils.commands.argument.Argument;
 import net.advancedplugins.utils.commands.argument.ArgumentHandler;
-import lombok.AllArgsConstructor;
 import net.advancedplugins.utils.text.Text;
 import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.Arrays;
-import java.util.LinkedList;
 
 public abstract class SimpleCommand<T extends CommandSender> extends Command<T> {
     @Getter
@@ -94,7 +94,7 @@ public abstract class SimpleCommand<T extends CommandSender> extends Command<T> 
     }
 
     public void sendUsage(CommandSender sender) {
-        Text.sendMessage(sender, Text.modify("&cUsage: "+getFormatted()));
+        Text.sendMessage(sender, Text.modify("&cUsage: " + getFormatted()));
     }
 
     public String getFormatted() {
@@ -219,6 +219,9 @@ public abstract class SimpleCommand<T extends CommandSender> extends Command<T> 
             return arguments[index].equalsIgnoreCase(argument.getArgument());
         }
         return true;
+
+    }
+
     @AllArgsConstructor
     class ShowcaseCommand {
         private String name;
