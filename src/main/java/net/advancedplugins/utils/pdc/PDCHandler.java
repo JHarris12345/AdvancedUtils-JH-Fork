@@ -3,6 +3,7 @@ package net.advancedplugins.utils.pdc;
 import net.advancedplugins.utils.ASManager;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -58,5 +59,9 @@ public class PDCHandler {
 
     public static long getLong(World world, String key) {
         return (long) get(world, key, PersistentDataType.LONG);
+    }
+
+    public static void unset(PersistentDataHolder holder, String chatColor) {
+        holder.getPersistentDataContainer().remove(getNamespace(chatColor));
     }
 }
