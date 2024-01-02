@@ -14,11 +14,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Arrays;
+
 public class AdvancedMenuItem {
 
     private ConfigurationSection section;
     private Replace replace;
-    @Setter
     private int[] slots;
 
     @Getter
@@ -28,6 +29,12 @@ public class AdvancedMenuItem {
 
     private boolean glow = false;
     private int amount = 0;
+
+    /**
+     * Used for custom data passing, e.g. map keys etc.
+     */
+    @Getter
+    private String data;
 
     public AdvancedMenuItem(String slots, ConfigurationSection section, Replace replace) {
         this.slots = ASManager.getSlots(slots);
@@ -99,4 +106,17 @@ public class AdvancedMenuItem {
         return item;
     }
 
+    public AdvancedMenuItem setData(String data) {
+        this.data = data;
+        return this;
+    }
+
+    public String getSlots() {
+        return Arrays.toString(slots);
+    }
+
+    public AdvancedMenuItem setSlots(int... slots) {
+        this.slots = slots;
+        return this;
+    }
 }

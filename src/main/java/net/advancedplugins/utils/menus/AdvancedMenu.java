@@ -67,7 +67,14 @@ public class AdvancedMenu implements InventoryHolder {
         if (page != null) {
         }
 
-        itemHashMap.values().forEach(i -> i.addToInventory(inventory));
+        itemHashMap.values().forEach(i -> {
+            try {
+                i.addToInventory(inventory);
+            } catch (Exception ev) {
+                ASManager.log("[AdvancedMenu] Error adding item to inventory: ["+i.getSlots()+"] " + i.getItem());
+                ev.printStackTrace();
+            }
+        });
 
         if (fillerItem != null) {
             ASManager.fillEmptyInventorySlots(inventory, fillerItem.getItem());

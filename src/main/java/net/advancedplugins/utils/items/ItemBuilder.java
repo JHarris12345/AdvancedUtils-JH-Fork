@@ -455,4 +455,13 @@ public class ItemBuilder {
         im = is.getItemMeta();
         return this;
     }
+
+    public void addLoreLines(List<String> lore) {
+        List<String> newLore = new ArrayList<>();
+        if (im.hasLore()) {
+            newLore = new ArrayList<>(im.getLore());
+        }
+        newLore.addAll(Text.modify(lore));
+        im.setLore(newLore);
+    }
 }
