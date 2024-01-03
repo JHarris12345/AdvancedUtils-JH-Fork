@@ -21,6 +21,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.type.Bed;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -1479,5 +1480,14 @@ public class ASManager {
 
     public static void log(String s) {
         instance.getLogger().warning(s);
+    }
+
+    public static FileConfiguration loadConfig(File file) {
+        try {
+            return YamlConfiguration.loadConfiguration(file);
+        } catch (Exception ev) {
+            getInstance().getLogger().severe("Failed to load " + file.getName() + " file, check your configuration and try again.");
+            return null;
+        }
     }
 }
