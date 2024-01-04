@@ -6,6 +6,8 @@ import net.advancedplugins.utils.configs.YamlFile;
 import net.advancedplugins.utils.evalex.Expression;
 import net.advancedplugins.utils.nbt.NBTapi;
 import net.advancedplugins.utils.nbt.backend.ClassWrapper;
+import net.advancedplugins.utils.nbt.backend.NBTCompound;
+import net.advancedplugins.utils.nbt.backend.NBTItem;
 import net.advancedplugins.utils.nbt.backend.ReflectionMethod;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import net.advancedplugins.utils.text.Replace;
@@ -1489,5 +1491,13 @@ public class ASManager {
             getInstance().getLogger().severe("Failed to load " + file.getName() + " file, check your configuration and try again.");
             return null;
         }
+    }
+
+    public static ItemStack makeItemGlow(ItemStack itemstack) {
+        NBTItem item = new NBTItem(itemstack);
+        NBTCompound compound = item.getCompoundList("Enchantments").addCompound();
+        compound.setString("id", "");
+        compound.setInteger("lvl", 0);
+        return item.getItem();
     }
 }

@@ -30,6 +30,7 @@ public class ItemBuilder {
     private ItemStack is;
     private ItemMeta im;
     private ConfigurationSection section;
+    private boolean glow = false;
 
     /**
      * Create a new ItemBuilder from scratch.
@@ -85,12 +86,10 @@ public class ItemBuilder {
 
         stack.setAmount(amount);
 
-        if (makeGlow) {
-            stackMeta.addEnchant(Enchantment.DURABILITY, 1, true);
-            stackMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        }
-
         stack.setItemMeta(stackMeta);
+
+        glow = makeGlow;
+
         this.is = stack;
         this.im = this.is.getItemMeta();
 
@@ -401,12 +400,7 @@ public class ItemBuilder {
     }
 
     public ItemBuilder setGlowing(boolean bool) {
-        if (!bool) return this;
-        is.setItemMeta(im);
-        im = is.getItemMeta();
-        im.addEnchant(Enchantment.DURABILITY, 1, true);
-        im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        is.setItemMeta(im);
+        this.glow = bool;
         return this;
     }
 
@@ -426,6 +420,11 @@ public class ItemBuilder {
      */
     public ItemStack toItemStack() {
         is.setItemMeta(im);
+
+        if (glow) {
+            is = ASManager.makeItemGlow(is);
+        }
+
         return is;
     }
 

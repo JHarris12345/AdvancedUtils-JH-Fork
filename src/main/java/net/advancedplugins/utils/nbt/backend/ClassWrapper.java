@@ -19,7 +19,7 @@ public enum ClassWrapper {
     CRAFT_ItemStack("org.bukkit.craftbukkit", "", "inventory.CraftItemStack", MinecraftVersion.MC1_8_R3),
     CRAFT_MetaBook("org.bukkit.craftbukkit", "", "inventory.CraftMetaBook", MinecraftVersion.MC1_8_R3),
     CRAFT_Enchantment("org.bukkit.craftbukkit", "", "enchantments.CraftEnchantment", MinecraftVersion.MC1_8_R3),
-
+    NMS_NBTACCOUNTER(PackageWrapper.NMS, "NBTReadLimiter", MinecraftVersion.MC1_20_R3, null, "net.minecraft.nbt", "net.minecraft.nbt.NbtAccounter"),
     // NBT
     NMS_NBTBase("net.minecraft", "nbt", "NBTBase", MinecraftVersion.MC1_8_R3),
     NMS_NBTTagString("net.minecraft", "nbt", "NBTTagString", MinecraftVersion.MC1_8_R3),

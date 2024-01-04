@@ -91,6 +91,15 @@ public enum ReflectionMethod {
     NMS_ENTITY_GET_NBT(ClassWrapper.NMS_ENTITY, new Class[]{ClassWrapper.NMS_NBTTAGCOMPOUND.getClazz()}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "e"), new Since(MinecraftVersion.MC1_12_R1, "save"), new Since(MinecraftVersion.MC1_18_R1, "saveWithoutId(net.minecraft.nbt.CompoundTag)")),
     NMS_ENTITY_GETSAVEID(ClassWrapper.NMS_ENTITY, new Class[]{}, MinecraftVersion.MC1_14_R1, new Since(MinecraftVersion.MC1_14_R1, "getSaveID"), new Since(MinecraftVersion.MC1_18_R1, "getEncodeId()")),
 
+    NBTFILE_READV2(ClassWrapper.NMS_NBTCOMPRESSEDSTREAMTOOLS,
+            new Class[] { InputStream.class, ClassWrapper.NMS_NBTACCOUNTER.getClazz() }, MinecraftVersion.MC1_20_R3,
+            new Since(MinecraftVersion.MC1_20_R3,
+                    "readCompressed(java.io.InputStream,net.minecraft.nbt.NbtAccounter)")),
+
+    NBTACCOUNTER_CREATE_UNLIMITED(ClassWrapper.NMS_NBTACCOUNTER,
+            new Class[] {}, MinecraftVersion.MC1_20_R3,
+            new Since(MinecraftVersion.MC1_20_R3,
+                    "unlimitedHeap()")),
 
     NBTFILE_READ(ClassWrapper.NMS_NBTCOMPRESSEDSTREAMTOOLS, new Class[]{InputStream.class}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "a"), new Since(MinecraftVersion.MC1_18_R1, "readCompressed(java.io.InputStream)")),
     NBTFILE_WRITE(ClassWrapper.NMS_NBTCOMPRESSEDSTREAMTOOLS, new Class[]{ClassWrapper.NMS_NBTTAGCOMPOUND.getClazz(), OutputStream.class}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "a"), new Since(MinecraftVersion.MC1_18_R1, "writeCompressed(net.minecraft.nbt.CompoundTag,java.io.OutputStream)")),

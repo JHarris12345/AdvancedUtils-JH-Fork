@@ -144,13 +144,6 @@ public class ConfigItemCreator {
            builder.setUnbreakable(config.getBoolean(path + "." + paths.get("unbreakable")));
         }
 
-        if (config.contains(path + "." + paths.get("force-glow"))) {
-            boolean forceGlow = config.getBoolean(path + "." + paths.get("force-glow"));
-            if (forceGlow) {
-                builder.addUnsafeEnchantment(Enchantment.LOOT_BONUS_MOBS, 1);
-                builder.addItemFlag(ItemFlag.HIDE_ENCHANTS);
-            }
-        }
 
         // Enchantments
         if (config.contains(path + "." + paths.get("enchantments"))) {
@@ -202,6 +195,14 @@ public class ConfigItemCreator {
             } else if (typeStr.contains("FIREWORK_STAR")) {
                 FireworkEffectMeta fireworkMeta = (FireworkEffectMeta) builder.getItemMeta();
                 fireworkMeta.setEffect(FireworkEffect.builder().withColor(color).build());
+            }
+        }
+
+        // This must be done last otherwise it will not glow
+        if (config.contains(path + "." + paths.get("force-glow"))) {
+            boolean forceGlow = config.getBoolean(path + "." + paths.get("force-glow"));
+            if (forceGlow) {
+                builder.setGlowing(true);
             }
         }
 
