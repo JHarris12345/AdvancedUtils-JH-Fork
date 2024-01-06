@@ -55,9 +55,11 @@ public class ConfigItemCreator {
         itemBuilderPaths.put("item-flags", "item-flags");
         itemBuilderPaths.put("custom-model-data", "custom-model-data");
         itemBuilderPaths.put("enchantments", "enchantments");
+        itemBuilderPaths.put("custom-enchantments", "custom-enchantments");
         itemBuilderPaths.put("armor-trim", "armor-trim");
         itemBuilderPaths.put("unbreakable", "unbreakable");
         itemBuilderPaths.put("head", "head");
+        itemBuilderPaths.put("owner", "head");
         ConfigItemCreator.setDefaultPaths(itemBuilderPaths);
     }
 
@@ -141,7 +143,7 @@ public class ConfigItemCreator {
         }
         // Custom Model Data
         if (config.contains(path + "." + paths.get("unbreakable"))) {
-           builder.setUnbreakable(config.getBoolean(path + "." + paths.get("unbreakable")));
+            builder.setUnbreakable(config.getBoolean(path + "." + paths.get("unbreakable")));
         }
 
 
@@ -149,26 +151,36 @@ public class ConfigItemCreator {
         if (config.contains(path + "." + paths.get("enchantments"))) {
             List<String> enchantments = format(config.getStringList(path + "." + paths.get("enchantments")), placeholders);
             for (String ench : enchantments) {
-                String[] parsed = ench.split(":");
-                String enchStr = parsed[0];
-                short level = 1;
-                if (parsed.length > 1) {
-                    if (!MathUtils.isShort(parsed[1])) {
-                        sendError("Specified vanilla enchantment level not valid! Must be between -32768 & 32767.", filePath, path, parsed[2]);
-                    } else {
-                        level = Short.parseShort(parsed[1]);
-                    }
-                }
+                Pair<String, Integer> pair = ASManager.parseEnchantment(ench);
+                if (pair == null)
+                    continue;
 
-                Enchantment enchantment = VanillaEnchants.displayNameToEnchant(enchStr);
+                Enchantment enchantment = VanillaEnchants.displayNameToEnchant(pair.getKey());
                 if (enchantment == null) {
-                    sendError("Specified vanilla enchantment doesn't exist!", filePath, path, enchStr);
+                    sendError("Specified vanilla enchantment doesn't exist!", filePath, path, pair.getKey());
                     continue;
                 }
-                builder.addUnsafeEnchantment(enchantment, level);
+
+                builder.addUnsafeEnchantment(enchantment, pair.getValue());
             }
         }
 
+        // Custom Enchantments
+        Bukkit.broadcastMessage("1 checkign for CE! "+config.contains(path + "." + paths.get("custom-enchantments"))+" "+paths.get("custom-enchantments"));
+        if (config.contains(path + "." + paths.get("custom-enchantments"))) {
+            Bukkit.broadcastMessage("2 checkign for CE!");
+            List<String> enchantments = format(config.getStringList(path + "." + paths.get("custom-enchantments")), placeholders);
+            Bukkit.broadcastMessage("3 checkign for CE! " + enchantments);
+            for (String ench : enchantments) {
+                Pair<String, Integer> pair = ASManager.parseEnchantment(ench);
+                Bukkit.broadcastMessage("3.5 checkign for CE! " + pair+" "+ench);
+                if (pair == null)
+                    continue;
+
+                Bukkit.broadcastMessage("4 checkign for CE! " + pair.getKey() + " " + pair.getValue());
+                builder.addCustomEnchantment(pair.getKey(), pair.getValue());
+            }
+        }
 
         // RGB Color
         if ((typeStr.contains("LEATHER_") || typeStr.contains("FIREWORK_STAR")) && config.contains(path + "." + paths.get("rgb-color"))) {

@@ -1,6 +1,8 @@
 package net.advancedplugins.utils.items;
 
 import net.advancedplugins.utils.ASManager;
+import net.advancedplugins.utils.hooks.HookPlugin;
+import net.advancedplugins.utils.hooks.HooksHandler;
 import net.advancedplugins.utils.nbt.NBTapi;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import net.advancedplugins.utils.text.Text;
@@ -450,6 +452,9 @@ public class ItemBuilder {
      */
     public ItemBuilder addCustomEnchantment(String enchantment, int level) {
         is.setItemMeta(im);
+        if(!HooksHandler.isEnabled(HookPlugin.ADVANCEDENCHANTMENTS))
+            return this;
+
         is = net.advancedplugins.ae.api.AEAPI.applyEnchant(enchantment, level, is);
         im = is.getItemMeta();
         return this;

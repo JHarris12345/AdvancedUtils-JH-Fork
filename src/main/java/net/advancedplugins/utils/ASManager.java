@@ -1500,4 +1500,29 @@ public class ASManager {
         compound.setInteger("lvl", 0);
         return item.getItem();
     }
+
+    public static Pair<String, Integer> parseEnchantment(String ench) {
+        String[] parsed = ench.split(":");
+
+        if (parsed[0].startsWith("!")) {
+            int chance = Integer.parseInt(parsed[0].replace("!", ""));
+            if (ThreadLocalRandom.current().nextInt(100) + 1 > chance) {
+                return null;
+            }
+            parsed = new String[]{parsed[1], parsed[2]};
+        }
+
+        int level;
+        if (parsed[1].contains("%")) {
+            String[] sr = parsed[1].replace("%", "").split("-");
+            int min = Integer.parseInt(sr[0]);
+            int max = Integer.parseInt(sr[1]);
+            level = net.advancedplugins.ae.utils.MathUtils.randomBetween(min, max);
+        } else {
+            level = Integer.parseInt(parsed[1]);
+        }
+
+        String enchStr = parsed[0];
+        return new Pair<>(enchStr, level);
+    }
 }
