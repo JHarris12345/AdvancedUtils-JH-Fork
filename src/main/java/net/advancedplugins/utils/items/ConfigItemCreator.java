@@ -50,12 +50,13 @@ public class ConfigItemCreator {
         itemBuilderPaths.put("amount", "amount");
         itemBuilderPaths.put("name", "name");
         itemBuilderPaths.put("lore", "lore");
-        itemBuilderPaths.put("force-glow", "force-glow");
-        itemBuilderPaths.put("itemsadder", "itemsadder");
         itemBuilderPaths.put("item-flags", "item-flags");
         itemBuilderPaths.put("custom-model-data", "custom-model-data");
+        itemBuilderPaths.put("force-glow", "force-glow");
         itemBuilderPaths.put("enchantments", "enchantments");
         itemBuilderPaths.put("custom-enchantments", "custom-enchantments");
+        itemBuilderPaths.put("rgb-color", "rgb-color");
+        itemBuilderPaths.put("itemsadder", "itemsadder");
         itemBuilderPaths.put("armor-trim", "armor-trim");
         itemBuilderPaths.put("unbreakable", "unbreakable");
         itemBuilderPaths.put("head", "head");
