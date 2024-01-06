@@ -17,6 +17,7 @@ public enum HookPlugin {
     FACTIONS("Factions"),
     ITEMSADDER("ItemsAdder"),
     MYTHICMOBS("MythicMobs"),
+    GEYSER("Geyser-Spigot"),
     MCMMO("mcMMO"),
     SUPERIORSKYBLOCK2("SuperiorSkyblock2"),
     ORAXEN("Oraxen"),
