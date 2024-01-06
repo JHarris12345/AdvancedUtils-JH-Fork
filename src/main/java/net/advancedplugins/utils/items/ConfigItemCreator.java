@@ -166,18 +166,13 @@ public class ConfigItemCreator {
         }
 
         // Custom Enchantments
-        Bukkit.broadcastMessage("1 checkign for CE! "+config.contains(path + "." + paths.get("custom-enchantments"))+" "+paths.get("custom-enchantments"));
         if (config.contains(path + "." + paths.get("custom-enchantments"))) {
-            Bukkit.broadcastMessage("2 checkign for CE!");
             List<String> enchantments = format(config.getStringList(path + "." + paths.get("custom-enchantments")), placeholders);
-            Bukkit.broadcastMessage("3 checkign for CE! " + enchantments);
             for (String ench : enchantments) {
                 Pair<String, Integer> pair = ASManager.parseEnchantment(ench);
-                Bukkit.broadcastMessage("3.5 checkign for CE! " + pair+" "+ench);
                 if (pair == null)
                     continue;
 
-                Bukkit.broadcastMessage("4 checkign for CE! " + pair.getKey() + " " + pair.getValue());
                 builder.addCustomEnchantment(pair.getKey(), pair.getValue());
             }
         }
