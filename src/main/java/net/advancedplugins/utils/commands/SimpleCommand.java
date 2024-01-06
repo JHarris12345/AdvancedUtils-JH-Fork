@@ -70,9 +70,13 @@ public abstract class SimpleCommand<T extends CommandSender> extends Command<T> 
     public void sendHelpPage(CommandSender sendTo, String color, String[] args) {
         int page = (args.length == 0 ? 0 : StringUtils.isNumeric(args[0]) ? Math.max(0, Integer.parseInt(args[0])) : 1) - 1;
 
-        int subCount = subCommands.size() + (page == 0 ? showcaseCommands.size() : 0);
+        int subCount = subCommands.size();
         if (pageCount == null) pageCount = (int) Math.ceil((float) (subCount) / COMMANDS_PER_PAGE);
         page = Math.min(Math.max(0, page), pageCount);
+
+        if (page + 1 > pageCount) {
+            page = pageCount - 1;
+        }
 
         PluginDescriptionFile description = super.plugin.getDescription();
         Text.sendMessage(sendTo, color + "[<] &8+-------< " + color + "&l" + description.getName().concat(" &7Page " + (page + 1) + "/" + pageCount) + " &8>-------+ " + color + "[>]");
