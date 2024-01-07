@@ -1,18 +1,41 @@
 package net.advancedplugins.utils.hooks.plugins;
 
+import com.gmail.nossr50.api.ItemSpawnReason;
+import com.gmail.nossr50.api.TreeFellerBlockBreakEvent;
 import com.gmail.nossr50.datatypes.meta.BonusDropMeta;
 import com.gmail.nossr50.datatypes.player.McMMOPlayer;
+import com.gmail.nossr50.events.items.McMMOItemSpawnEvent;
 import com.gmail.nossr50.util.MetadataConstants;
 import com.gmail.nossr50.util.player.UserManager;
+import net.advancedplugins.utils.ASManager;
+import net.advancedplugins.utils.SchedulerUtils;
 import net.advancedplugins.utils.hooks.PluginHookInstance;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class McMMOHook extends PluginHookInstance {
+public class McMMOHook extends PluginHookInstance implements Listener {
+
+    public McMMOHook() {
+        SchedulerUtils.runTaskTimer(() -> {
+            long currentTime = System.currentTimeMillis();
+            // clear values older than 0.5 seconds
+            treeFellerTelepathyBlocks.entrySet().removeIf(entry -> {
+                if (currentTime - entry.getValue() > 500) {
+                    entry.getKey().removeMetadata("ae-mcmmo-treefeller-tpdrops", ASManager.getInstance());
+                    return true;
+                }
+                return false;
+            });
+        }, 20L, 20L);
+    }
 
     public int getSkillLevel(Player p, String skill) {
         return com.gmail.nossr50.api.ExperienceAPI.getLevel(p, skill);
@@ -29,6 +52,11 @@ public class McMMOHook extends PluginHookInstance {
     public List<String> getSkills() {
         return com.gmail.nossr50.api.SkillAPI.getSkills();
     }
+
+    public boolean isTreeFellerEvent(Event event) {
+        return event instanceof TreeFellerBlockBreakEvent;
+    }
+
 
     public boolean isFakeBlockBreak(Event e) {
         return false;
@@ -75,5 +103,17 @@ public class McMMOHook extends PluginHookInstance {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public static final Map<Block, Long> treeFellerTelepathyBlocks = new HashMap<>();
+
+    @EventHandler(ignoreCancelled = true)
+    public void onTelepathyTreeFellerBonusItemSpawn(McMMOItemSpawnEvent event) {
+        Block block = event.getLocation().getBlock();
+        if (!treeFellerTelepathyBlocks.containsKey(block)) return;
+        event.setCancelled(true);
+        if (event.getItemSpawnReason() == ItemSpawnReason.BONUS_DROPS) {
+            ASManager.giveItem(event.getPlayer(), event.getItemStack());
+        }
     }
 }

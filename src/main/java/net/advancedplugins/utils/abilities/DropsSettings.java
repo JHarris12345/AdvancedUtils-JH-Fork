@@ -53,4 +53,14 @@ public class DropsSettings {
      * The tool to break the blocks with.
      */
     private ItemStack tool = null;
+
+    /**
+     * Whether the event is McMMO <a href="https://github.com/mcMMO-Dev/mcMMO/blob/master/src/main/java/com/gmail/nossr50/api/TreeFellerBlockBreakEvent.java#">TreeFellerEvent</a>
+     */
+    private boolean treeFellerEvent = false;
+
+    /**
+     * Whether the event is AureliumSkills <a href="https://github.com/Archy-X/AureliumSkills/blob/master/bukkit/src/main/java/com/archyx/aureliumskills/api/event/TerraformBlockBreakEvent.java">TerraformBlockBreakEvent</a>
+     */
+    private boolean terraformEvent = false;
 }
