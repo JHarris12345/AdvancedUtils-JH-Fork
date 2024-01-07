@@ -1,6 +1,5 @@
 package net.advancedplugins.utils.hooks;
 
-import com.bgsoftware.superiorskyblock.external.ProtocolLibHook;
 import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
 import net.advancedplugins.utils.hooks.holograms.CMIHologramHandler;
@@ -35,7 +34,7 @@ public class HooksHandler {
 
         // these should be fine loading rn as well, as they are softdepend in plugin.yml (Wega)
         if (isPluginEnabled(HookPlugin.MCMMO.getPluginName()))
-            registerNew(HookPlugin.MCMMO, new McMMOHook());
+            registerNew(HookPlugin.MCMMO, new McMMOHook(), true);
 
         if (isPluginEnabled(HookPlugin.ADVANCEDENCHANTMENTS.getPluginName()))
             registerNew(HookPlugin.ADVANCEDENCHANTMENTS, new AdvancedEnchantmentsHook());
