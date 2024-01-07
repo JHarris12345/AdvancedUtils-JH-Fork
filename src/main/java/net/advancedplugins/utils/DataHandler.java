@@ -190,7 +190,7 @@ public class DataHandler {
     }
 
     public void unload() {
-        for(int id : activeTasks) {
+        for (int id : activeTasks) {
             Bukkit.getScheduler().cancelTask(id);
         }
     }
@@ -213,6 +213,10 @@ public class DataHandler {
 
     public String getString(String s) {
         return getConfig().getString(s);
+    }
+
+    public String getString(String s, String def) {
+        return getConfig().getString(s, def);
     }
 
     public String getStringColored(String s) {
