@@ -35,7 +35,6 @@ public class MythicMobsHook extends PluginHookInstance implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     private void onMythicDamage(MythicDamageEvent event) {
-        System.out.println("HAS = " + event.getDamageMetadata().getIgnoreEnchantments());
         if (event.getDamageMetadata().getIgnoreEnchantments()) {
             ignoreEnchantsMobs.add(event.getCaster().getEntity().getBukkitEntity());
             /*
