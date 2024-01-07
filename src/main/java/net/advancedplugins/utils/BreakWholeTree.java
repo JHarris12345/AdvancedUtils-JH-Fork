@@ -1,6 +1,5 @@
 package net.advancedplugins.utils;
 
-import net.advancedplugins.utils.configs.YamlFile;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -46,7 +45,7 @@ public class BreakWholeTree {
 
                 if (locBlock.hasMetadata("AE_Placed")) continue;
                 // don't break player placed blocks
-                if (locBlock.hasMetadata("non-natural") && YamlFile.CONFIG.getBoolean("settings.respect-player-placed-blocks", true)) {
+                if (locBlock.hasMetadata("non-natural") /*&& YamlFile.CONFIG.getBoolean("settings.respect-player-placed-blocks", true)*/) {
                     continue;
                 }
 
@@ -96,7 +95,7 @@ public class BreakWholeTree {
         }
         if (start.hasMetadata("AE_Placed")) return;
         // don't break player placed blocks
-        if (start.hasMetadata("non-natural") && YamlFile.CONFIG.getBoolean("settings.respect-player-placed-blocks", true)) {
+        if (start.hasMetadata("non-natural") /*&& YamlFile.CONFIG.getBoolean("settings.respect-player-placed-blocks", true)*/) {
             return;
         }
         if (!ASManager.isLog(start.getType())) {
@@ -115,7 +114,7 @@ public class BreakWholeTree {
             return;
         }
         if (start.hasMetadata("AE_Placed")) return;
-        if (start.hasMetadata("non-natural") && YamlFile.CONFIG.getBoolean("settings.respect-player-placed-blocks", true)) {
+        if (start.hasMetadata("non-natural")/* && YamlFile.CONFIG.getBoolean("settings.respect-player-placed-blocks", true)*/) {
             return;
         }
         if (!ASManager.isLog(start.getType())) {
