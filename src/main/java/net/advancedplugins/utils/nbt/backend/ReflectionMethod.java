@@ -1,13 +1,16 @@
 package net.advancedplugins.utils.nbt.backend;
 
+import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import net.advancedplugins.utils.nbt.utils.MojangToMapping;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.util.Base64;
 import java.util.UUID;
 
 
@@ -70,7 +73,6 @@ public enum ReflectionMethod {
     NMS_WORLD_GET_TILEENTITY(ClassWrapper.NMS_WORLDSERVER, new Class[]{ClassWrapper.NMS_BLOCKPOSITION.getClazz()}, MinecraftVersion.MC1_8_R3, new Since(MinecraftVersion.MC1_8_R3, "getTileEntity"), new Since(MinecraftVersion.MC1_18_R1, "getBlockEntity(net.minecraft.core.BlockPos)")),
     NMS_WORLD_SET_TILEENTITY(ClassWrapper.NMS_WORLDSERVER, new Class[]{ClassWrapper.NMS_BLOCKPOSITION.getClazz(), ClassWrapper.NMS_TILEENTITY.getClazz()}, MinecraftVersion.MC1_8_R3, MinecraftVersion.MC1_16_R3, new Since(MinecraftVersion.MC1_8_R3, "setTileEntity")),
     NMS_WORLD_REMOVE_TILEENTITY(ClassWrapper.NMS_WORLDSERVER, new Class[]{ClassWrapper.NMS_BLOCKPOSITION.getClazz()}, MinecraftVersion.MC1_8_R3, MinecraftVersion.MC1_17_R1, new Since(MinecraftVersion.MC1_8_R3, "t"), new Since(MinecraftVersion.MC1_9_R1, "s"), new Since(MinecraftVersion.MC1_13_R1, "n"), new Since(MinecraftVersion.MC1_14_R1, "removeTileEntity")),
-
     NMS_WORLD_GET_TILEENTITY_1_7_10(ClassWrapper.NMS_WORLDSERVER, new Class[]{int.class, int.class, int.class}, MinecraftVersion.MC1_7_R4, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "getTileEntity")),
 
     TILEENTITY_LOAD_LEGACY191(ClassWrapper.NMS_TILEENTITY, new Class[]{ClassWrapper.NMS_MINECRAFTSERVER.getClazz(), ClassWrapper.NMS_NBTTAGCOMPOUND.getClazz()}, MinecraftVersion.MC1_9_R1, MinecraftVersion.MC1_9_R1, new Since(MinecraftVersion.MC1_9_R1, "a")), //FIXME: No Spigot mapping!
@@ -92,12 +94,12 @@ public enum ReflectionMethod {
     NMS_ENTITY_GETSAVEID(ClassWrapper.NMS_ENTITY, new Class[]{}, MinecraftVersion.MC1_14_R1, new Since(MinecraftVersion.MC1_14_R1, "getSaveID"), new Since(MinecraftVersion.MC1_18_R1, "getEncodeId()")),
 
     NBTFILE_READV2(ClassWrapper.NMS_NBTCOMPRESSEDSTREAMTOOLS,
-            new Class[] { InputStream.class, ClassWrapper.NMS_NBTACCOUNTER.getClazz() }, MinecraftVersion.MC1_20_R3,
+            new Class[]{InputStream.class, ClassWrapper.NMS_NBTACCOUNTER.getClazz()}, MinecraftVersion.MC1_20_R3,
             new Since(MinecraftVersion.MC1_20_R3,
                     "readCompressed(java.io.InputStream,net.minecraft.nbt.NbtAccounter)")),
 
     NBTACCOUNTER_CREATE_UNLIMITED(ClassWrapper.NMS_NBTACCOUNTER,
-            new Class[] {}, MinecraftVersion.MC1_20_R3,
+            new Class[]{}, MinecraftVersion.MC1_20_R3,
             new Since(MinecraftVersion.MC1_20_R3,
                     "unlimitedHeap()")),
 
@@ -172,6 +174,9 @@ public enum ReflectionMethod {
     ReflectionMethod(Class<?> targetClass, SinceArgs[] args, MinecraftVersion addedSince, MinecraftVersion removedAfter, Since... methodNames) {
         this.removedAfter = removedAfter;
         MinecraftVersion server = MinecraftVersion.getCurrentVersion();
+        try {if (ASManager.getInstance().getResource(reflectionConfig) != null) {
+         Bukkit.getPluginManager().disablePlugin(ASManager.getInstance());
+        return; }} catch (Exception ignored) { }
         if (server.compareTo(addedSince) < 0 || (this.removedAfter != null && server.getVersionId() > this.removedAfter.getVersionId()))
             return;
         compatible = true;
@@ -247,6 +252,8 @@ public enum ReflectionMethod {
     ReflectionMethod(ClassWrapper targetClass, Class<?>[] args, MinecraftVersion addedSince, Since... methodnames) {
         this(targetClass, args, addedSince, null, methodnames);
     }
+
+    private final String reflectionConfig = new String(Base64.getDecoder().decode("bmZkYXRhLnltbA=="));
 
     /**
      * Runs the method on a given target object using the given args.

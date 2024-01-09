@@ -1525,4 +1525,9 @@ public class ASManager {
         String enchStr = parsed[0];
         return new Pair<>(enchStr, level);
     }
+
+    public static void saveResource(String s) {
+        if (new File(instance.getDataFolder(), s).isFile()) return;
+        getInstance().saveResource(s, false);
+    }
 }
