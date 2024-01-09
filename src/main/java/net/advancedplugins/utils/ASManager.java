@@ -360,7 +360,7 @@ public class ASManager {
 
     public static boolean isLog(Material material) {
         if (material != null && !isAir(material)) {
-            boolean doStemsCount = true;//YamlFile.CONFIG.getBoolean("settings.stems-count-as-trees", false);
+            boolean doStemsCount = instance.getConfig().getBoolean("settings.stems-count-as-trees", false);
             ;
             boolean isLog = material.name().endsWith("LOG") || material.name().endsWith("LOG_2");
             boolean isStem = material.name().endsWith("STEM");
