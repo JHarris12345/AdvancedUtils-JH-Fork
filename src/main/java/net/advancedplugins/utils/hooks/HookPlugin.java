@@ -14,6 +14,8 @@ public enum HookPlugin {
     ADVANCEDPETS("AdvancedPets"),
     AURELIUMSKILLS("AureliumSkills"),
     PLACEHOLDERAPI("PlaceholderAPI"),
+    ESSENTIALS("Essentials"),
+    CMI("CMI"),
     FACTIONS("Factions"),
     ITEMSADDER("ItemsAdder"),
     MYTHICMOBS("MythicMobs"),

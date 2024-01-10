@@ -142,6 +142,6 @@ public class HooksHandler {
     }
 
     public static boolean isEnabled(HookPlugin hookPlugin) {
-        return pluginHookMap.containsKey(hookPlugin);
+        return pluginHookMap.containsKey(hookPlugin) || isPluginEnabled(hookPlugin.getPluginName());
     }
 }
