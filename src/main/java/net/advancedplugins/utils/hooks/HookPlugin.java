@@ -12,6 +12,7 @@ public enum HookPlugin {
     GRIEFPREVENTION("GriefPrevention"),
     SLIMEFUN("Slimefun"),
     ADVANCEDPETS("AdvancedPets"),
+    DYNMAP("dynmap"),
     AURELIUMSKILLS("AureliumSkills"),
     PLACEHOLDERAPI("PlaceholderAPI"),
     ESSENTIALS("Essentials"),

@@ -73,6 +73,9 @@ public class HooksHandler {
         if (isPluginEnabled(HookPlugin.GEYSER.getPluginName()))
             registerNew(HookPlugin.GEYSER, new GeyserHook());
 
+        if (isPluginEnabled(HookPlugin.DYNMAP.getPluginName()))
+            registerNew(HookPlugin.DYNMAP, new DynmapHook());
+
         // Do this after server is loaded, so all softdepends that aren't in the plugin.yml file will be enabled by this time
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
             // Figure out which factions plugin is loaded and hook into the correct one
