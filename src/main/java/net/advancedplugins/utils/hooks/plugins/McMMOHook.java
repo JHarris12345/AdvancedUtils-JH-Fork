@@ -4,6 +4,7 @@ import com.gmail.nossr50.api.ItemSpawnReason;
 import com.gmail.nossr50.api.TreeFellerBlockBreakEvent;
 import com.gmail.nossr50.datatypes.meta.BonusDropMeta;
 import com.gmail.nossr50.datatypes.player.McMMOPlayer;
+import com.gmail.nossr50.events.fake.FakePlayerFishEvent;
 import com.gmail.nossr50.events.items.McMMOItemSpawnEvent;
 import com.gmail.nossr50.util.MetadataConstants;
 import com.gmail.nossr50.util.player.UserManager;
@@ -61,6 +62,10 @@ public class McMMOHook extends PluginHookInstance implements Listener {
     public boolean isFakeBlockBreak(Event e) {
         return false;
 //        return e instanceof com.gmail.nossr50.events.fake.FakeBlockBreakEvent;
+    }
+
+    public boolean isFakeFishEvent(Event e) {
+        return e instanceof FakePlayerFishEvent;
     }
 
     public boolean callFakeEvent(Block b, Player p) {
