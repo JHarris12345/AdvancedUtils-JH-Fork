@@ -68,7 +68,6 @@ public class McMMOHook extends PluginHookInstance implements Listener {
 
     public boolean isFakeFishEvent(Event e) {
         return e instanceof FakePlayerFishEvent;
-//        return e instanceof com.gmail.nossr50.events.fake.FakeBlockBreakEvent;
     }
 
     public boolean callFakeEvent(Block b, Player p) {
