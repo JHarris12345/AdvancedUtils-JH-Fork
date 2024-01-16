@@ -33,7 +33,7 @@ public class GlobalProtCheck implements ProtectionType, Listener {
     public boolean canBreak(Player p, Location loc) {
         Block block = loc.getBlock();
 
-        block.setMetadata("fakeBreak", new FixedMetadataValue(ASManager.getInstance(), true));
+        block.setMetadata("blockbreakevent-ignore", new FixedMetadataValue(ASManager.getInstance(), true));
 
         BlockBreakEvent event = new FakeAdvancedBlockBreakEvent(block, p);
 //        if (HooksHandler.isEnabled(HookPlugin.MCMMO)) {
@@ -51,8 +51,8 @@ public class GlobalProtCheck implements ProtectionType, Listener {
         // if event was cancelled by protection plugin, and not us
         boolean cancelled = event.isCancelled() && !block.hasMetadata("ae-fake-cancel");
 
-        if (block.hasMetadata("fakeBreak")) {
-            block.removeMetadata("fakeBreak", ASManager.getInstance());
+        if (block.hasMetadata("blockbreakevent-ignore")) {
+            block.removeMetadata("blockbreakevent-ignore", ASManager.getInstance());
         }
 
         if (block.hasMetadata("ae-fake-cancel")) {
