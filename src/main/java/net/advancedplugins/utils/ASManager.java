@@ -1529,4 +1529,11 @@ public class ASManager {
         if (new File(instance.getDataFolder(), s).isFile()) return;
         getInstance().saveResource(s, false);
     }
+
+    public static boolean parseBoolean(String arg, boolean b) {
+        if (arg == null) return b;
+        if (arg.equalsIgnoreCase("true")) return true;
+        if (arg.equalsIgnoreCase("false")) return false;
+        return b;
+    }
 }

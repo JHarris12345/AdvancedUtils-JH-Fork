@@ -4,8 +4,10 @@ import com.gmail.nossr50.api.ItemSpawnReason;
 import com.gmail.nossr50.api.TreeFellerBlockBreakEvent;
 import com.gmail.nossr50.datatypes.meta.BonusDropMeta;
 import com.gmail.nossr50.datatypes.player.McMMOPlayer;
+import com.gmail.nossr50.datatypes.skills.PrimarySkillType;
 import com.gmail.nossr50.events.fake.FakePlayerFishEvent;
 import com.gmail.nossr50.events.items.McMMOItemSpawnEvent;
+import com.gmail.nossr50.mcMMO;
 import com.gmail.nossr50.util.MetadataConstants;
 import com.gmail.nossr50.util.player.UserManager;
 import net.advancedplugins.utils.ASManager;
@@ -93,6 +95,10 @@ public class McMMOHook extends PluginHookInstance implements Listener {
 
     public boolean blockHasHerbalismBonusDrops(Block block) {
         return block.hasMetadata(MetadataConstants.METADATA_KEY_BONUS_DROPS);
+    }
+
+    public boolean hasHerbalismSkill(Player p) {
+        return mcMMO.p.getSkillTools().doesPlayerHaveSkillPermission(p, PrimarySkillType.HERBALISM);
     }
 
     public int getHerbalismBonusDropMultiplier(Block block) {
