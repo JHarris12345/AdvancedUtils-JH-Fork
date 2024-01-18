@@ -294,10 +294,45 @@ public class ConfigItemCreator {
      * @param placeholders Map containing all placeholders and their values.
      * @return String with all placeholders filled in.
      */
+    /**
+     * Sets placeholders in a string.
+     *
+     * @param string       String to set placeholders in.
+     * @param placeholders Map containing all placeholders and their values.
+     * @return String with all placeholders filled in.
+     */
     private static String placeholders(String string, Map<String, String> placeholders) {
-        if (placeholders != null) {
+        if (placeholders != null && string != null) {
             for (Map.Entry<String, String> entry : placeholders.entrySet()) {
-                string = string.replace(entry.getKey(), entry.getValue());
+                if (string.contains("%description%") && entry.getKey().contains("%description%") && entry.getValue().contains("\n")) {
+                    String formatString = string;
+                    string = "";
+
+                    String[] lines = entry.getValue().split("\n");
+                    StringBuilder stringBuilder = new StringBuilder(string);
+                    for (int i = 0; i < lines.length; i++) {
+                        stringBuilder.append(formatString.replace(entry.getKey(), lines[i]));
+                        if (i + 1 != lines.length) {
+                            stringBuilder.append("\n");
+                        }
+                    }
+                    string = stringBuilder.toString();
+                } else if (string.contains("%level-description%") && entry.getKey().contains("%level-description%") && entry.getValue().contains("\n")) {
+                    String formatString = string;
+                    string = "";
+
+                    String[] lines = entry.getValue().split("\n");
+                    StringBuilder stringBuilder = new StringBuilder(string);
+                    for (int i = 0; i < lines.length; i++) {
+                        stringBuilder.append(formatString.replace(entry.getKey(), lines[i]));
+                        if (i + 1 != lines.length) {
+                            stringBuilder.append("\n");
+                        }
+                    }
+                    string = stringBuilder.toString();
+                } else {
+                    string = string.replace(entry.getKey(), entry.getValue());
+                }
             }
         }
         return string;
