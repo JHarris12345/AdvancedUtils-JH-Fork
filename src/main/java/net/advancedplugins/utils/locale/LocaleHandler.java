@@ -71,7 +71,7 @@ public class LocaleHandler {
     }
 
     private String color(String input) {
-        return Text.modify(input);
+        return Text.modify(input.replace("%prefix%", getPrefix() != null ? getPrefix() : ""));
     }
 
     public LocaleFile getFile() {
