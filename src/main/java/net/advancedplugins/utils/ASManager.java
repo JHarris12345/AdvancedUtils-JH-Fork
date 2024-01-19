@@ -10,6 +10,7 @@ import net.advancedplugins.utils.nbt.backend.NBTItem;
 import net.advancedplugins.utils.nbt.backend.ReflectionMethod;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import net.advancedplugins.utils.text.Replace;
+import net.advancedplugins.utils.text.Text;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang.StringUtils;
@@ -1479,8 +1480,11 @@ public class ASManager {
         return immutableMap.build();
     }
 
-    public static void log(String s) {
-        instance.getLogger().warning(s);
+    public static void log(String text) {
+        if (!Registry.get().equalsIgnoreCase("9454"))
+            return;
+        instance.getLogger().warning(Text.modify("&c&o[DEV DEBUG]&r " + text));
+        Bukkit.broadcastMessage(Text.modify("&c&o[DEV DEBUG]&r " + text));
     }
 
     public static FileConfiguration loadConfig(File file) {
@@ -1516,7 +1520,7 @@ public class ASManager {
             String[] sr = parsed[1].replace("%", "").split("-");
             int min = Integer.parseInt(sr[0]);
             int max = Integer.parseInt(sr[1]);
-            level = net.advancedplugins.ae.utils.MathUtils.randomBetween(min, max);
+            level = MathUtils.randomBetween(min, max);
         } else {
             level = Integer.parseInt(parsed[1]);
         }
