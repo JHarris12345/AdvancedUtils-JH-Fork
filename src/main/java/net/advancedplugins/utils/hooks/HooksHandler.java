@@ -70,6 +70,9 @@ public class HooksHandler {
         if (isPluginEnabled(HookPlugin.PROTECTIONSTONES.getPluginName()))
             registerNew(HookPlugin.PROTECTIONSTONES, new ProtectionStonesHook());
 
+        if (isPluginEnabled(HookPlugin.RESIDENCE.getPluginName()))
+            registerNew(HookPlugin.RESIDENCE, new ResidenceHook());
+
         if (isPluginEnabled(HookPlugin.GEYSER.getPluginName()))
             registerNew(HookPlugin.GEYSER, new GeyserHook());
 

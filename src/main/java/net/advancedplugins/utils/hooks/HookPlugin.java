@@ -13,6 +13,7 @@ public enum HookPlugin {
     SLIMEFUN("Slimefun"),
     ADVANCEDPETS("AdvancedPets"),
     DYNMAP("dynmap"),
+    RESIDENCE("Residence"),
     AURELIUMSKILLS("AureliumSkills"),
     PLACEHOLDERAPI("PlaceholderAPI"),
     ESSENTIALS("Essentials"),
@@ -29,6 +30,7 @@ public enum HookPlugin {
     FACTIONSKORE("FactionsKore");
 
     private final String pluginName;
+
     HookPlugin(String pluginName) {
         this.pluginName = pluginName;
     }
