@@ -1,6 +1,7 @@
 package net.advancedplugins.utils.abilities;
 
 import net.advancedplugins.utils.ASManager;
+import net.advancedplugins.utils.items.ItemBuilder;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -64,7 +65,8 @@ public class SmeltMaterial {
                 return new ItemStack(Material.matchMaterial("NETHER_BRICK"));
             case "CLAY":
             case "CLAY_ITEM":
-                return new ItemStack(Material.matchMaterial("BRICK"));
+            case "CLAY_BALL":
+                return new ItemBuilder(Material.matchMaterial("BRICK")).setAmount(i.getAmount()).toItemStack();
             case "WET_SPONGE":
                 return new ItemStack(Material.getMaterial("SPONGE"));
             default:
