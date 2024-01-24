@@ -94,6 +94,9 @@ public class HooksHandler {
             if (isPluginEnabled(HookPlugin.ITEMSADDER.getPluginName()))
                 registerNew(HookPlugin.ITEMSADDER, new ItemsAdderHook(plugin), true);
 
+            if (isPluginEnabled(HookPlugin.ADVANCEDCHESTS.getPluginName()))
+                registerNew(HookPlugin.ADVANCEDCHESTS, new AdvancedChestsHook());
+
             sendHookMessage(plugin);
         }, 10);
     }
