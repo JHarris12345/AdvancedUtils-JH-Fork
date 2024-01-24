@@ -1540,4 +1540,8 @@ public class ASManager {
         if (arg.equalsIgnoreCase("false")) return false;
         return b;
     }
+
+    public static int minmax(int base, int min, int max) {
+        return Math.max(min, Math.min(max, base));
+    }
 }
