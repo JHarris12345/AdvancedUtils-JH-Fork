@@ -6,7 +6,6 @@ import org.bukkit.Location;
 import us.lynuxcraft.deadsilenceiv.advancedchests.AdvancedChestsPlugin;
 
 
-// this hook is technically not used anywhere, but if it is needed it's here haha
 public class AdvancedChestsHook extends PluginHookInstance {
 
     @Override
