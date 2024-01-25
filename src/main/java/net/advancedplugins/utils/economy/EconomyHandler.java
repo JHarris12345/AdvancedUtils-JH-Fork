@@ -1,9 +1,7 @@
 package net.advancedplugins.utils.economy;
 
 
-import net.advancedplugins.utils.economy.local.ExpEconomy;
-import net.advancedplugins.utils.economy.local.LevelEconomy;
-import net.advancedplugins.utils.economy.local.VaultEconomy;
+import net.advancedplugins.utils.economy.local.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -17,6 +15,10 @@ public class EconomyHandler {
     public EconomyHandler(JavaPlugin plugin) {
         registerEconomy(new ExpEconomy());
         registerEconomy(new LevelEconomy());
+        registerEconomy(new DiamondsEconomy());
+        registerEconomy(new EmeraldsEconomy());
+        registerEconomy(new GoldEconomy());
+        registerEconomy(new SoulsEconomy());
         if (plugin.getServer().getPluginManager().isPluginEnabled("Vault"))
             registerEconomy(new VaultEconomy());
     }
