@@ -7,6 +7,7 @@ import net.advancedplugins.utils.hooks.holograms.DecentHologramsHandler;
 import net.advancedplugins.utils.hooks.holograms.HologramHandler;
 import net.advancedplugins.utils.hooks.plugins.*;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -21,11 +22,11 @@ public class HooksHandler {
         // This shouldn't be loaded more than once, but if it is - clear pluginHookMap
         if (!pluginHookMap.isEmpty())
             pluginHookMap = ImmutableMap.<HookPlugin, PluginHookInstance>builder().build();
-        
+
         HooksHandler.plugin = plugin;
         holograms();
 
-        if(isPluginEnabled(HookPlugin.PROTOCOLLIB.getPluginName()))
+        if (isPluginEnabled(HookPlugin.PROTOCOLLIB.getPluginName()))
             registerNew(HookPlugin.PROTOCOLLIB, new PluginHookInstance()); // Generic plugin hook
 
         // AureliumSKills hook must be loaded instantly without runnable
@@ -81,6 +82,9 @@ public class HooksHandler {
 
         if (isPluginEnabled(HookPlugin.ESSENTIALS.getPluginName()))
             registerNew(HookPlugin.ESSENTIALS, new EssentialsHook());
+
+        if (isPluginEnabled(HookPlugin.CMI.getPluginName()))
+            registerNew(HookPlugin.CMI, new CMIHook());
 
         // Do this after server is loaded, so all softdepends that aren't in the plugin.yml file will be enabled by this time
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
@@ -155,5 +159,14 @@ public class HooksHandler {
 
     public static boolean isEnabled(HookPlugin hookPlugin) {
         return pluginHookMap.containsKey(hookPlugin) || isPluginEnabled(hookPlugin.getPluginName());
+    }
+
+    public static boolean isPlayerVanished(Player player) {
+        if (isEnabled(HookPlugin.CMI))
+            return ((CMIHook) getHook(HookPlugin.CMI)).isPlayerVanished(player);
+        else if (isEnabled(HookPlugin.ESSENTIALS))
+            return ((EssentialsHook) getHook(HookPlugin.ESSENTIALS)).isPlayerVanished(player);
+        else
+            return false;
     }
 }
