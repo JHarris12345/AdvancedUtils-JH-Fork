@@ -240,7 +240,7 @@ public class DataHandler {
     }
 
     public boolean isEnabled() {
-        return getBoolean("enabled");
+        return getBoolean("enabled", true);
     }
 
     @Getter
