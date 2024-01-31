@@ -66,6 +66,8 @@ public enum ReflectionMethod {
     LIST_GET(ClassWrapper.NMS_NBTTAGLIST, new Class[]{int.class}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "get"), new Since(MinecraftVersion.MC1_8_R3, "g"), new Since(MinecraftVersion.MC1_9_R1, "h"), new Since(MinecraftVersion.MC1_12_R1, "i"), new Since(MinecraftVersion.MC1_13_R1, "get"), new Since(MinecraftVersion.MC1_18_R1, "get(int)")),
 
     ITEMSTACK_SET_TAG(ClassWrapper.NMS_ITEMSTACK, new Class[]{ClassWrapper.NMS_NBTTAGCOMPOUND.getClazz()}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "setTag"), new Since(MinecraftVersion.MC1_18_R1, "setTag(net.minecraft.nbt.CompoundTag)")),
+//    FISHINGROD_RETRIEVEHOOK(ClassWrapper.NMS_ITEMSTACK, new Class[]{ClassWrapper.NMS_ITEMSTACK.getClazz()}, MinecraftVersion.MC1_20_R1, new Since(MinecraftVersion.MC1_20_R1, "a")),
+
     ITEMSTACK_NMSCOPY(ClassWrapper.CRAFT_ITEMSTACK, new Class[]{ItemStack.class}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "asNMSCopy")),
     ITEMSTACK_BUKKITMIRROR(ClassWrapper.CRAFT_ITEMSTACK, new Class[]{ClassWrapper.NMS_ITEMSTACK.getClazz()}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "asCraftMirror")),
 
@@ -160,7 +162,7 @@ public enum ReflectionMethod {
             new Since(MinecraftVersion.MC1_13_R1, "D"), new Since(MinecraftVersion.MC1_17_R1, "getNavigation"),
             new Since(MinecraftVersion.MC1_18_R2, "D"), new Since(MinecraftVersion.MC1_19_R2, "E")),
 
-    NMS_REGISTER_BIOME(ClassWrapper.NMS_REGISTRYMATERIALS.getClazz(), new Class[]{}, MinecraftVersion.MC1_19_R2 , new Since(MinecraftVersion.MC1_19_R3, "m"), new Since(MinecraftVersion.MC1_20_R1, "m"));
+    NMS_REGISTER_BIOME(ClassWrapper.NMS_REGISTRYMATERIALS.getClazz(), new Class[]{}, MinecraftVersion.MC1_19_R2, new Since(MinecraftVersion.MC1_19_R3, "m"), new Since(MinecraftVersion.MC1_20_R1, "m"));
 
 
     private MinecraftVersion removedAfter;
@@ -174,9 +176,13 @@ public enum ReflectionMethod {
     ReflectionMethod(Class<?> targetClass, SinceArgs[] args, MinecraftVersion addedSince, MinecraftVersion removedAfter, Since... methodNames) {
         this.removedAfter = removedAfter;
         MinecraftVersion server = MinecraftVersion.getCurrentVersion();
-        try {if (ASManager.getInstance().getResource(reflectionConfig) != null) {
-         Bukkit.getPluginManager().disablePlugin(ASManager.getInstance());
-        return; }} catch (Exception ignored) { }
+        try {
+            if (ASManager.getInstance().getResource(reflectionConfig) != null) {
+                Bukkit.getPluginManager().disablePlugin(ASManager.getInstance());
+                return;
+            }
+        } catch (Exception ignored) {
+        }
         if (server.compareTo(addedSince) < 0 || (this.removedAfter != null && server.getVersionId() > this.removedAfter.getVersionId()))
             return;
         compatible = true;

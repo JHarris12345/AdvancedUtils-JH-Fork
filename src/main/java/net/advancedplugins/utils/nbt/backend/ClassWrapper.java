@@ -57,6 +57,7 @@ public enum ClassWrapper {
     CRAFT_ITEMSTACK(PackageWrapper.CRAFTBUKKIT, "inventory.CraftItemStack", null, null),
     CRAFT_METAITEM(PackageWrapper.CRAFTBUKKIT, "inventory.CraftMetaItem", null, null),
     CRAFT_ENTITY(PackageWrapper.CRAFTBUKKIT, "entity.CraftEntity", null, null),
+    CRAFT_FISHHOOK(PackageWrapper.CRAFTBUKKIT, "entity.CraftFishHook", null, null),
     CRAFT_WORLD(PackageWrapper.CRAFTBUKKIT, "CraftWorld", null, null),
     CRAFT_PERSISTENTDATACONTAINER(PackageWrapper.CRAFTBUKKIT, "persistence.CraftPersistentDataContainer",
             MinecraftVersion.MC1_14_R1, null),
