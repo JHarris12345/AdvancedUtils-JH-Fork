@@ -6,7 +6,6 @@ import io.th0rgal.oraxen.utils.drops.Loot;
 import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.hooks.PluginHookInstance;
 import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -49,6 +48,7 @@ public class OraxenHook extends PluginHookInstance implements Listener {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onCustomBlockBreak(OraxenNoteBlockBreakEvent event) {
         Block block = event.getBlock();
+        if (block == null) return;
         // otherwise the item is put in the inventory and at the same time is
         if (block.hasMetadata("ae-oraxen-cancel")) {
             block.removeMetadata("ae-oraxen-cancel", plugin);
