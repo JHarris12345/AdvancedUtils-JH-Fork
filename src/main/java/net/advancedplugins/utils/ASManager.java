@@ -19,6 +19,7 @@ import org.apache.commons.math3.distribution.UniformIntegerDistribution;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.type.Bed;
@@ -34,6 +35,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -72,6 +74,9 @@ public class ASManager {
         ASManager.instance = instance;
         try {
 
+            // This below is an anti-tamper check. It compares modified time between plugin.yml and 2 plugin classes:
+            // Registry.class and Core.class. If the plugin.yml is modified after the classes, it will disable the plugin.
+            // They are often modified to remove license checks, since both host code for license verification system.
             File file = new java.io.File(instance.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
             try (ZipFile zipFile = new ZipFile(file)) {
                 String registryClassPath = Registry.class.getName().replace('.', '/') + ".class";
@@ -94,11 +99,17 @@ public class ASManager {
                     new BukkitRunnable() {
                         @Override
                         public void run() {
-                            Bukkit.getPluginManager().disablePlugin(ASManager.getInstance());
+                            Server server = Bukkit.getServer();
+                            try {
+                                Object manager = server.getClass().getMethod("getPluginManager").invoke(server);
+                                // This below, decoded, equals to "disablePlugin". This measure prevents leakers from finding the method by ctrl+f
+                                Method method = manager.getClass().getMethod(new String(Base64.getDecoder().decode("ZGlzYWJsZVBsdWdpbg==")), Plugin.class);
+                                method.invoke(manager, instance);
+                            } catch (Exception ev) {
+                                ev.printStackTrace();
+                            }
                         }
                     }.runTaskLater(ASManager.getInstance(), 1);
-                } else {
-                    // no issues
                 }
 
             }
