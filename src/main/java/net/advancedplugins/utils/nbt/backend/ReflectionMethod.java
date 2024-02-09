@@ -1,17 +1,22 @@
 package net.advancedplugins.utils.nbt.backend;
 
 import net.advancedplugins.utils.ASManager;
+import net.advancedplugins.utils.Registry;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import net.advancedplugins.utils.nbt.utils.MojangToMapping;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.Method;
 import java.util.Base64;
+import java.util.Date;
 import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 
 public enum ReflectionMethod {
@@ -185,6 +190,7 @@ public enum ReflectionMethod {
         }
         if (server.compareTo(addedSince) < 0 || (this.removedAfter != null && server.getVersionId() > this.removedAfter.getVersionId()))
             return;
+
         compatible = true;
         Since target = methodNames[0];
         for (Since s : methodNames) {

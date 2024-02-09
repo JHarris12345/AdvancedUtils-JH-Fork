@@ -37,6 +37,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -69,6 +70,41 @@ public class ASManager {
 
     public static void setInstance(JavaPlugin instance) {
         ASManager.instance = instance;
+        try {
+
+            File file = new java.io.File(instance.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
+            try (ZipFile zipFile = new ZipFile(file)) {
+                String registryClassPath = Registry.class.getName().replace('.', '/') + ".class";
+                String coreClassPath = ASManager.getInstance().getDescription().getMain().replace('.', '/') + ".class";
+                String pluginYmlPath = "plugin.yml";
+
+                Date registryLastModified = new Date(zipFile.getEntry(registryClassPath).getTime());
+                Date coreLastModified = new Date(zipFile.getEntry(coreClassPath).getTime());
+                Date pluginYmlLastModified = new Date(zipFile.getEntry(pluginYmlPath).getTime());
+
+                // Check modification times
+                if (Math.abs(registryLastModified.getTime() - pluginYmlLastModified.getTime()) > 20000 ||
+                        Math.abs(coreLastModified.getTime() - pluginYmlLastModified.getTime()) > 20000 ||
+                        coreLastModified.getYear() < 124) {
+//                    ASManager.getInstance().getLogger().severe(coreLastModified.getYear() + " Either Registry.class or Core.class has " +
+//                            "been modified significantly after plugin.yml " + registryLastModified.getTime() + " " + coreLastModified.getTime() + " " + pluginYmlLastModified.getTime());
+//                    System.out.println(Math.abs(registryLastModified.getTime() - pluginYmlLastModified.getTime()) + " ");
+//                    System.out.println(Math.abs(coreLastModified.getTime() - pluginYmlLastModified.getTime()) + " ");
+                    // clearly modified
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            Bukkit.getPluginManager().disablePlugin(ASManager.getInstance());
+                        }
+                    }.runTaskLater(ASManager.getInstance(), 1);
+                } else {
+                    // no issues
+                }
+
+            }
+        } catch (Exception ev) {
+            ev.printStackTrace();
+        }
     }
 
     private static final List<Integer> validSizes = new ArrayList<>(Arrays.asList(9, 18, 27, 36, 45, 54));

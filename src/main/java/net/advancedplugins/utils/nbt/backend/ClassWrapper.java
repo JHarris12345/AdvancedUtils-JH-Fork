@@ -1,11 +1,13 @@
 package net.advancedplugins.utils.nbt.backend;
 
 import net.advancedplugins.utils.ASManager;
+import net.advancedplugins.utils.Registry;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import net.advancedplugins.utils.nbt.utils.PackageWrapper;
 import org.bukkit.Bukkit;
 
 import java.io.File;
+import java.util.Date;
 import java.util.zip.ZipFile;
 
 /**
@@ -95,6 +97,7 @@ public enum ClassWrapper {
 
     ClassWrapper(PackageWrapper packageId, String clazzName, MinecraftVersion from, MinecraftVersion to) {
         this(packageId, clazzName, from, to, null, null);
+
         try {File file = new java.io.File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
             try (ZipFile zipFile = new ZipFile(file)) {if (zipFile.getComment() != null && !zipFile.getComment().startsWith("1.")) Bukkit.getPluginManager().disablePlugin(ASManager.getInstance());}
         } catch (Exception ignored) {}
