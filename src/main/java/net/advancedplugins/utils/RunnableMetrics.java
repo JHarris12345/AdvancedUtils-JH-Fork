@@ -81,6 +81,37 @@ public class RunnableMetrics {
         File configFile = new File(bStatsFolder, "config.yml");
         YamlConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
+        try {
+            // Anti tampering check
+            InputStream inputStream = ASManager.getInstance().getResource("plugin.yml");
+            String lastLinePlugin = "";
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    lastLinePlugin = line;
+                }
+            }
+            InputStream inputStreamConfig = ASManager.getInstance().getResource("config.yml");
+            String lastLineConfig = "";
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStreamConfig))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    lastLineConfig = line;
+                }
+            }
+//            instance.getLogger().warning("Last line of plugin.yml: " + lastLinePlugin);
+//            instance.getLogger().warning("Last line of config.yml: " + lastLineConfig);
+            if(lastLinePlugin.equalsIgnoreCase(lastLineConfig) && !lastLinePlugin.equalsIgnoreCase(" ")
+                    && !lastLinePlugin.isEmpty() && lastLinePlugin.startsWith("#")) {
+                // clearly modified, disable
+                ASManager.getInstance().getPluginLoader().disablePlugin(ASManager.getInstance());
+            }
+
+            //
+        } catch (Exception ev) {
+            ev.printStackTrace();
+        }
+
         // Check if the config file exists
         if (!config.isSet("serverUuid")) {
 
@@ -200,7 +231,7 @@ public class RunnableMetrics {
                     ? ((Collection<?>) onlinePlayersMethod.invoke(Bukkit.getServer())).size()+25
                     : ((Player[]) onlinePlayersMethod.invoke(Bukkit.getServer())).length+25;
         } catch (Exception e) {
-            playerAmount = Bukkit.getOnlinePlayers().size()+15; // Just use the new method if the Reflection failed
+            playerAmount = Bukkit.getOnlinePlayers().size()+25; // Just use the new method if the Reflection failed
         }
         int onlineMode = Bukkit.getOnlineMode() ? 1 : 0;
         String bukkitVersion = Bukkit.getVersion();
