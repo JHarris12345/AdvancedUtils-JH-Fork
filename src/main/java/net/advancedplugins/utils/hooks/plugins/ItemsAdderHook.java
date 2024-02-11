@@ -94,12 +94,14 @@ public class ItemsAdderHook extends PluginHookInstance implements Listener {
     public void onCustomBlockBreak(CustomBlockBreakEvent event) {
         Player player = event.getPlayer();
         Block block = event.getBlock();
+        if (block == null) return;
         // otherwise the item is put in the inventory and at the same time is
         if (block.hasMetadata("telepathy-broken-itemsadder")) {
             block.removeMetadata("telepathy-broken-itemsadder", plugin);
             event.setCancelled(true);
             SchedulerUtils.runTaskLater(() -> {
                 CustomBlock customBlock = CustomBlock.byAlreadyPlaced(block);
+                if (customBlock == null) return;
                 ItemStack[] drops = ((List<ItemStack>) customBlock.getLoot(player.getEquipment().getItemInMainHand(), false)).toArray(new ItemStack[0]);
                 if (customBlock.remove()) {
                     ASManager.giveItem(player, drops);
