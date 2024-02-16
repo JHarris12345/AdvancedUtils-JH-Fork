@@ -331,7 +331,8 @@ public class ConfigItemCreator {
                     }
                     string = stringBuilder.toString();
                 } else {
-                    string = string.replace(entry.getKey(), entry.getValue());
+                    if (entry.getValue() != null)
+                        string = string.replace(entry.getKey(), entry.getValue());
                 }
             }
         }
