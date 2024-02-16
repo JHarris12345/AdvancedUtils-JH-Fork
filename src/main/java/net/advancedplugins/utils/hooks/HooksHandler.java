@@ -86,6 +86,9 @@ public class HooksHandler {
         if (isPluginEnabled(HookPlugin.CMI.getPluginName()))
             registerNew(HookPlugin.CMI, new CMIHook());
 
+        if (isPluginEnabled(HookPlugin.BEACONPLUS3.getPluginName()))
+            registerNew(HookPlugin.BEACONPLUS3, new BeaconsPlus3Hook());
+
         // Do this after server is loaded, so all softdepends that aren't in the plugin.yml file will be enabled by this time
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
             // Figure out which factions plugin is loaded and hook into the correct one
