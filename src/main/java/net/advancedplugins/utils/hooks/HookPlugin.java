@@ -28,7 +28,8 @@ public enum HookPlugin {
     PROTECTIONSTONES("ProtectionStones"),
     PROTOCOLLIB("ProtocolLib"),
     FACTIONSKORE("FactionsKore"),
-    ADVANCEDCHESTS("AdvancedChests");
+    ADVANCEDCHESTS("AdvancedChests"),
+    BEACONPLUS3("BeaconPlus3");
 
     private final String pluginName;
 
