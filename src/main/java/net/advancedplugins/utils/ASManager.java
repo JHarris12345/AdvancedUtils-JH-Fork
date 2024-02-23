@@ -44,7 +44,9 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
@@ -134,6 +136,22 @@ public class ASManager {
         if (arg != null) {
             throw new IllegalArgumentException(message);
         }
+    }
+
+    /**
+     * Calculates the similarity percentage between two strings.
+     *
+     * @param s1 First string to compare.
+     * @param s2 Second string to compare.
+     * @return Returns the similarity percentage (int) between two strings.
+     */
+    public static int similarityPercentage(String s1, String s2) {
+        if (s1 == null || s2 == null || s1.isEmpty() || s2.isEmpty())
+            return 0;
+
+        int maxLength = Math.max(s1.length(), s2.length());
+        int distance = StringUtils.getLevenshteinDistance(s1, s2);
+        return (int) ((1 - ((double) distance / maxLength)) * 100);
     }
 
     public static int getInvSize(int size) {
