@@ -65,9 +65,9 @@ public class Replacer {
                 result = result.replace(entry.getKey(), Objects.toString(entry.getValue().get()));
             }
         }
-       /* if (this.usePlaceholderApi) {
-            return PlaceholderAPI.setPlaceholders(this.player, result);
-        }*/
+       if (this.usePlaceholderApi) {
+            return me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(this.player, result);
+        }
         return result;
     }
 }
