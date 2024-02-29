@@ -36,6 +36,17 @@ public class LandsHook extends PluginHookInstance {
         return landsIntegration.canPvP(attacker, defender, defender.getLocation(), false, false);
     }
 
+    public boolean canMobsSpawn(Location loc) {
+        try {
+            LandWorld world = landsIntegration.getWorld(loc.getWorld());
+            if (world == null) return true;
+            return world.getArea(loc).hasNaturalFlag(Flags.MONSTER_SPAWN);
+        } catch (Exception ev) {
+            ev.printStackTrace();
+            return true;
+        }
+    }
+
     public boolean isProtected(Location loc) {
         return landsIntegration.getArea(loc) != null;
     }

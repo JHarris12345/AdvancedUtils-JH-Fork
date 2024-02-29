@@ -138,7 +138,7 @@ public class HooksHandler {
     }
 
     public static PluginHookInstance getHook(HookPlugin plugin) {
-        return pluginHookMap.getOrDefault(plugin, new PluginHookInstance());
+        return pluginHookMap.get(plugin);
     }
 
     private static void holograms() {
