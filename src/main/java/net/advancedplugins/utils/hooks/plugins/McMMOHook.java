@@ -5,11 +5,15 @@ import com.gmail.nossr50.api.TreeFellerBlockBreakEvent;
 import com.gmail.nossr50.datatypes.meta.BonusDropMeta;
 import com.gmail.nossr50.datatypes.player.McMMOPlayer;
 import com.gmail.nossr50.datatypes.skills.PrimarySkillType;
+import com.gmail.nossr50.datatypes.skills.SubSkillType;
 import com.gmail.nossr50.events.fake.FakePlayerFishEvent;
 import com.gmail.nossr50.events.items.McMMOItemSpawnEvent;
 import com.gmail.nossr50.mcMMO;
+import com.gmail.nossr50.util.BlockUtils;
 import com.gmail.nossr50.util.MetadataConstants;
+import com.gmail.nossr50.util.Misc;
 import com.gmail.nossr50.util.player.UserManager;
+import com.gmail.nossr50.util.random.RandomChanceUtil;
 import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.SchedulerUtils;
 import net.advancedplugins.utils.hooks.PluginHookInstance;
@@ -19,6 +23,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.List;
@@ -91,6 +96,30 @@ public class McMMOHook extends PluginHookInstance implements Listener {
         if (mmoPlayer == null) return;
 
         mmoPlayer.getHerbalismManager().processHerbalismBlockBreakEvent(event);
+    }
+
+    // https://github.com/mcMMO-Dev/mcMMO/blob/master/src/main/java/com/gmail/nossr50/skills/mining/MiningManager.java#L78
+    public void processBlockBreakEvent(Player player, BlockBreakEvent event) {
+        McMMOPlayer mmoPlayer = UserManager.getPlayer(player);
+        if (mmoPlayer == null) return;
+
+        System.out.println(RandomChanceUtil.checkRandomChanceExecutionSuccess(player, SubSkillType.MINING_DOUBLE_DROPS, true));
+        if (RandomChanceUtil.checkRandomChanceExecutionSuccess(player, SubSkillType.MINING_DOUBLE_DROPS, true)) {
+            boolean useTriple = mmoPlayer.getAbilityMode(mcMMO.p.getSkillTools().getSuperAbility(PrimarySkillType.MINING)) && mcMMO.p.getAdvancedConfig().getAllowMiningTripleDrops();
+
+            BlockUtils.markDropsAsBonus(event.getBlock().getState(), useTriple);
+
+            if (event.getBlock().getMetadata(MetadataConstants.METADATA_KEY_BONUS_DROPS).size() > 0) {
+                BonusDropMeta bonusDropMeta = (BonusDropMeta) event.getBlock().getMetadata(MetadataConstants.METADATA_KEY_BONUS_DROPS).get(0);
+                int bonusCount = bonusDropMeta.asInt();
+
+                for (ItemStack itemStack : event.getBlock().getDrops()) {
+                    for (int i = 0; i < bonusCount; i++) {
+                        Misc.spawnItemNaturally(event.getPlayer(), event.getBlock().getState().getLocation(), itemStack, ItemSpawnReason.BONUS_DROPS);
+                    }
+                }
+            }
+        }
     }
 
     public boolean blockHasHerbalismBonusDrops(Block block) {
