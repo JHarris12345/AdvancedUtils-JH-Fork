@@ -103,7 +103,6 @@ public class McMMOHook extends PluginHookInstance implements Listener {
         McMMOPlayer mmoPlayer = UserManager.getPlayer(player);
         if (mmoPlayer == null) return;
 
-        System.out.println(RandomChanceUtil.checkRandomChanceExecutionSuccess(player, SubSkillType.MINING_DOUBLE_DROPS, true));
         if (RandomChanceUtil.checkRandomChanceExecutionSuccess(player, SubSkillType.MINING_DOUBLE_DROPS, true)) {
             boolean useTriple = mmoPlayer.getAbilityMode(mcMMO.p.getSkillTools().getSuperAbility(PrimarySkillType.MINING)) && mcMMO.p.getAdvancedConfig().getAllowMiningTripleDrops();
 
