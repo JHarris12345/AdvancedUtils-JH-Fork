@@ -3,6 +3,7 @@ package net.advancedplugins.utils.editor;
 import lombok.Getter;
 import lombok.Setter;
 import net.advancedplugins.utils.ASManager;
+import net.advancedplugins.utils.SchedulerUtils;
 import net.advancedplugins.utils.SkullCreator;
 import net.advancedplugins.utils.items.ItemBuilder;
 import net.advancedplugins.utils.nbt.NBTapi;
@@ -131,8 +132,15 @@ public class ConfigEditorMenu implements Listener {
     @EventHandler
     public void onCreate(AsyncPlayerChatEvent e) {
         if (creatingNew && e.getPlayer().equals(editor)) {
-            handler.create(e.getMessage(), editor);
+            creatingNew = false;
+            e.setCancelled(true);
             HandlerList.unregisterAll(this);
+            String msg = e.getMessage();
+            if (msg.equalsIgnoreCase("cancel")) {
+                editor.sendMessage(Text.modify("cancelled"));
+                return;
+            }
+            SchedulerUtils.runTask(() -> handler.create(msg, editor).open());
         }
     }
 
@@ -152,7 +160,7 @@ public class ConfigEditorMenu implements Listener {
                     open();
                 } else if (action.equalsIgnoreCase("create")) {
                     event.getWhoClicked().closeInventory();
-                    editor.sendMessage(Text.modify("name for new item"));
+                    editor.sendMessage(Text.modify("&fPlease enter a name for the enchantment or type &e'cancel'&f to cancel."));
                     creatingNew = true;
                 }
                 return;
