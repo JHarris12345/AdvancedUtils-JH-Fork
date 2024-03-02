@@ -89,8 +89,8 @@ public class ASManager {
                 Date pluginYmlLastModified = new Date(zipFile.getEntry(pluginYmlPath).getTime());
 
                 // Check modification times
-                if (Math.abs(registryLastModified.getTime() - pluginYmlLastModified.getTime()) > 30000 ||
-                        Math.abs(coreLastModified.getTime() - pluginYmlLastModified.getTime()) > 30000 ||
+                if (Math.abs(registryLastModified.getTime() - pluginYmlLastModified.getTime()) > 60000 ||
+                        Math.abs(coreLastModified.getTime() - pluginYmlLastModified.getTime()) > 60000 ||
                         coreLastModified.getYear() < 124) {
 //                    ASManager.getInstance().getLogger().severe(coreLastModified.getYear() + " Either Registry.class or Core.class has " +
 //                            "been modified significantly after plugin.yml " + registryLastModified.getTime() + " " + coreLastModified.getTime() + " " + pluginYmlLastModified.getTime());
