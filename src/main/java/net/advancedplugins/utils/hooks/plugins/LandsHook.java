@@ -2,6 +2,7 @@ package net.advancedplugins.utils.hooks.plugins;
 
 import me.angeschossen.lands.api.LandsIntegration;
 import me.angeschossen.lands.api.flags.Flags;
+import me.angeschossen.lands.api.land.Area;
 import me.angeschossen.lands.api.land.LandWorld;
 import me.angeschossen.lands.api.player.LandPlayer;
 import net.advancedplugins.utils.ASManager;
@@ -40,7 +41,9 @@ public class LandsHook extends PluginHookInstance {
         try {
             LandWorld world = landsIntegration.getWorld(loc.getWorld());
             if (world == null) return true;
-            return world.getArea(loc).hasNaturalFlag(Flags.MONSTER_SPAWN);
+            Area area = world.getArea(loc);
+            if (area == null) return true;
+            return area.hasNaturalFlag(Flags.MONSTER_SPAWN);
         } catch (Exception ev) {
             ev.printStackTrace();
             return true;
