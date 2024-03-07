@@ -2,6 +2,7 @@ package net.advancedplugins.utils;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import ia.m.T;
 import net.advancedplugins.utils.evalex.Expression;
 import net.advancedplugins.utils.nbt.NBTapi;
 import net.advancedplugins.utils.nbt.backend.ClassWrapper;
@@ -1623,6 +1624,27 @@ public class ASManager {
             return response.toString();
         } finally {
             connection.disconnect();
+        }
+    }
+
+    public static <T> T randomElement(Collection<T> values) {
+        if (values.isEmpty()) {
+            return null;
+        }
+
+        final int randomIndex = ThreadLocalRandom.current().nextInt(values.size());
+
+        if (values instanceof List) {
+            // Lists support fast random access.
+            List<T> list = (List<T>) values;
+            return list.get(randomIndex);
+        } else {
+            // For sets and other collections, use an iterator to reach the random element.
+            Iterator<T> iterator = values.iterator();
+            for (int i = 0; i < randomIndex; i++) {
+                iterator.next();
+            }
+            return iterator.next();
         }
     }
 }
