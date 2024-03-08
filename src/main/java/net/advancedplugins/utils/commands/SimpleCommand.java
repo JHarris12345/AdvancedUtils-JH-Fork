@@ -108,7 +108,7 @@ public abstract class SimpleCommand<T extends CommandSender> extends Command<T> 
                 builder.append(arg.getArgument());
             } else {
                 if (arg.isOptional())
-                    builder.append("[").append(arg.getArgument()).append("]&");
+                    builder.append("[").append(arg.getArgument()).append("]");
                 else
                     builder.append("<").append(arg.getArgument()).append(">");
             }

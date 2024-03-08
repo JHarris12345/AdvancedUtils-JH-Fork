@@ -3,6 +3,7 @@ package net.advancedplugins.utils.commands;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
@@ -28,7 +29,7 @@ public abstract class Command<T extends CommandSender> {
         this.onExecute((T) sender, args);
     }
 
-    public String getPermission() {
+    public @Nullable String getPermission() {
         return this.permission;
     }
 

@@ -86,7 +86,7 @@ public class CommandBase implements CommandExecutor, TabCompleter {
                 simpleCommand.middleMan(sender, args);
                 return true;
             }
-            if (!subResult.doesInheritPermission() && subResult.getPermission() != null && !sender.hasPermission(subResult.getPermission()) && !simpleCommand.getPermission().isEmpty()) {
+            if (!subResult.doesInheritPermission() && subResult.getPermission() != null && !sender.hasPermission(subResult.getPermission()) && simpleCommand.getPermission() != null && !simpleCommand.getPermission().isEmpty()) {
                 Text.sendMessage(sender, subResult.getNoPermissionLang(sender));
                 return true;
             }
@@ -132,7 +132,7 @@ public class CommandBase implements CommandExecutor, TabCompleter {
                     continue;
                 }
                 for (SubCommand<? extends CommandSender> subResult : subResults) {
-                    if (!subResult.doesInheritPermission() && subResult.getPermission() != null && !sender.hasPermission(subResult.getPermission()) && !simpleCommand.getPermission().isEmpty()) {
+                    if (!subResult.doesInheritPermission() && subResult.getPermission() != null && !sender.hasPermission(subResult.getPermission()) && simpleCommand.getPermission() != null && !simpleCommand.getPermission().isEmpty()) {
                         continue;
                     }
                     if (!subResult.isConsole() && sender instanceof ConsoleCommandSender) {
