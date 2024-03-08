@@ -34,6 +34,17 @@ public class SchedulerUtils {
     }
 
     /**
+     * Runs an Async Runnable every x ticks.
+     *
+     * @param initialDelay The time to delay the first execution.
+     * @param period       The period between successive executions.
+     * @return The Task ID.
+     */
+    public static int runTaskTimerAsync(Runnable task, long initialDelay, long period) {
+        return Bukkit.getScheduler().runTaskTimerAsynchronously(ASManager.getInstance(), task, initialDelay, period).getTaskId();
+    }
+
+    /**
      * Runs a Runnable at the next server tick.
      *
      * @return The Task ID.
