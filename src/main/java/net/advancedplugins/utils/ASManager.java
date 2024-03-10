@@ -1647,4 +1647,10 @@ public class ASManager {
             return iterator.next();
         }
     }
+
+    public static <T> List<T> reverse(Set<T> formats) {
+        List<T> list = new ArrayList<>(formats);
+        Collections.reverse(list);
+        return list;
+    }
 }
