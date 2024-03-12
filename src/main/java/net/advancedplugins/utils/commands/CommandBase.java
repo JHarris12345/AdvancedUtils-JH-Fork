@@ -6,6 +6,7 @@ import lombok.Getter;
 import net.advancedplugins.utils.commands.argument.ArgumentHandler;
 import net.advancedplugins.utils.commands.argument.ArgumentType;
 import net.advancedplugins.utils.text.Text;
+import org.apache.commons.lang.NumberUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -153,7 +154,7 @@ public class CommandBase implements CommandExecutor, TabCompleter {
         this.registerArgumentType(String.class, string -> string)
                 .registerArgumentType(Player.class, Bukkit::getPlayerExact)
                 .registerArgumentType(OfflinePlayer.class, Bukkit::getOfflinePlayer)
-                .registerArgumentType(Integer.class, string -> StringUtils.isNumeric(string) ? Integer.parseInt(string) : 0)
+                .registerArgumentType(Integer.class, string -> NumberUtils.isNumber(string) ? Integer.parseInt(string) : 0)
                 .registerArgumentType(Boolean.class, string -> string.equalsIgnoreCase("true") || (string.equalsIgnoreCase("false") ? false : null));
     }
 }

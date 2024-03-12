@@ -151,13 +151,10 @@ public class HooksHandler {
     private static void holograms() {
         if (isPluginEnabled("CMI")) {
             holograms = new CMIHologramHandler(plugin);
-            return;
         } else if (isPluginEnabled("DecentHolograms")) {
             holograms = new DecentHologramsHandler(plugin);
-            return;
         } else if (isPluginEnabled("HolographicDisplays")) {
             holograms = new DecentHologramsHandler(plugin);
-            return;
         } else {
             holograms = new HologramHandler(plugin);
         }
