@@ -32,7 +32,7 @@ public class ItemDurability {
     public ItemDurability(@Nullable LivingEntity itemHolder, ItemStack input) {
         this.itemHolder = itemHolder;
         this.item = (input == null) ? new ItemStack(Material.AIR) : input;
-        itemsAdder = HooksHandler.isEnabled(HookPlugin.ITEMSADDER) &&
+        itemsAdder = HooksHandler.getHook(HookPlugin.ITEMSADDER) != null &&
                 ((ItemsAdderHook) HooksHandler.getHook(HookPlugin.ITEMSADDER)).isCustomItem(item);
     }
 
