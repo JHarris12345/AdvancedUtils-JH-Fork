@@ -29,75 +29,68 @@ public class HooksHandler {
         if (isPluginEnabled(HookPlugin.PROTOCOLLIB.getPluginName()))
             registerNew(HookPlugin.PROTOCOLLIB, new PluginHookInstance()); // Generic plugin hook
 
-        // AureliumSkills hook must be loaded instantly without runnable
+        // AureliumSKills hook must be loaded instantly without runnable
         if (isPluginEnabled(HookPlugin.AURELIUMSKILLS.getPluginName()))
             registerNew(HookPlugin.AURELIUMSKILLS, new AureliumSkillsHook(), true);
 
+        // these should be fine loading rn as well, as they are softdepend in plugin.yml (Wega)
+        if (isPluginEnabled(HookPlugin.MCMMO.getPluginName()))
+            registerNew(HookPlugin.MCMMO, new McMMOHook(), true);
+
+        if (isPluginEnabled(HookPlugin.ADVANCEDENCHANTMENTS.getPluginName()))
+            registerNew(HookPlugin.ADVANCEDENCHANTMENTS, new AdvancedEnchantmentsHook());
+
+        if (isPluginEnabled(HookPlugin.WORLDGUARD.getPluginName()))
+            registerNew(HookPlugin.WORLDGUARD, new WorldGuardHook());
+
+        if (isPluginEnabled(HookPlugin.GRIEFPREVENTION.getPluginName()))
+            registerNew(HookPlugin.GRIEFPREVENTION, new GriefPreventionHook());
+
+        if (isPluginEnabled(HookPlugin.PLACEHOLDERAPI.getPluginName()))
+            registerNew(HookPlugin.PLACEHOLDERAPI, new PlaceholderAPIHook());
+
+        if (isPluginEnabled(HookPlugin.SLIMEFUN.getPluginName()))
+            registerNew(HookPlugin.SLIMEFUN, new SlimeFunHook());
+
+        if (isPluginEnabled(HookPlugin.MYTHICMOBS.getPluginName()))
+            registerNew(HookPlugin.MYTHICMOBS, new MythicMobsHook(), true);
+
+        if (isPluginEnabled(HookPlugin.TOWNY.getPluginName()))
+            // registerNew(HookPlugin.TOWNY, new MythicMobsHook()); // probably a mistake?
+            registerNew(HookPlugin.TOWNY, new TownyHook());
+
+        if (isPluginEnabled(HookPlugin.LANDS.getPluginName()))
+            registerNew(HookPlugin.LANDS, new LandsHook());
+
+        if (isPluginEnabled(HookPlugin.SUPERIORSKYBLOCK2.getPluginName()))
+            registerNew(HookPlugin.SUPERIORSKYBLOCK2, new SuperiorSkyblock2Hook());
+
+        if (isPluginEnabled(HookPlugin.ORAXEN.getPluginName()))
+            registerNew(HookPlugin.ORAXEN, new OraxenHook(plugin), true);
+
+        if (isPluginEnabled(HookPlugin.PROTECTIONSTONES.getPluginName()))
+            registerNew(HookPlugin.PROTECTIONSTONES, new ProtectionStonesHook());
+
+        if (isPluginEnabled(HookPlugin.RESIDENCE.getPluginName()))
+            registerNew(HookPlugin.RESIDENCE, new ResidenceHook());
+
+        if (isPluginEnabled(HookPlugin.GEYSER.getPluginName()))
+            registerNew(HookPlugin.GEYSER, new GeyserHook());
+
+        if (isPluginEnabled(HookPlugin.DYNMAP.getPluginName()))
+            registerNew(HookPlugin.DYNMAP, new DynmapHook());
+
+        if (isPluginEnabled(HookPlugin.ESSENTIALS.getPluginName()))
+            registerNew(HookPlugin.ESSENTIALS, new EssentialsHook());
+
+        if (isPluginEnabled(HookPlugin.CMI.getPluginName()))
+            registerNew(HookPlugin.CMI, new CMIHook());
+
+        if (isPluginEnabled(HookPlugin.BEACONPLUS3.getPluginName()))
+            registerNew(HookPlugin.BEACONPLUS3, new BeaconsPlus3Hook());
+
         // Do this after server is loaded, so all softdepends that aren't in the plugin.yml file will be enabled by this time
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-
-            // these should be fine loading rn as well, as they are softdepend in plugin.yml (Wega)
-            if (isPluginEnabled(HookPlugin.MCMMO.getPluginName()))
-                registerNew(HookPlugin.MCMMO, new McMMOHook(), true);
-
-            if (isPluginEnabled(HookPlugin.ADVANCEDENCHANTMENTS.getPluginName()))
-                registerNew(HookPlugin.ADVANCEDENCHANTMENTS, new AdvancedEnchantmentsHook());
-
-            if (isPluginEnabled(HookPlugin.WORLDGUARD.getPluginName()))
-                registerNew(HookPlugin.WORLDGUARD, new WorldGuardHook());
-
-            if (isPluginEnabled(HookPlugin.GRIEFPREVENTION.getPluginName()))
-                registerNew(HookPlugin.GRIEFPREVENTION, new GriefPreventionHook());
-
-            if (isPluginEnabled(HookPlugin.PLACEHOLDERAPI.getPluginName()))
-                registerNew(HookPlugin.PLACEHOLDERAPI, new PlaceholderAPIHook());
-
-            if (isPluginEnabled(HookPlugin.SLIMEFUN.getPluginName()))
-                registerNew(HookPlugin.SLIMEFUN, new SlimeFunHook());
-
-            if (isPluginEnabled(HookPlugin.MYTHICMOBS.getPluginName()))
-                registerNew(HookPlugin.MYTHICMOBS, new MythicMobsHook(), true);
-
-            if (isPluginEnabled(HookPlugin.TOWNY.getPluginName()))
-                // registerNew(HookPlugin.TOWNY, new MythicMobsHook()); // probably a mistake?
-                registerNew(HookPlugin.TOWNY, new TownyHook());
-
-            if (isPluginEnabled(HookPlugin.LANDS.getPluginName()))
-                registerNew(HookPlugin.LANDS, new LandsHook());
-
-            if (isPluginEnabled(HookPlugin.SUPERIORSKYBLOCK2.getPluginName()))
-                registerNew(HookPlugin.SUPERIORSKYBLOCK2, new SuperiorSkyblock2Hook());
-
-            if (isPluginEnabled(HookPlugin.ORAXEN.getPluginName()))
-                registerNew(HookPlugin.ORAXEN, new OraxenHook(plugin), true);
-
-            if (isPluginEnabled(HookPlugin.PROTECTIONSTONES.getPluginName()))
-                registerNew(HookPlugin.PROTECTIONSTONES, new ProtectionStonesHook());
-
-            if (isPluginEnabled(HookPlugin.RESIDENCE.getPluginName()))
-                registerNew(HookPlugin.RESIDENCE, new ResidenceHook());
-
-            if (isPluginEnabled(HookPlugin.GEYSER.getPluginName()))
-                registerNew(HookPlugin.GEYSER, new GeyserHook());
-
-            if (isPluginEnabled(HookPlugin.DYNMAP.getPluginName()))
-                registerNew(HookPlugin.DYNMAP, new DynmapHook());
-
-            if (isPluginEnabled(HookPlugin.ESSENTIALS.getPluginName()))
-                registerNew(HookPlugin.ESSENTIALS, new EssentialsHook());
-
-            if (isPluginEnabled(HookPlugin.CMI.getPluginName()))
-                registerNew(HookPlugin.CMI, new CMIHook());
-
-            if (isPluginEnabled(HookPlugin.LUCKPERMS.getPluginName()))
-                registerNew(HookPlugin.LUCKPERMS, new LuckPermsHook());
-
-            if (isPluginEnabled(HookPlugin.BEACONPLUS3.getPluginName()))
-                registerNew(HookPlugin.BEACONPLUS3, new BeaconsPlus3Hook());
-
-            if (isPluginEnabled(HookPlugin.VAULT.getPluginName()))
-                registerNew(HookPlugin.VAULT, new VaultHook());
-
             // Figure out which factions plugin is loaded and hook into the correct one
 
             if (isPluginEnabled(HookPlugin.FACTIONS.getPluginName())) {
