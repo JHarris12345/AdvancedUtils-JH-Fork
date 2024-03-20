@@ -112,7 +112,6 @@ public class McMMOHook extends PluginHookInstance implements Listener {
                 && !mcMMO.getPlaceStore().isTrue(blockState)) {
             this.miningCheck(player, event);
         }
-
     }
 
     // https://github.com/mcMMO-Dev/mcMMO/blob/master/src/main/java/com/gmail/nossr50/skills/mining/MiningManager.java#L78
@@ -138,6 +137,22 @@ public class McMMOHook extends PluginHookInstance implements Listener {
                 }
             }
         }
+    }
+
+    /*
+     workaround for https://github.com/GC-spigot/AdvancedEnchantments/issues/4079
+     stupid but it works :D
+    */
+    @EventHandler
+    public void onBonusDrop(McMMOItemSpawnEvent event) {
+        if (event.getItemSpawnReason() != ItemSpawnReason.BONUS_DROPS) return;
+        Block block = event.getLocation().getBlock();
+        if (!block.hasMetadata("ae_mcmmoTelepathy")) return;
+        block.removeMetadata("ae_mcmmoTelepathy", ASManager.getInstance());
+
+        event.getLocation().subtract(0, 10000, 0);
+        ItemStack bonusItem = event.getItemStack().clone();
+        ASManager.giveItem(event.getPlayer(), bonusItem);
     }
 
     public boolean blockHasHerbalismBonusDrops(Block block) {
