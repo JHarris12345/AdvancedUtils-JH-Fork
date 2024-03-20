@@ -10,6 +10,7 @@ public enum HookPlugin {
     LWC("LWC"),
     LANDS("Lands"),
     GRIEFPREVENTION("GriefPrevention"),
+    GRIEFDEFENDER("GriefDefender"),
     SLIMEFUN("Slimefun"),
     ADVANCEDPETS("AdvancedPets"),
     DYNMAP("dynmap"),

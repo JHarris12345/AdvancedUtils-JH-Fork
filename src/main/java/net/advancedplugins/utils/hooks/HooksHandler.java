@@ -46,6 +46,9 @@ public class HooksHandler {
         if (isPluginEnabled(HookPlugin.GRIEFPREVENTION.getPluginName()))
             registerNew(HookPlugin.GRIEFPREVENTION, new GriefPreventionHook());
 
+        if (isPluginEnabled(HookPlugin.GRIEFDEFENDER.getPluginName()))
+            registerNew(HookPlugin.GRIEFDEFENDER, new GriefDefenderHook());
+
         if (isPluginEnabled(HookPlugin.PLACEHOLDERAPI.getPluginName()))
             registerNew(HookPlugin.PLACEHOLDERAPI, new PlaceholderAPIHook());
 
