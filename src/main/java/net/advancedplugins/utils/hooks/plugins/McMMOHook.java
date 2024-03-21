@@ -10,6 +10,7 @@ import com.gmail.nossr50.events.fake.FakePlayerFishEvent;
 import com.gmail.nossr50.events.items.McMMOItemSpawnEvent;
 import com.gmail.nossr50.mcMMO;
 import com.gmail.nossr50.util.BlockUtils;
+import com.gmail.nossr50.util.ItemUtils;
 import com.gmail.nossr50.util.MetadataConstants;
 import com.gmail.nossr50.util.Misc;
 import com.gmail.nossr50.util.player.UserManager;
@@ -18,6 +19,7 @@ import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.SchedulerUtils;
 import net.advancedplugins.utils.hooks.PluginHookInstance;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -98,27 +100,59 @@ public class McMMOHook extends PluginHookInstance implements Listener {
         mmoPlayer.getHerbalismManager().processHerbalismBlockBreakEvent(event);
     }
 
-    // https://github.com/mcMMO-Dev/mcMMO/blob/master/src/main/java/com/gmail/nossr50/skills/mining/MiningManager.java#L78
+    // https://github.com/mcMMO-Dev/mcMMO/blob/master/src/main/java/com/gmail/nossr50/listeners/BlockListener.java#L400
     public void processBlockBreakEvent(Player player, BlockBreakEvent event) {
+        Block block = event.getBlock();
+        BlockState blockState = block.getState();
+        ItemStack heldItem = player.getInventory().getItemInMainHand();
+
+        if (BlockUtils.affectedBySuperBreaker(blockState)
+                && (ItemUtils.isPickaxe(heldItem) || ItemUtils.isHoe(heldItem))
+                && mcMMO.p.getSkillTools().doesPlayerHaveSkillPermission(player, PrimarySkillType.MINING)
+                && !mcMMO.getPlaceStore().isTrue(blockState)) {
+            this.miningCheck(player, event);
+        }
+    }
+
+    // https://github.com/mcMMO-Dev/mcMMO/blob/master/src/main/java/com/gmail/nossr50/skills/mining/MiningManager.java#L78
+    private void miningCheck(Player player, BlockBreakEvent event) {
+        Block block = event.getBlock();
+        BlockState blockState = block.getState();
         McMMOPlayer mmoPlayer = UserManager.getPlayer(player);
         if (mmoPlayer == null) return;
 
         if (RandomChanceUtil.checkRandomChanceExecutionSuccess(player, SubSkillType.MINING_DOUBLE_DROPS, true)) {
             boolean useTriple = mmoPlayer.getAbilityMode(mcMMO.p.getSkillTools().getSuperAbility(PrimarySkillType.MINING)) && mcMMO.p.getAdvancedConfig().getAllowMiningTripleDrops();
 
-            BlockUtils.markDropsAsBonus(event.getBlock().getState(), useTriple);
+            BlockUtils.markDropsAsBonus(blockState, useTriple);
 
-            if (event.getBlock().getMetadata(MetadataConstants.METADATA_KEY_BONUS_DROPS).size() > 0) {
-                BonusDropMeta bonusDropMeta = (BonusDropMeta) event.getBlock().getMetadata(MetadataConstants.METADATA_KEY_BONUS_DROPS).get(0);
+            if (block.getMetadata(MetadataConstants.METADATA_KEY_BONUS_DROPS).size() > 0) {
+                BonusDropMeta bonusDropMeta = (BonusDropMeta) block.getMetadata(MetadataConstants.METADATA_KEY_BONUS_DROPS).get(0);
                 int bonusCount = bonusDropMeta.asInt();
 
-                for (ItemStack itemStack : event.getBlock().getDrops()) {
+                for (ItemStack itemStack : block.getDrops()) {
                     for (int i = 0; i < bonusCount; i++) {
-                        Misc.spawnItemNaturally(event.getPlayer(), event.getBlock().getState().getLocation(), itemStack, ItemSpawnReason.BONUS_DROPS);
+                        Misc.spawnItemNaturally(event.getPlayer(), blockState.getLocation(), itemStack, ItemSpawnReason.BONUS_DROPS);
                     }
                 }
             }
         }
+    }
+
+    /*
+     workaround for https://github.com/GC-spigot/AdvancedEnchantments/issues/4079
+     stupid but it works :D
+    */
+    @EventHandler
+    public void onBonusDrop(McMMOItemSpawnEvent event) {
+        if (event.getItemSpawnReason() != ItemSpawnReason.BONUS_DROPS) return;
+        Block block = event.getLocation().getBlock();
+        if (!block.hasMetadata("ae_mcmmoTelepathy")) return;
+        block.removeMetadata("ae_mcmmoTelepathy", ASManager.getInstance());
+
+        event.getLocation().subtract(0, 10000, 0);
+        ItemStack bonusItem = event.getItemStack().clone();
+        ASManager.giveItem(event.getPlayer(), bonusItem);
     }
 
     public boolean blockHasHerbalismBonusDrops(Block block) {
