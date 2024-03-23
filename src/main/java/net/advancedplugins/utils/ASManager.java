@@ -2,12 +2,10 @@ package net.advancedplugins.utils;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import ia.m.T;
 import net.advancedplugins.utils.evalex.Expression;
+import net.advancedplugins.utils.items.Glow;
 import net.advancedplugins.utils.nbt.NBTapi;
 import net.advancedplugins.utils.nbt.backend.ClassWrapper;
-import net.advancedplugins.utils.nbt.backend.NBTCompound;
-import net.advancedplugins.utils.nbt.backend.NBTItem;
 import net.advancedplugins.utils.nbt.backend.ReflectionMethod;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import net.advancedplugins.utils.text.Replace;
@@ -1562,11 +1560,16 @@ public class ASManager {
     }
 
     public static ItemStack makeItemGlow(ItemStack itemstack) {
+
+        /* Compound got removed when using durability effects (https://github.com/GC-spigot/AdvancedEnchantments/issues/3982)
         NBTItem item = new NBTItem(itemstack);
         NBTCompound compound = item.getCompoundList("Enchantments").addCompound();
         compound.setString("id", "");
         compound.setInteger("lvl", 0);
-        return item.getItem();
+         */
+
+        itemstack.addEnchantment(Glow.ench, 0);
+        return itemstack;
     }
 
     public static Pair<String, Integer> parseEnchantment(String ench) {
