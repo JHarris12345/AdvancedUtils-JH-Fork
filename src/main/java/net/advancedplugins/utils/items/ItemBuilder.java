@@ -396,7 +396,6 @@ public class ItemBuilder {
      * @param arguments The string arguments to add.
      */
     public ItemBuilder addNBTTag(String type, String arguments) {
-        System.out.println("NBT");
         is.setItemMeta(im);
         is = NBTapi.addNBTTag(type, arguments, is);
         im = is.getItemMeta();
@@ -410,7 +409,6 @@ public class ItemBuilder {
      * @param arguments The string arguments to add.
      */
     public ItemBuilder addPDC(String type, String arguments) {
-        System.out.println("PDC");
         PDCHandler.setString(im, type, arguments);
         return this;
     }
