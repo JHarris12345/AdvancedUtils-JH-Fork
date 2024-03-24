@@ -9,6 +9,7 @@ import com.gmail.nossr50.datatypes.skills.SubSkillType;
 import com.gmail.nossr50.events.fake.FakePlayerFishEvent;
 import com.gmail.nossr50.events.items.McMMOItemSpawnEvent;
 import com.gmail.nossr50.mcMMO;
+import com.gmail.nossr50.skills.herbalism.HerbalismManager;
 import com.gmail.nossr50.util.BlockUtils;
 import com.gmail.nossr50.util.ItemUtils;
 import com.gmail.nossr50.util.MetadataConstants;
@@ -23,9 +24,12 @@ import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.HashMap;
 import java.util.List;
@@ -86,6 +90,17 @@ public class McMMOHook extends PluginHookInstance implements Listener {
         return true;
     }
 
+    public boolean herbalismCheck(Player player, BlockBreakEvent event) {
+        Block block = event.getBlock();
+        BlockState blockState = block.getState();
+        if (BlockUtils.affectedByGreenTerra(blockState)) {
+            if (mcMMO.p.getSkillTools().doesPlayerHaveSkillPermission(player, PrimarySkillType.HERBALISM)) {
+                processHerbalismBlockBreakEvent(player, event);
+                return true;
+            }
+        }
+        return false;
+    }
     /**
      * Will set the correct metadata for the blocks,
      * so they can be handled later
@@ -101,7 +116,7 @@ public class McMMOHook extends PluginHookInstance implements Listener {
     }
 
     // https://github.com/mcMMO-Dev/mcMMO/blob/master/src/main/java/com/gmail/nossr50/listeners/BlockListener.java#L400
-    public void processBlockBreakEvent(Player player, BlockBreakEvent event) {
+    public void processBlockBreakEvent(Player player, BlockBreakEvent event, boolean telepathy) {
         Block block = event.getBlock();
         BlockState blockState = block.getState();
         ItemStack heldItem = player.getInventory().getItemInMainHand();
@@ -110,12 +125,12 @@ public class McMMOHook extends PluginHookInstance implements Listener {
                 && (ItemUtils.isPickaxe(heldItem) || ItemUtils.isHoe(heldItem))
                 && mcMMO.p.getSkillTools().doesPlayerHaveSkillPermission(player, PrimarySkillType.MINING)
                 && !mcMMO.getPlaceStore().isTrue(blockState)) {
-            this.miningCheck(player, event);
+            this.miningCheck(player, event, telepathy);
         }
     }
 
     // https://github.com/mcMMO-Dev/mcMMO/blob/master/src/main/java/com/gmail/nossr50/skills/mining/MiningManager.java#L78
-    private void miningCheck(Player player, BlockBreakEvent event) {
+    private void miningCheck(Player player, BlockBreakEvent event, boolean telepathy) {
         Block block = event.getBlock();
         BlockState blockState = block.getState();
         McMMOPlayer mmoPlayer = UserManager.getPlayer(player);
@@ -132,6 +147,9 @@ public class McMMOHook extends PluginHookInstance implements Listener {
 
                 for (ItemStack itemStack : block.getDrops()) {
                     for (int i = 0; i < bonusCount; i++) {
+                        if (telepathy)
+                            blockState.setMetadata("ae_mcmmoTelepathy", new FixedMetadataValue(ASManager.getInstance(), true));
+
                         Misc.spawnItemNaturally(event.getPlayer(), blockState.getLocation(), itemStack, ItemSpawnReason.BONUS_DROPS);
                     }
                 }
@@ -157,10 +175,6 @@ public class McMMOHook extends PluginHookInstance implements Listener {
 
     public boolean blockHasHerbalismBonusDrops(Block block) {
         return block.hasMetadata(MetadataConstants.METADATA_KEY_BONUS_DROPS);
-    }
-
-    public boolean hasHerbalismSkill(Player p) {
-        return mcMMO.p.getSkillTools().doesPlayerHaveSkillPermission(p, PrimarySkillType.HERBALISM);
     }
 
     public int getHerbalismBonusDropMultiplier(Block block) {
