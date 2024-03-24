@@ -1568,7 +1568,7 @@ public class ASManager {
         compound.setInteger("lvl", 0);
          */
 
-        itemstack.addEnchantment(Glow.ench, 0);
+//        itemstack.addEnchantment(Glow.ench, 0);
         return itemstack;
     }
 
