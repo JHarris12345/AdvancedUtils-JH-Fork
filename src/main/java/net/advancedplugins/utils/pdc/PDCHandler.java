@@ -9,10 +9,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.persistence.PersistentDataType;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class PDCHandler {
 
@@ -101,7 +99,7 @@ public class PDCHandler {
     }
 
     private static NamespacedKey getNamespace(String key) {
-        return new NamespacedKey(ASManager.getInstance(), key);
+        return new NamespacedKey(ASManager.getInstance(), key.replace(";", "-"));
     }
 
     public static void setString(PersistentDataHolder holder, String key, String name) {
@@ -136,5 +134,19 @@ public class PDCHandler {
     public static boolean hasPDC(PersistentDataHolder holder) {
         if (holder == null) return false;
         return !holder.getPersistentDataContainer().getKeys().isEmpty();
+    }
+
+    public static List<String> getKeys(ItemStack i) {
+        return i.hasItemMeta() ? i.getItemMeta().getPersistentDataContainer().getKeys()
+                .stream().map(NamespacedKey::getKey).collect(Collectors.toList()): Collections.EMPTY_LIST;
+    }
+
+    public static Object get(ItemStack itemInHand, NamespacedKey key) {
+        for(PersistentDataType type : dataTypes) {
+            if (itemInHand.getItemMeta().getPersistentDataContainer().has(key, type)) {
+                return itemInHand.getItemMeta().getPersistentDataContainer().get(key, type);
+            }
+        }
+        return null;
     }
 }
