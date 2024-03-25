@@ -5,6 +5,7 @@ import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.hooks.HooksHandler;
 import net.advancedplugins.utils.nbt.NBTapi;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
+import net.advancedplugins.utils.pdc.PDCHandler;
 import net.advancedplugins.utils.text.Text;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -400,6 +401,18 @@ public class ItemBuilder {
         im = is.getItemMeta();
         return this;
     }
+
+    /**
+     * Adds string PDC data to itemstack.
+     *
+     * @param type      The type of data.
+     * @param arguments The string arguments to add.
+     */
+    public ItemBuilder addPDC(String type, String arguments) {
+        PDCHandler.setString(im, type, arguments);
+        return this;
+    }
+
 
     public ItemBuilder setGlowing(boolean bool) {
         this.glow = bool;
