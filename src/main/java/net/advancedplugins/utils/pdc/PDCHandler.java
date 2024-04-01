@@ -48,10 +48,10 @@ public class PDCHandler {
         return (int) get(holder, key, PersistentDataType.INTEGER);
     }
 
-    public static int getLong(PersistentDataHolder holder, String key) {
+    public static long getLong(PersistentDataHolder holder, String key) {
         if(!has(holder, key, PersistentDataType.LONG))
             return 0;
-        return (int) get(holder, key, PersistentDataType.LONG);
+        return (long) get(holder, key, PersistentDataType.LONG);
     }
 
     public static double getDouble(PersistentDataHolder holder, String key) {
