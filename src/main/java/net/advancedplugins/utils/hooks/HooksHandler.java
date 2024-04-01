@@ -160,6 +160,7 @@ public class HooksHandler {
         return Bukkit.getPluginManager().isPluginEnabled(plugin);
     }
 
+    @Deprecated
     public static boolean isEnabled(HookPlugin hookPlugin) {
         return pluginHookMap.containsKey(hookPlugin) || isPluginEnabled(hookPlugin.getPluginName());
     }
