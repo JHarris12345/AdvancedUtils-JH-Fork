@@ -31,9 +31,13 @@ public class GriefDefenderHook extends PluginHookInstance {
     }
 
     public boolean canIceGenerate(Location l) {
-        final Claim claim = GriefDefender.getCore().getClaimAt(l);
-        if(claim == null) return true;
-        return claim.getFlagPermissionValue(Flag.builder().name("ice-growth").build(), new HashSet<>()).asBoolean();
+        try {
+            final Claim claim = GriefDefender.getCore().getClaimAt(l);
+            if (claim == null) return true;
+            return claim.getFlagPermissionValue(Flag.builder().name("ice-growth").build(), new HashSet<>()).asBoolean();
+        } catch (Exception ignored) {
+            return true;
+        }
     }
 
 }
