@@ -42,7 +42,7 @@ public class Text {
     }
 
     public static String parsePapi(String message, OfflinePlayer player) {
-        if (HooksHandler.isEnabled(HookPlugin.PLACEHOLDERAPI)) {
+        if (HooksHandler.getHook(HookPlugin.PLACEHOLDERAPI) != null) {
             return me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, message);
         }
         return message;

@@ -16,7 +16,6 @@ import com.gmail.nossr50.util.MetadataConstants;
 import com.gmail.nossr50.util.Misc;
 import com.gmail.nossr50.util.player.UserManager;
 import com.gmail.nossr50.util.random.ProbabilityUtil;
-import com.gmail.nossr50.util.random.RandomChanceUtil;
 import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.SchedulerUtils;
 import net.advancedplugins.utils.hooks.PluginHookInstance;
