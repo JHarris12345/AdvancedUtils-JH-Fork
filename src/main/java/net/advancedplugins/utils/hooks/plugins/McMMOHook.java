@@ -15,6 +15,7 @@ import com.gmail.nossr50.util.ItemUtils;
 import com.gmail.nossr50.util.MetadataConstants;
 import com.gmail.nossr50.util.Misc;
 import com.gmail.nossr50.util.player.UserManager;
+import com.gmail.nossr50.util.random.ProbabilityUtil;
 import com.gmail.nossr50.util.random.RandomChanceUtil;
 import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.SchedulerUtils;
@@ -136,7 +137,7 @@ public class McMMOHook extends PluginHookInstance implements Listener {
         McMMOPlayer mmoPlayer = UserManager.getPlayer(player);
         if (mmoPlayer == null) return;
 
-        if (RandomChanceUtil.checkRandomChanceExecutionSuccess(player, SubSkillType.MINING_DOUBLE_DROPS, true)) {
+        if (ProbabilityUtil.isSkillRNGSuccessful(SubSkillType.MINING_DOUBLE_DROPS, player)) {
             boolean useTriple = mmoPlayer.getAbilityMode(mcMMO.p.getSkillTools().getSuperAbility(PrimarySkillType.MINING)) && mcMMO.p.getAdvancedConfig().getAllowMiningTripleDrops();
 
             BlockUtils.markDropsAsBonus(blockState, useTriple);
