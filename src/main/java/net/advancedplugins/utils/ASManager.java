@@ -489,7 +489,7 @@ public class ASManager {
             case "POTATOES":
                 return Material.POTATO;
             case "TRIPWIRE":
-                return Material.TRIPWIRE_HOOK;
+                return Material.STRING;
         }
         return material;
     }
@@ -1089,7 +1089,7 @@ public class ASManager {
             }
 
             case "TRIPWIRE": {
-                return Material.TRIPWIRE_HOOK;
+                return Material.STRING;
             }
 
             default:
