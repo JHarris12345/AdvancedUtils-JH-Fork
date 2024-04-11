@@ -4,10 +4,7 @@ import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.LocalLocation;
 import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.hooks.HooksHandler;
-import net.advancedplugins.utils.protection.external.FactionsCheck;
-import net.advancedplugins.utils.protection.external.LandsCheck;
-import net.advancedplugins.utils.protection.external.SlimeFunCheck;
-import net.advancedplugins.utils.protection.external.WorldGuardCheck;
+import net.advancedplugins.utils.protection.external.*;
 import net.advancedplugins.utils.protection.internal.GlobalProtCheck;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -32,6 +29,9 @@ public class ProtectionHandler {
         // Lands
         if (HooksHandler.isEnabled(HookPlugin.LANDS))
             register(plugin, new LandsCheck());
+
+        if (HooksHandler.isEnabled(HookPlugin.PROTECTIONSTONES))
+            register(plugin, new ProtectionStonesCheck());
 
 //        if(HooksHandler.isEnabled(HookPlugin.GRIEFPREVENTION))
 //            register(plugin, new );
