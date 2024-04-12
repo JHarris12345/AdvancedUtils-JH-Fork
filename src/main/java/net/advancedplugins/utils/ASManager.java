@@ -2,8 +2,8 @@ package net.advancedplugins.utils;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import net.advancedplugins.utils.annotations.ConfigKey;
 import net.advancedplugins.utils.evalex.Expression;
-import net.advancedplugins.utils.items.Glow;
 import net.advancedplugins.utils.nbt.NBTapi;
 import net.advancedplugins.utils.nbt.backend.ClassWrapper;
 import net.advancedplugins.utils.nbt.backend.ReflectionMethod;
@@ -1531,7 +1531,21 @@ public class ASManager {
                 T instance = clazz.getDeclaredConstructor().newInstance();
                 for (Field field : clazz.getDeclaredFields()) {
                     field.setAccessible(true);
-                    Object value = config.get(path + "." + key + "." + field.getName());
+
+                    ConfigKey configKey = field.getAnnotation(ConfigKey.class);
+                    if (configKey == null) {
+                        log("Missing ConfigKey annotation for field " + field.getName() + " in class " + clazz.getSimpleName());
+                        continue;
+                    }
+
+                    Object value;
+                    // Empty configKey means it should bet set as the key
+                    if (configKey.value().isEmpty()) {
+                        value = key;
+                    } else {
+                        value = config.get(path + "." + key + "." + configKey.value());
+                    }
+
                     field.set(instance, value);
                 }
                 immutableMap.put(key, instance);
