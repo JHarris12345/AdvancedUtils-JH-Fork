@@ -11,6 +11,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerItemBreakEvent;
+import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -150,17 +151,25 @@ public class ItemDurability {
      * @param amount Durability to set.
      */
     public ItemDurability setDurability(int amount) {
-        if (itemsAdder) {
+        boolean cancelled = false;
+        if (this.itemHolder instanceof Player) {
+            PlayerItemDamageEvent event = new PlayerItemDamageEvent((Player) this.itemHolder, this.item, amount);
+            Bukkit.getPluginManager().callEvent(event);
+            cancelled = event.isCancelled();
+            amount = event.getDamage();
+        }
+        if (itemsAdder && !cancelled) {
             this.item = ((ItemsAdderHook) HooksHandler.getHook(HookPlugin.ITEMSADDER)).setCustomItemDurability(item,
                     amount < getMaxDurability() ? getMaxDurability() - amount : -1);
             return this;
         }
 
-        if (amount >= this.getMaxDurability() && this.itemHolder != null && this.itemHolder instanceof Player && item.getItemMeta() instanceof Damageable) {
+        if (!cancelled && amount >= this.getMaxDurability() && this.itemHolder != null && this.itemHolder instanceof Player && item.getItemMeta() instanceof Damageable) {
             Bukkit.getPluginManager().callEvent(new PlayerItemBreakEvent((Player) this.itemHolder, this.item));
         }
 
-        this.setDurabilityVersionSave(amount);
+        if (!cancelled)
+            this.setDurabilityVersionSave(amount);
         return this;
     }
 
