@@ -12,14 +12,13 @@ public abstract class Command<T extends CommandSender> {
     private final String permission;
     private final boolean isConsole;
 
-    private Function<T, String> noPermission;
-    private Function<T, String> notOnline;
+    private Function<T, String> noPermission = player -> "&cYou do not have permission to do this.";
+    private Function<T, String> notOnline = player -> "&cPlayer is not online.";
 
     public Command(JavaPlugin plugin, String permission, boolean isConsole) {
         this.plugin = plugin;
         this.permission = permission;
         this.isConsole = isConsole;
-        this.noPermission = player -> "&cYou do not have permission to do this.";
     }
 
     public abstract void onExecute(T sender, String[] args);

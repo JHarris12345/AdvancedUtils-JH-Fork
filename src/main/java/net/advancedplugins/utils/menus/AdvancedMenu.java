@@ -46,6 +46,7 @@ public class AdvancedMenu implements InventoryHolder {
     private final int invSize;
 
     private ClickAction closeAction = null;
+    private final ConfigurationSection section;
 
     public AdvancedMenu(Player player, ConfigurationSection section, Replace replace) {
 //        this.section = section;
@@ -53,7 +54,13 @@ public class AdvancedMenu implements InventoryHolder {
         this.title = Text.modify(section.getString(handler.getPath("name")), (Replace) replace);
         this.invSize = section.getInt(handler.getPath("size"));
         this.replace = replace;
+        this.section = section;
 
+        populateItemHashMap(section, itemHashMap, replace);
+    }
+
+    public void refreshItems() {
+        itemHashMap.clear();
         populateItemHashMap(section, itemHashMap, replace);
     }
 
@@ -63,8 +70,9 @@ public class AdvancedMenu implements InventoryHolder {
 
     public void openInventory(Integer page) {
         inventory = Bukkit.createInventory(this, this.invSize, title);
-        // todo: handle pages
         if (page != null) {
+            page = Math.max(0, page);
+            this.page = page;
         }
 
         itemHashMap.values().forEach(i -> {

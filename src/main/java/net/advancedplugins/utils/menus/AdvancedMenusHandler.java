@@ -33,6 +33,12 @@ public class AdvancedMenusHandler {
 
     private void loadDefaultActions() {
         defaultActions.put("close", (player, inventory, item, slot, type) -> player.closeInventory());
+        defaultActions.put("PREVIOUS_PAGE", (player, inventory, item, slot, type) -> {
+            inventory.openInventory(inventory.getPage()-1);
+        });
+        defaultActions.put("NEXT_PAGE", (player, inventory, item, slot, type) -> {
+            inventory.openInventory(inventory.getPage()+1);
+        });
         // Todo: add previous_page, next_page action
     }
 

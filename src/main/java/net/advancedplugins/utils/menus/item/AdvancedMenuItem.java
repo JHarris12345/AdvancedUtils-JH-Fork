@@ -1,13 +1,11 @@
 package net.advancedplugins.utils.menus.item;
 
 import lombok.Getter;
-import lombok.Setter;
 import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.items.ConfigItemCreator;
 import net.advancedplugins.utils.items.ItemBuilder;
 import net.advancedplugins.utils.text.Replace;
 import net.advancedplugins.utils.text.Replacer;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
@@ -72,8 +70,12 @@ public class AdvancedMenuItem {
 
     public void addToInventory(Inventory inv) {
         ItemStack item = getItem();
+        boolean range = slots.length > 1;
         for (int slot : slots) {
-            inv.setItem(slot, item);
+            if(!range)
+                inv.setItem(slot, item);
+            else if (ASManager.isAir(inv.getItem(slot))) // range check
+                inv.setItem(slot, item);
         }
     }
 
