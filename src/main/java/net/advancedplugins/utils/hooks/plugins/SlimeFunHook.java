@@ -1,9 +1,11 @@
 package net.advancedplugins.utils.hooks.plugins;
 
+import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.hooks.PluginHookInstance;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -32,6 +34,10 @@ public class SlimeFunHook extends PluginHookInstance {
 
     public boolean isSlimefunItem(Block block) {
         return BlockStorage.check(block) != null;
+    }
+
+    public boolean hasSoulbound(ItemStack item, World world) {
+        return SlimefunUtils.isSoulbound(item, world);
     }
 
     public Collection<ItemStack> getDrops(Location loc) {
