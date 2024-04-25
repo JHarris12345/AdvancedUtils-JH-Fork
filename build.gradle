@@ -67,6 +67,7 @@ dependencies {
     compileOnly group: 'com.massivecraft', name: 'Factions', version: '1.6.9.5-U0.6.28'
     compileOnly group: 'com.github.angeschossen', name: 'LandsAPI', version: '6.29.12'
     compileOnly group: 'com.griefdefender', name: 'api', version: '2.1.0-SNAPSHOT'
+    compileOnly 'com.mojang:datafixerupper:4.0.26'
     compileOnly 'dev.espi:protectionstones:2.10.2'
 //    compileOnly 'com.github.SaberLLC:Saber-Factions:4.1.2-STABLE'
     annotationProcessor 'org.projectlombok:lombok:1.18.26'

@@ -23,8 +23,11 @@ import java.util.*;
  */
 public class NBTReflectionUtil {
 
+
     private static Field field_unhandledTags = null;
     private static Field field_handle = null;
+    private static Object type_custom_data = null;
+    private static Object registry_access = null;
 
     static {
         try {
@@ -70,8 +73,9 @@ public class NBTReflectionUtil {
      */
     public static Object readNBT(InputStream stream) {
         try {
-            if(MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R3)) {
-                return ReflectionMethod.NBTFILE_READV2.run(null, stream, ReflectionMethod.NBTACCOUNTER_CREATE_UNLIMITED.run(null));
+            if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R3)) {
+                return ReflectionMethod.NBTFILE_READV2.run(null, stream,
+                        ReflectionMethod.NBTACCOUNTER_CREATE_UNLIMITED.run(null));
             } else {
                 return ReflectionMethod.NBTFILE_READ.run(null, stream);
             }
@@ -153,8 +157,13 @@ public class NBTReflectionUtil {
      */
     public static Object convertNBTCompoundtoNMSItem(NBTCompound nbtcompound) {
         try {
-            Object nmsComp = gettoCompount(nbtcompound.getCompound(), nbtcompound);
-            if (MinecraftVersion.getVersion().getVersionId() >= MinecraftVersion.MC1_11_R1.getVersionId()) {
+            Object nmsComp = getToCompount(nbtcompound.getCompound(), nbtcompound);
+            if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
+                if(nbtcompound.hasTag("tag")) {
+                    nmsComp = DataFixerUtil.fixUpRawItemData(nmsComp, DataFixerUtil.VERSION1_20_4, DataFixerUtil.VERSION1_20_5);
+                }
+                return ReflectionMethod.NMSITEM_LOAD.run(null, registry_access, nmsComp);
+            } else if (MinecraftVersion.getVersion().getVersionId() >= MinecraftVersion.MC1_11_R1.getVersionId()) {
                 return ObjectCreator.NMS_COMPOUNDFROMITEM.getInstance(nmsComp);
             } else {
                 return ReflectionMethod.NMSITEM_CREATESTACK.run(null, nmsComp);
@@ -331,7 +340,7 @@ public class NBTReflectionUtil {
         if (!valideCompound(comp)) {
             return;
         }
-        Object workingtag = gettoCompount(nbttag, comp);
+        Object workingtag = getToCompount(nbttag, comp);
         try {
             ReflectionMethod.COMPOUND_SET.run(workingtag, name,
                     ClassWrapper.NMS_NBTTAGCOMPOUND.getClazz().newInstance());
@@ -352,12 +361,12 @@ public class NBTReflectionUtil {
         if (root == null) {
             root = ObjectCreator.NMS_NBTTAGCOMPOUND.getInstance();
         }
-        Object tmp = gettoCompount(root, comp);
+        Object tmp = getToCompount(root, comp);
         comp.setResolvedObject(tmp);
         return tmp != null;
     }
 
-    protected static Object gettoCompount(Object nbttag, NBTCompound comp) {
+    protected static Object getToCompount(Object nbttag, NBTCompound comp) {
         Deque<String> structure = new ArrayDeque<>();
         while (comp.getParent() != null) {
             structure.add(comp.getName());
@@ -390,7 +399,7 @@ public class NBTReflectionUtil {
         }
         if (!valideCompound(comp))
             throw new NbtApiException("The Compound wasn't able to be linked back to the root!");
-        Object workingtag = gettoCompount(rootnbttag, comp);
+        Object workingtag = getToCompount(rootnbttag, comp);
         try {
             ReflectionMethod.COMPOUND_MERGE.run(workingtag, workingtagSrc);
             comp.setCompound(rootnbttag);
@@ -418,7 +427,7 @@ public class NBTReflectionUtil {
         if (!valideCompound(comp)) {
             throw new NbtApiException("The Compound wasn't able to be linked back to the root!");
         }
-        Object workingtag = gettoCompount(rootnbttag, comp);
+        Object workingtag = getToCompount(rootnbttag, comp);
         try {
             ReflectionMethod.COMPOUND_SET.run(workingtag, key, val);
             comp.setCompound(rootnbttag);
@@ -539,7 +548,7 @@ public class NBTReflectionUtil {
         }
         if (!valideCompound(comp))
             return;
-        Object workingtag = gettoCompount(rootnbttag, comp);
+        Object workingtag = getToCompount(rootnbttag, comp);
         ReflectionMethod.COMPOUND_REMOVE_KEY.run(workingtag, key);
         comp.setCompound(rootnbttag);
     }
@@ -578,7 +587,7 @@ public class NBTReflectionUtil {
         }
         if (!valideCompound(comp))
             throw new NbtApiException("The Compound wasn't able to be linked back to the root!");
-        Object workingtag = gettoCompount(rootnbttag, comp);
+        Object workingtag = getToCompount(rootnbttag, comp);
         type.run(workingtag, key, data);
         comp.setCompound(rootnbttag);
     }

@@ -162,11 +162,26 @@ public enum ReflectionMethod {
             new Since(MinecraftVersion.MC1_19_R2, "E"), new Since(MinecraftVersion.MC1_19_R3, "G"),
             new Since(MinecraftVersion.MC1_20_R1, "J"),
             new Since(MinecraftVersion.MC1_20_R2, "L"),
-            new Since(MinecraftVersion.MC1_20_R3, "N")),
+            new Since(MinecraftVersion.MC1_20_R3, "N"),
+            new Since(MinecraftVersion.MC1_20_R4, "K")),
     NMS_ENTITY_CLEARPATH(ClassWrapper.NMS_ENTITY_INSENTIENT.getClazz(), new Class[]{}, MinecraftVersion.MC1_13_R1,
             new Since(MinecraftVersion.MC1_13_R1, "D"), new Since(MinecraftVersion.MC1_17_R1, "getNavigation"),
-            new Since(MinecraftVersion.MC1_18_R2, "D"), new Since(MinecraftVersion.MC1_19_R2, "E")),
+            new Since(MinecraftVersion.MC1_18_R2, "D"), new Since(MinecraftVersion.MC1_19_R2, "E"), new Since(MinecraftVersion.MC1_20_R4, "M")),
+    NMSDATACOMPONENTHOLDER_GET(ClassWrapper.NMS_DATACOMPONENTHOLDER, new Class[] {ClassWrapper.NMS_DATACOMPONENTTYPE.getClazz()}, MinecraftVersion.MC1_20_R4,
+            new Since(MinecraftVersion.MC1_20_R4, "get(net.minecraft.core.component.DataComponentType)")),
+    NMSCUSTOMDATA_GETCOPY(ClassWrapper.NMS_CUSTOMDATA, new Class[] {}, MinecraftVersion.MC1_20_R4,
+            new Since(MinecraftVersion.MC1_20_R4, "copyTag()")),
+    NMSITEM_SET(ClassWrapper.NMS_ITEMSTACK, new Class[] {ClassWrapper.NMS_DATACOMPONENTTYPE.getClazz(), Object.class}, MinecraftVersion.MC1_20_R4,
+            new Since(MinecraftVersion.MC1_20_R4, "set(net.minecraft.core.component.DataComponentType,java.lang.Object)")),
+    NMSITEM_SAVE_MODERN(ClassWrapper.NMS_ITEMSTACK, new Class[] { ClassWrapper.NMS_PROVIDER.getClazz() },
+            MinecraftVersion.MC1_20_R4, new Since(MinecraftVersion.MC1_20_R4, "save(net.minecraft.core.HolderLookup$Provider)")),
+    NMSITEM_LOAD(ClassWrapper.NMS_ITEMSTACK, new Class[] { ClassWrapper.NMS_PROVIDER.getClazz(), ClassWrapper.NMS_NBTTAGCOMPOUND.getClazz() },
+            MinecraftVersion.MC1_20_R4, new Since(MinecraftVersion.MC1_20_R4, "parseOptional(net.minecraft.core.HolderLookup$Provider,net.minecraft.nbt.CompoundTag)")),
+    NMSSERVER_GETREGISTRYACCESS(ClassWrapper.NMS_SERVER, new Class[] {},
 
+            MinecraftVersion.MC1_20_R4, new Since(MinecraftVersion.MC1_20_R4, "registryAccess()")),
+    GET_DATAFIXER(ClassWrapper.NMS_DATAFIXERS, new Class[] {}, MinecraftVersion.MC1_20_R4,
+            new Since(MinecraftVersion.MC1_20_R4, "getDataFixer()")),
     NMS_REGISTER_BIOME(ClassWrapper.NMS_REGISTRYMATERIALS.getClazz(), new Class[]{}, MinecraftVersion.MC1_19_R2, new Since(MinecraftVersion.MC1_19_R3, "m"), new Since(MinecraftVersion.MC1_20_R1, "m"));
 
 

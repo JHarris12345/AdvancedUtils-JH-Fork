@@ -1,5 +1,6 @@
 package net.advancedplugins.utils.nbt.backend;
 
+import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import net.advancedplugins.utils.nbt.utils.ReadWriteItemNBT;
 import net.advancedplugins.utils.nbt.utils.ReadWriteNBT;
 import net.advancedplugins.utils.nbt.utils.ReadableNBT;
@@ -202,6 +203,13 @@ public class NBTItem extends NBTCompound implements ReadWriteItemNBT {
         if (item == null || item.getType() == Material.AIR) {
             return;
         }
+        if(MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
+            // 1.20.5+ doesn't have any vanilla tags
+            NBT.modify(item, nbt -> {
+                nbt.mergeCompound(this);
+            });
+            return;
+        }
         ItemMeta meta = item.getItemMeta();
         NBTReflectionUtil.getUnhandledNBTTags(meta)
                 .putAll(NBTReflectionUtil.getUnhandledNBTTags(bukkitItem.getItemMeta()));
@@ -214,6 +222,10 @@ public class NBTItem extends NBTCompound implements ReadWriteItemNBT {
      * @return true when custom tags are present
      */
     public boolean hasCustomNbtData() {
+        if(MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
+            // 1.20.5+ doesn't have any vanilla tags
+            return hasNBTData();
+        }
         finalizeChanges();
         ItemMeta meta = bukkitItem.getItemMeta();
         return !NBTReflectionUtil.getUnhandledNBTTags(meta).isEmpty();
@@ -223,6 +235,11 @@ public class NBTItem extends NBTCompound implements ReadWriteItemNBT {
      * Remove all custom (non-vanilla) NBT tags from the NBTItem.
      */
     public void clearCustomNBT() {
+        if(MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
+            // 1.20.5+ doesn't have any vanilla tags
+            setCompound(null);
+            return;
+        }
         finalizeChanges();
         ItemMeta meta = bukkitItem.getItemMeta();
         NBTReflectionUtil.getUnhandledNBTTags(meta).clear();

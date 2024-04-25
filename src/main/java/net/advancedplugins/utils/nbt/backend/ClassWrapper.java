@@ -17,6 +17,7 @@ public enum ClassWrapper {
     // Blocks
     CRAFT_BlockData("org.bukkit.craftbukkit", "", "block.data.CraftBlockData", MinecraftVersion.MC1_13_R1),
     CRAFT_World("org.bukkit.craftbukkit", "", "CraftWorld", MinecraftVersion.MC1_8_R3),
+    CRAFT_SERVER(PackageWrapper.CRAFTBUKKIT, "CraftServer", null, null),
     // Entities
     CRAFT_Entity("org.bukkit.craftbukkit", "", "entity.CraftEntity", MinecraftVersion.MC1_8_R3),
     CRAFT_Player("org.bukkit.craftbukkit", "", "entity.CraftPlayer", MinecraftVersion.MC1_8_R3),
@@ -90,6 +91,24 @@ public enum ClassWrapper {
     NMS_IBLOCKDATA(PackageWrapper.NMS, "IBlockData", MinecraftVersion.MC1_8_R3, null,
             "net.minecraft.world.level.block.state", "net.minecraft.world.level.block.state.BlockState"),
     GAMEPROFILE(PackageWrapper.NONE, "com.mojang.authlib.GameProfile", MinecraftVersion.MC1_8_R3, null),
+    NMS_CUSTOMDATA(PackageWrapper.NMS, "CustomData", MinecraftVersion.MC1_20_R4, null,
+            "net.minecraft.world.item.component", "net.minecraft.world.item.component.CustomData"),
+    NMS_DATACOMPONENTTYPE(PackageWrapper.NMS, "DataComponentType", MinecraftVersion.MC1_20_R4, null,
+            "net.minecraft.core.component", "net.minecraft.core.component.DataComponentType"),
+    NMS_DATACOMPONENTS(PackageWrapper.NMS, "DataComponents", MinecraftVersion.MC1_20_R4, null,
+            "net.minecraft.core.component", "net.minecraft.core.component.DataComponents"),
+    NMS_DATACOMPONENTHOLDER(PackageWrapper.NMS, "DataComponentHolder", MinecraftVersion.MC1_20_R4, null,
+            "net.minecraft.core.component", "net.minecraft.core.component.DataComponentHolder"),
+    NMS_PROVIDER(PackageWrapper.NMS, "HolderLookup$a", MinecraftVersion.MC1_20_R4, null,
+            "net.minecraft.core", "net.minecraft.core.HolderLookup$Provider"),
+    NMS_DATAFIXERS(PackageWrapper.NMS, "DataConverterRegistry", MinecraftVersion.MC1_20_R4, null,
+            "net.minecraft.util.datafix", "net.minecraft.util.datafix.DataFixers"),
+    NMS_REFERENCES(PackageWrapper.NMS, "DataConverterTypes", MinecraftVersion.MC1_20_R4, null,
+            "net.minecraft.util.datafix.fixes", "net.minecraft.util.datafix.fixes.References"),
+    NMS_NBTOPS(PackageWrapper.NMS, "DynamicOpsNBT", MinecraftVersion.MC1_20_R4, null,
+            "net.minecraft.nbt", "net.minecraft.nbt.NbtOps"),
+    NMS_SERVER(PackageWrapper.NMS, "MinecraftServer", MinecraftVersion.MC1_20_R4, null,
+            "net.minecraft.server", "net.minecraft.server.MinecraftServer"),
     ;
 
     private Class<?> clazz;

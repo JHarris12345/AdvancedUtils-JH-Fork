@@ -1,5 +1,8 @@
 package net.advancedplugins.utils.nbt.utils;
 
+import lombok.Getter;
+import net.advancedplugins.ae.Core;
+import net.advancedplugins.utils.ASManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -27,10 +30,22 @@ public enum MinecraftVersion {
     MC1_19_R3(1_19_4, true),
     MC1_20_R1(1_20_1, true),
     MC1_20_R2(1_20_2, true),
-    MC1_20_R3(1_20_3, true),
-    MC1_20_R4(1_20_4, true);
+    MC1_20_R3(1_20_4, true),
+    MC1_20_R4(1_20_5, true);
 
+    /**
+     * -- GETTER --
+     *
+     * @return Integer representing the Minecraft version of the specific MinecraftVersion instance it's called from.
+     */
+    @Getter
     private final int versionId;
+    /**
+     * -- GETTER --
+     *
+     * @return True if method names are in Mojang format and need to be remapped internally
+     */
+    @Getter
     public final boolean mojangMapping;
 
     MinecraftVersion(int versionId) {
@@ -42,6 +57,7 @@ public enum MinecraftVersion {
         this.mojangMapping = _mojangMapping;
     }
 
+    @Getter
     private static MinecraftVersion version;
     private static Boolean hasGsonSupport;
     private static Boolean isPaper;
@@ -54,8 +70,7 @@ public enum MinecraftVersion {
         if (version != null) {
             return version;
         }
-        final String ver = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
-
+        String ver = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
         isPaper = Package.getPackage("com.destroystokyo.paper") != null;
         try {
             version = MinecraftVersion.valueOf(ver.replace("v", "MC"));
@@ -79,10 +94,6 @@ public enum MinecraftVersion {
         return isPaper;
     }
 
-    public static MinecraftVersion getVersion() {
-        return version;
-    }
-
     /**
      * @return Integer representing the Minecraft version the server is running.
      */
@@ -98,26 +109,11 @@ public enum MinecraftVersion {
     }
 
 
-    /**
-     * @return True if method names are in Mojang format and need to be remapped internally
-     */
-    public boolean isMojangMapping() {
-        return mojangMapping;
-    }
-
     public String getPackageName() {
         if (getVersion() == MinecraftVersion.Unknown) {
             return Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
         }
         return this.name().replace("MC", "v");
-    }
-
-
-    /**
-     * @return Integer representing the Minecraft version of the specific MinecraftVersion instance it's called from.
-     */
-    public int getVersionId() {
-        return versionId;
     }
 
     /**
@@ -140,7 +136,6 @@ public enum MinecraftVersion {
      * Returns true if the current versions is at least the given Version
      *
      * @param version The minimum version
-     * @return
      */
     public static boolean isAtLeastVersion(MinecraftVersion version) {
         return getVersion().getVersionId() >= version.getVersionId();
@@ -150,7 +145,6 @@ public enum MinecraftVersion {
      * Returns true if the current versions newer (not equal) than the given version
      *
      * @param version The minimum version
-     * @return
      */
     public static boolean isNewerThan(MinecraftVersion version) {
         return getVersion().getVersionId() > version.getVersionId();
