@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.awt.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
@@ -152,7 +153,8 @@ public class Text {
     }
 
     private static String renderColorCodes(String textToRender) {
-        if (MinecraftVersion.getVersion().getVersionId() >= 1160) {
+        if (MinecraftVersion.getVersion().getVersionId() >= 1160)
+            textToRender = gradient(textToRender);{
             Matcher match = HEX_PATTERN.matcher(textToRender);
             while (match.find()) {
                 String hex = textToRender.substring(match.start(), match.end());
@@ -170,5 +172,41 @@ public class Text {
             }
         }
         return new String(charArray);
+    }
+
+    // Code stolen (and edited) from https://www.spigotmc.org/threads/bungee-hex-color-util.561417/
+    // :3
+    private static String gradient(String msg) {
+        while (msg.contains("<gradient") && msg.contains("</gradient>")) {
+            int start = msg.indexOf("<gradient");
+            int firstHex = msg.indexOf("#", start);
+            int secondHex = msg.indexOf("#", firstHex + 1);
+            String hex1 = msg.substring(firstHex, firstHex + 7);
+            String hex2 = msg.substring(secondHex, secondHex + 7);
+            String str = msg.substring(msg.indexOf(">", start) + 1, msg.indexOf("</gradient>"));
+            msg = msg.replaceFirst(msg.substring(start, msg.indexOf(">", start) + 1), "");
+            msg = msg.replaceFirst("</gradient>", ChatColor.WHITE + "");
+            String newStr = str;
+            for (int i = 0; i < str.length(); i++) {
+                newStr = newStr.substring(0, i * 10) + gradient(hex2, hex1, (float) i / (str.length() - 1))
+                        + newStr.substring(i * 10);
+            }
+            msg = msg.replace(str, newStr);
+        }
+        return msg;
+    }
+
+    private static String gradient(String color1, String color2, float weight) {
+        try {
+            Color col1 = Color.decode(color1), col2 = Color.decode(color2);
+            float w2 = 1 - weight;
+            Color gradient = new Color(col1.getRed() / 255.0f * weight + col2.getRed() / 255.0f * w2,
+                    col1.getGreen() / 255.0f * weight + col2.getGreen() / 255.0f * w2,
+                    col1.getBlue() / 255.0f * weight + col2.getBlue() / 255.0f * w2);
+            return String.format("{#%02x%02x%02x}", gradient.getRed(), gradient.getGreen(),
+                    gradient.getBlue());
+        } catch (Exception e) {
+            return "{#FFFFFF}";
+        }
     }
 }
