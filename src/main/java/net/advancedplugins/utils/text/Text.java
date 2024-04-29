@@ -12,12 +12,14 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.Arrays;
 import java.awt.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Text {
     private static final char SECTION_CHAR = '\u00A7';
@@ -108,7 +110,8 @@ public class Text {
         }
         List<String> middleList = Lists.newArrayList();
         for (String string : list) {
-            middleList.add(modify(string, replacer));
+            String s = modify(string, replacer);
+            middleList.addAll(Arrays.stream(s.split("<new>")).collect(Collectors.toList()));
         }
         return middleList;
     }
