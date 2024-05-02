@@ -143,12 +143,15 @@ public enum ClassWrapper {
         try {
             if (packageId == PackageWrapper.NONE) {
                 clazz = Class.forName(clazzName);
-            } else if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
-                if (MinecraftVersion.isPaper())
+            } else if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_18_R2)) {
+                String version = MinecraftVersion.getVersion().getPackageName();
+                // 1.20.5+ for paper uses remapped craftbukkit to remove version number
+                if (MinecraftVersion.isPaper() && MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4))
                     clazz = Class.forName((packageId.equals(PackageWrapper.NMS) ? packageId.getUri().split(".server")[0] + "." : packageId.getUri() + ".") + clazzName);
-                else {
-                    String version = MinecraftVersion.getVersion().getPackageName();
-                    clazz = Class.forName((packageId.equals(PackageWrapper.NMS) ? (mojangMap == null ? packageId.getUri().split(".server")[0] : mojangMap)+ "." :
+                if (MinecraftVersion.isPaper()) // 1.17 - 1.20.4
+                    clazz = Class.forName((packageId.equals(PackageWrapper.NMS) ? (mojangMap == null ? packageId.getUri().split(".server")[0] : mojangMap)  + "." : packageId.getUri() + "." + version + ".") + clazzName);
+                else { // spigot, no remapped craftbukkit
+                    clazz = Class.forName((packageId.equals(PackageWrapper.NMS) ? (mojangMap == null ? packageId.getUri().split(".server")[0] : mojangMap) + "." :
                             packageId.getUri() + "." + version + ".") + clazzName);
                 }
 
@@ -164,7 +167,7 @@ public enum ClassWrapper {
 
             }
 
-            if(clazz == null) {
+            if (clazz == null) {
                 Bukkit.getLogger().warning("Failed to load class " + clazzName);
             }
         } catch (Throwable ex) {
