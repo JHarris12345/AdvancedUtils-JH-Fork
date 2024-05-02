@@ -2,6 +2,7 @@ package net.advancedplugins.utils.menus.item;
 
 import lombok.Getter;
 import net.advancedplugins.utils.ASManager;
+import net.advancedplugins.utils.VanillaEnchants;
 import net.advancedplugins.utils.items.ConfigItemCreator;
 import net.advancedplugins.utils.items.ItemBuilder;
 import net.advancedplugins.utils.text.Replace;
@@ -97,7 +98,7 @@ public class AdvancedMenuItem {
                 replace == null ? null : replace.apply(new Replacer()).getPlaceholders(), null);
         if (glow) {
             ItemBuilder builder = new ItemBuilder(item);
-            builder.addUnsafeEnchantment(Enchantment.LOOT_BONUS_MOBS, 1);
+            builder.addUnsafeEnchantment(VanillaEnchants.displayNameToEnchant("FORTUNE"), 1);
             builder.addItemFlag(ItemFlag.HIDE_ENCHANTS);
             item = builder.toItemStack();
         }

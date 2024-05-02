@@ -69,7 +69,7 @@ public class MojangToMapping {
             put("net.minecraft.world.level.block.entity.BlockEntity#saveWithId()", "n");
             put("net.minecraft.world.level.block.entity.BlockEntity#getBlockState()", "q");
             put("net.minecraft.world.level.block.entity.BlockEntity#load(net.minecraft.nbt.CompoundTag)", "a");
-            put("net.minecraft.server.level.ServerLevel#getBlockState(net.minecraft.core.BlockPos)", "c_");
+            put("net.minecraft.server.level.ServerLevel#getBlockEntity(net.minecraft.core.BlockPos)", "c_");
         }
 
     };
@@ -128,6 +128,7 @@ public class MojangToMapping {
         }
 
     };
+
     @SuppressWarnings("serial")
     private static Map<String, String> MC1_20R3 = new HashMap<String, String>() {
 
@@ -178,6 +179,8 @@ public class MojangToMapping {
                 return MC1_20R2;
             case MC1_20_R1:
                 return MC1_20R1;
+            case MC1_19_R3:
+                return MC1_19R2;
             case MC1_19_R2:
                 return MC1_19R2;
             case MC1_19_R1:
@@ -187,10 +190,9 @@ public class MojangToMapping {
             case MC1_18_R1:
                 return MC1_18R1;
             default:
-                return MC1_20R2;// throw new NbtApiException("This version of the NBTAPI is not compatible with
-            // this server version!");
+                // this should never happen, unless a version is forgotten here(like 1.19R3 which uses the 1.19R2 mappings)
+                throw new NbtApiException("No fitting mapping found for version " + MinecraftVersion.getVersion() + ". This is a bug!");
         }
     }
-
 
 }

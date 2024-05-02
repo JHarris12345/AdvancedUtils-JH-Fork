@@ -2,6 +2,8 @@ package net.advancedplugins.utils.nbt.backend;
 
 import net.advancedplugins.utils.nbt.utils.GsonWrapper;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
+import net.advancedplugins.utils.nbt.utils.MojangToMapping;
+import org.bukkit.Bukkit;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
@@ -14,15 +16,8 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.*;
 
-/**
- * Utility class for translating NBTApi calls to reflections into NMS code All
- * methods are allowed to throw {@link NbtApiException}
- *
- * @author tr7zw
- *
- */
+@SuppressWarnings("deprecation")
 public class NBTReflectionUtil {
-
 
     private static Field field_unhandledTags = null;
     private static Field field_handle = null;
@@ -41,6 +36,21 @@ public class NBTReflectionUtil {
             field_handle.setAccessible(true);
         } catch (NoSuchFieldException e) {
 
+        }
+        if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
+            try {
+                Field typeField = ClassWrapper.NMS_DATACOMPONENTS.getClazz().getDeclaredField(
+                        MojangToMapping.getMapping().get("net.minecraft.core.component.DataComponents#CUSTOM_DATA"));
+                type_custom_data = typeField.get(null);
+            } catch (NoSuchFieldException | IllegalArgumentException | IllegalAccessException e) {
+
+            }
+            try {
+//                Object nmsServer = ReflectionMethod.NMSSERVER_GETSERVER.run(Bukkit.getServer());
+//                registry_access = ReflectionMethod.NMSSERVER_GETREGISTRYACCESS.run(nmsServer);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -142,10 +152,37 @@ public class NBTReflectionUtil {
      */
     public static Object getItemRootNBTTagCompound(Object nmsitem) {
         try {
-            Object answer = ReflectionMethod.NMSITEM_GETTAG.run(nmsitem);
-            return answer;
+            if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
+                Object customData = ReflectionMethod.NMSDATACOMPONENTHOLDER_GET.run(nmsitem, type_custom_data);
+                if (customData == null) {
+                    return null;
+                }
+                return ReflectionMethod.NMSCUSTOMDATA_GETCOPY.run(customData);
+            } else {
+                Object answer = ReflectionMethod.NMSITEM_GETTAG.run(nmsitem);
+                return answer;
+            }
         } catch (Exception e) {
             throw new NbtApiException("Exception while getting an Itemstack's NBTCompound!", e);
+        }
+    }
+
+    /**
+     * Set the Compound as the Items NBT or CustomData
+     *
+     * @param nmsItem
+     * @param compound
+     */
+    public static void setItemStackCompound(Object nmsItem, Object compound) {
+        if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
+            if (compound == null) {
+                ReflectionMethod.NMSITEM_SET.run(nmsItem, new Object[] { type_custom_data, null });
+            } else {
+                ReflectionMethod.NMSITEM_SET.run(nmsItem, type_custom_data,
+                        ObjectCreator.NMS_CUSTOMDATA.getInstance(compound));
+            }
+        } else {
+            ReflectionMethod.ITEMSTACK_SET_TAG.run(nmsItem, compound);
         }
     }
 
@@ -160,7 +197,7 @@ public class NBTReflectionUtil {
             Object nmsComp = getToCompount(nbtcompound.getCompound(), nbtcompound);
             if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
                 if(nbtcompound.hasTag("tag")) {
-                    nmsComp = DataFixerUtil.fixUpRawItemData(nmsComp, DataFixerUtil.VERSION1_20_4, DataFixerUtil.VERSION1_20_5);
+                    nmsComp = DataFixerUtil.fixUpRawItemData(nmsComp, DataFixerUtil.VERSION1_20_4, DataFixerUtil.getCurrentVersion());
                 }
                 return ReflectionMethod.NMSITEM_LOAD.run(null, registry_access, nmsComp);
             } else if (MinecraftVersion.getVersion().getVersionId() >= MinecraftVersion.MC1_11_R1.getVersionId()) {
@@ -181,8 +218,13 @@ public class NBTReflectionUtil {
      */
     public static NBTContainer convertNMSItemtoNBTCompound(Object nmsitem) {
         try {
-            Object answer = ReflectionMethod.NMSITEM_SAVE.run(nmsitem, ObjectCreator.NMS_NBTTAGCOMPOUND.getInstance());
-            return new NBTContainer(answer);
+            if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
+                return new NBTContainer(ReflectionMethod.NMSITEM_SAVE_MODERN.run(nmsitem, registry_access));
+            } else {
+                Object answer = ReflectionMethod.NMSITEM_SAVE.run(nmsitem,
+                        ObjectCreator.NMS_NBTTAGCOMPOUND.getInstance());
+                return new NBTContainer(answer);
+            }
         } catch (Exception e) {
             throw new NbtApiException("Exception while converting NMS ItemStack to NBTCompound!", e);
         }
@@ -195,6 +237,7 @@ public class NBTReflectionUtil {
      * @return Map containing unhandled (custom) NBT tags
      */
     @SuppressWarnings("unchecked")
+    @Deprecated
     public static Map<String, Object> getUnhandledNBTTags(ItemMeta meta) {
         try {
             return (Map<String, Object>) field_unhandledTags.get(meta);
@@ -257,7 +300,9 @@ public class NBTReflectionUtil {
             }
 
             Object answer = null;
-            if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_18_R1)) {
+            if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
+                answer = ReflectionMethod.TILEENTITY_GET_NBT_1205.run(o, registry_access);
+            } else if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_18_R1)) {
                 answer = ReflectionMethod.TILEENTITY_GET_NBT_1181.run(o);
             } else {
                 answer = ClassWrapper.NMS_NBTTAGCOMPOUND.getClazz().newInstance();
@@ -290,7 +335,9 @@ public class NBTReflectionUtil {
                 Object pos = ObjectCreator.NMS_BLOCKPOSITION.getInstance(tile.getX(), tile.getY(), tile.getZ());
                 o = ReflectionMethod.NMS_WORLD_GET_TILEENTITY.run(nmsworld, pos);
             }
-            if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_17_R1)) {
+            if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
+                ReflectionMethod.TILEENTITY_SET_NBT_1205.run(o, comp, registry_access);
+            } else if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_17_R1)) {
                 ReflectionMethod.TILEENTITY_SET_NBT.run(o, comp);
             } else if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_16_R1)) {
                 Object blockData = ReflectionMethod.TILEENTITY_GET_BLOCKDATA.run(o);
@@ -366,7 +413,7 @@ public class NBTReflectionUtil {
         return tmp != null;
     }
 
-    protected static Object getToCompount(Object nbttag, NBTCompound comp) {
+    public static Object getToCompount(Object nbttag, NBTCompound comp) {
         Deque<String> structure = new ArrayDeque<>();
         while (comp.getParent() != null) {
             structure.add(comp.getName());

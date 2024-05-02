@@ -62,7 +62,7 @@ public class CropUtils {
     public static int getDropAmount(Block block, Material dropType, ItemStack item) {
         if (!isFullyGrown(block)) return 1;
 
-        int fortuneLevel = item.getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS);
+        int fortuneLevel = item.getEnchantmentLevel(VanillaEnchants.displayNameToEnchant("FORTUNE"));
         int amount;
         // The looting for most drops is calculated by binomial distribution:
         // 2 drops are fixed, then a drop is attempted three times with a success rate of around 57% to yield the extra 0\u00A73 drops.

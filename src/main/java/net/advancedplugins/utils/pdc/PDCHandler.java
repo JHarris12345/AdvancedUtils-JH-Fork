@@ -95,10 +95,10 @@ public class PDCHandler {
     }
 
     public static boolean hasBoolean(PersistentDataHolder holder, String key) {
-        return has(holder, key, PersistentDataType.BOOLEAN);
+        return has(holder, key, PersistentDataType.BYTE);
     }
 
-    private static NamespacedKey getNamespace(String key) {
+    public static NamespacedKey getNamespace(String key) {
         return new NamespacedKey(ASManager.getInstance(), key.replace(";", "-"));
     }
 

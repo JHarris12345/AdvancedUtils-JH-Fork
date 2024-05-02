@@ -1,5 +1,6 @@
 package net.advancedplugins.utils;
 
+import net.advancedplugins.ae.Core;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import org.bukkit.enchantments.Enchantment;
 
@@ -8,63 +9,127 @@ import java.util.Locale;
 public class VanillaEnchants {
 
     public static Enchantment displayNameToEnchant(String paramString) {
+        return displayNameToEnchant(paramString, true);
+    }
+
+    public static Enchantment displayNameToEnchant(String paramString, boolean displayError) {
+        paramString = paramString.toLowerCase(Locale.ROOT);
+
+        Enchantment enchant = getEnchant(paramString);
+        if (enchant != null)
+            return enchant;
+
+        enchant = getEnchant(paramString.replaceAll(" ", "_"));
+        if (enchant != null)
+            return enchant;
+
+        enchant = getEnchant(paramString.replaceAll("_", "").replaceAll(" ", ""));
+        if (enchant != null)
+            return enchant;
+
+        if (displayError)
+            Core.getInstance().getLogger().warning("Invalid vanilla enchantment: " + paramString
+                    + ". Enchantment names can be found here: " +
+                    "https://hub.spigotmc.org/javadocs/spigot/org/bukkit/enchantments/Enchantment.html");
+        return null;
+    }
+
+    private static Enchantment getEnchant(String paramString) {
         switch (paramString.toLowerCase(Locale.ROOT)) {
             case "protection":
-                return Enchantment.PROTECTION_ENVIRONMENTAL;
+                return MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4) ?
+                        Enchantment.getByName("PROTECTION") : Enchantment.getByName("PROTECTION_ENVIRONMENTAL");
             case "fire_protection":
-                return Enchantment.PROTECTION_FIRE;
+            case "fireprotection":
+                return MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4) ?
+                        Enchantment.getByName("FIRE_PROTECTION") : Enchantment.getByName("PROTECTION_FIRE");
             case "feather_falling":
-                return Enchantment.PROTECTION_FALL;
+            case "featherfalling":
+                return MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4) ?
+                        Enchantment.getByName("FEATHER_FALLING") : Enchantment.getByName("PROTECTION_FALL");
             case "blast_protection":
-                return Enchantment.PROTECTION_EXPLOSIONS;
+            case "blastprotection":
+                return MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4) ?
+                        Enchantment.getByName("BLAST_PROTECTION") : Enchantment.getByName("PROTECTION_EXPLOSIONS");
             case "projectile_protection":
-                return Enchantment.PROTECTION_PROJECTILE;
+            case "projectileprotection":
+                return MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4) ?
+                        Enchantment.getByName("PROJECTILE_PROTECTION") : Enchantment.getByName("PROTECTION_PROJECTILE");
             case "respiration":
-                return Enchantment.OXYGEN;
+                return MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4) ?
+                        Enchantment.getByName("RESPIRATION") : Enchantment.getByName("OXYGEN");
             case "aqua_affinity":
-                return Enchantment.WATER_WORKER;
+            case "aquaaffinity":
+                return MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4) ?
+                        Enchantment.getByName("AQUA_AFFINITY") : Enchantment.getByName("WATER_WORKER");
+            case "throns":
             case "thorns":
                 return Enchantment.THORNS;
             case "depth_strider":
+            case "depthstrider":
                 return Enchantment.DEPTH_STRIDER;
             case "frost_walker":
-                return Enchantment.FROST_WALKER;
+            case "frostwalker":
+                return MinecraftVersion.getVersionNumber() >= 1_9_0 ? Enchantment.FROST_WALKER : null;
             case "curse_of_binding":
-                return Enchantment.BINDING_CURSE;
+            case "curseofbinding":
+                return MinecraftVersion.getVersionNumber() >= 1_11_0 ? Enchantment.BINDING_CURSE : null;
+            case "soul_speed":
+            case "soulspeed":
+                return MinecraftVersion.getVersionNumber() >= 1_16_0 ? Enchantment.SOUL_SPEED : null;
             case "sharpness":
-                return Enchantment.DAMAGE_ALL;
+                return MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4) ?
+                        Enchantment.getByName("SHARPNESS") : Enchantment.getByName("DAMAGE_ALL");
             case "smite":
-                return Enchantment.DAMAGE_UNDEAD;
+                return MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4) ?
+                        Enchantment.getByName("SMITE") : Enchantment.getByName("DAMAGE_UNDEAD");
             case "bane_of_arthropods":
-                return Enchantment.DAMAGE_ARTHROPODS;
+            case "baneofarthropods":
+            case "bane":
+                return MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4) ?
+                        Enchantment.getByName("BANE_OF_ARTHROPODS") : Enchantment.getByName("DAMAGE_ARTHROPODS");
             case "knockback":
                 return Enchantment.KNOCKBACK;
             case "fire_aspect":
+            case "fireaspect":
                 return Enchantment.FIRE_ASPECT;
             case "looting":
-                return Enchantment.LOOT_BONUS_MOBS;
+                return MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4) ?
+                        Enchantment.getByName("LOOTING") : Enchantment.getByName("LOOT_BONUS_MOBS");
             case "sweeping_edge":
-                return Enchantment.SWEEPING_EDGE;
+            case "sweepingedge":
+                return MinecraftVersion.getVersionNumber() >= 1_11_1 ? Enchantment.getByName("SWEEPING_EDGE") : null;
             case "efficiency":
-                return Enchantment.DIG_SPEED;
+                return MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4) ?
+                        Enchantment.getByName("EFFICIENCY") : Enchantment.getByName("DIG_SPEED");
             case "silk_touch":
+            case "silktouch":
                 return Enchantment.SILK_TOUCH;
             case "unbreaking":
-                return Enchantment.DURABILITY;
+                return MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4) ?
+                        Enchantment.getByName("UNBREAKING") : Enchantment.getByName("DURABILITY");
             case "fortune":
-                return Enchantment.LOOT_BONUS_BLOCKS;
+                return MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4) ?
+                        Enchantment.getByName("FORTUNE") : Enchantment.getByName("LOOT_BONUS_BLOCKS");
             case "power":
-                return Enchantment.ARROW_DAMAGE;
+                return MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4) ?
+                        Enchantment.getByName("POWER") : Enchantment.getByName("ARROW_DAMAGE");
             case "punch":
-                return Enchantment.ARROW_KNOCKBACK;
+                return MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4) ?
+                        Enchantment.getByName("POWER") : Enchantment.getByName("ARROW_KNOCKBACK");
             case "flame":
-                return Enchantment.ARROW_FIRE;
+                return MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4) ?
+                        Enchantment.getByName("FLAME") : Enchantment.getByName("ARROW_FIRE");
             case "infinity":
-                return Enchantment.ARROW_INFINITE;
+                return MinecraftVersion.getVersionNumber() >= 1_20_5 ? Enchantment.getByName("INFINITY") : Enchantment.getByName("ARROW_INFINITE");
             case "luck_of_the_sea":
-                return Enchantment.LUCK;
+            case "luckofthesea":
+                return MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4) ?
+                        Enchantment.getByName("LUCK_OF_THE_SEA") : Enchantment.getByName("LUCK");
             case "lure":
                 return Enchantment.LURE;
+            case "curse_of_vanishing":
+                return (MinecraftVersion.getVersionNumber() >= 1_14_0) ? Enchantment.VANISHING_CURSE : null;
             case "loyalty":
                 return (MinecraftVersion.getVersionNumber() >= 1_13_0) ? Enchantment.LOYALTY : null;
             case "impaling":
@@ -76,15 +141,26 @@ public class VanillaEnchants {
             case "multishot":
                 return (MinecraftVersion.getVersionNumber() >= 1_14_0) ? Enchantment.MULTISHOT : null;
             case "quick_charge":
+            case "quickcharge":
                 return (MinecraftVersion.getVersionNumber() >= 1_14_0) ? Enchantment.QUICK_CHARGE : null;
             case "piercing":
                 return (MinecraftVersion.getVersionNumber() >= 1_14_0) ? Enchantment.PIERCING : null;
             case "mending":
-                return Enchantment.MENDING;
+                return MinecraftVersion.getVersionNumber() >= 1_9_0 ? Enchantment.MENDING : null;
             case "vanishing_curse":
+            case "vanishingcurse":
                 return Enchantment.VANISHING_CURSE;
             default:
-                return Enchantment.getByName(paramString.toUpperCase(Locale.ROOT));
+                try {
+                    return Enchantment.getByName(paramString.toUpperCase(Locale.ROOT));
+                } catch (Exception e) {
+                    try {
+                        return Enchantment.getByName(paramString.toUpperCase(Locale.ROOT).replace(" ", "")
+                                .replace("_", ""));
+                    } catch (Exception e2) {
+                        return null;
+                    }
+                }
         }
     }
 

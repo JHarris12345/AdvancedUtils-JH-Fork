@@ -42,10 +42,10 @@ public class ReallyFastBlockHandler {
 
     static {
         try {
-            Class<?> nmsWorldClass = ClassWrapper.NMS_World.getClazz();
+            Class<?> nmsWorldClass = ClassWrapper.NMS_WORLD.getClazz();
             craftWorldClass = ClassWrapper.CRAFT_World.getClazz();
-            Class<?> nmsBlockPosition = ClassWrapper.NMS_BlockPosition.getClazz();
-            Class<?> iBlockData = ClassWrapper.NMS_IBlockData.getClazz();
+            Class<?> nmsBlockPosition = ClassWrapper.NMS_BLOCKPOSITION.getClazz();
+            Class<?> iBlockData = ClassWrapper.NMS_IBLOCKDATA.getClazz();
             if (MinecraftVersion.isNew()) {
                 craftBlockData = ClassWrapper.CRAFT_BlockData.getClazz();
                 getState = craftBlockData.getMethod("getState");

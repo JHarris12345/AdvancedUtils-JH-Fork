@@ -2,6 +2,7 @@ package net.advancedplugins.utils;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import net.advancedplugins.ae.utils.EnchantsConverter;
 import net.advancedplugins.utils.annotations.ConfigKey;
 import net.advancedplugins.utils.evalex.Expression;
 import net.advancedplugins.utils.nbt.NBTapi;
@@ -1134,7 +1135,7 @@ public class ASManager {
         String typeName = blockType.name().replace("LEGACY_", "");
 
         boolean silk = item.getEnchantments().containsKey(Enchantment.SILK_TOUCH);
-        int fortuneLevel = item.getEnchantmentLevel(Enchantment.LOOT_BONUS_BLOCKS);
+        int fortuneLevel = item.getEnchantmentLevel(VanillaEnchants.displayNameToEnchant("FORTUNE"));
 
         // If it's a block that requires Silk Touch and the item doesn't
         // have Silk Touch, return -1, so we know to skip it.

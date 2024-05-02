@@ -6,6 +6,9 @@ import net.advancedplugins.utils.ASManager;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum MinecraftVersion {
     Unknown(Integer.MAX_VALUE),//Use the newest known mappings
     MC1_7_R4(1_7_4),
@@ -31,8 +34,19 @@ public enum MinecraftVersion {
     MC1_20_R1(1_20_1, true),
     MC1_20_R2(1_20_2, true),
     MC1_20_R3(1_20_4, true),
-    MC1_20_R4(1_20_5, true);
+    MC1_20_R4(1_20_6, true);
 
+    private static final Map<String, MinecraftVersion> VERSION_TO_REVISION = new HashMap<String, MinecraftVersion>() {
+        {
+            this.put("1.20", MC1_20_R1);
+            this.put("1.20.1",  MC1_20_R1);
+            this.put("1.20.2", MC1_20_R2);
+            this.put("1.20.3", MC1_20_R3);
+            this.put("1.20.4", MC1_20_R3);
+            this.put("1.20.5", MC1_20_R4);
+            this.put("1.20.6", MC1_20_R4);
+        }
+    };
     /**
      * -- GETTER --
      *
@@ -70,15 +84,16 @@ public enum MinecraftVersion {
         if (version != null) {
             return version;
         }
-        String ver = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
-        isPaper = Package.getPackage("com.destroystokyo.paper") != null;
         try {
+            final String ver = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
             version = MinecraftVersion.valueOf(ver.replace("v", "MC"));
-        } catch (IllegalArgumentException ex) {
-            version = MinecraftVersion.Unknown;
+        } catch (Exception ex) {
+            version = VERSION_TO_REVISION.getOrDefault(Bukkit.getServer().getBukkitVersion().split("-")[0],
+                    MinecraftVersion.Unknown);
         }
+        isPaper = Package.getPackage("com.destroystokyo.paper") != null;
         if (version == Unknown) {
-            Bukkit.getServer().getLogger().warning("You are using invalid version of Minecraft [" + ver + "]! Disabling...");
+            Bukkit.getServer().getLogger().warning("You are using invalid version of Minecraft [" + Bukkit.getServer().getBukkitVersion() + "]! Disabling...");
         }
         return version;
     }

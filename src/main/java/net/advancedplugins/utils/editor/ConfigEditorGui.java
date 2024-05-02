@@ -436,7 +436,7 @@ public class ConfigEditorGui implements Listener {
 
                 if (info != null && info.suggestions != null) {
                     editor.sendMessage(Text.modify("&7&oYou can use TAB to auto-complete suggestions for this value!"));
-                    editor.addCustomChatCompletions(info.suggestions);
+//                    editor.addCustomChatCompletions(info.suggestions);
                 }
             }
         }
@@ -514,7 +514,7 @@ public class ConfigEditorGui implements Listener {
         }
 
         if (matchInfo(editingKey) != null && matchInfo(editingKey).suggestions != null)
-            editor.removeCustomChatCompletions(matchInfo(editingKey).suggestions);
+//            editor.removeCustomChatCompletions(matchInfo(editingKey).suggestions);
 
         editingKey = null;
     }

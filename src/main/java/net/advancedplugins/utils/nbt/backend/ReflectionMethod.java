@@ -137,24 +137,25 @@ public enum ReflectionMethod {
             new Since(MinecraftVersion.MC1_19_R2, "n"),
             new Since(MinecraftVersion.MC1_19_R3, "o"),
             new Since(MinecraftVersion.MC1_20_R1, "n"),
-            new Since(MinecraftVersion.MC1_20_R3, "o")
+            new Since(MinecraftVersion.MC1_20_R3, "o"),
+            new Since(MinecraftVersion.MC1_20_R4, "o")
     ), // TODO: remove if fixed in new 1.19
 
     // Item
     CRAFT_MagicNumbers_getItem(ClassWrapper.CRAFT_MagicNumbers.getClazz(), new Class[]{Material.class}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "getItem")),
-    CRAFT_ItemStack_asNMSCopy(ClassWrapper.CRAFT_ItemStack.getClazz(), new Class[]{ItemStack.class}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "asNMSCopy")),
+    CRAFT_ItemStack_asNMSCopy(ClassWrapper.CRAFT_ITEMSTACK.getClazz(), new Class[]{ItemStack.class}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "asNMSCopy")),
 
-    NMS_ItemStack_canDestroySpecialBlock(ClassWrapper.NMS_ItemStack.getClazz(), new SinceArgs[]{new SinceArgs(MinecraftVersion.MC1_7_R4, new Class[]{ClassWrapper.NMS_Block.getClazz()}),
-            new SinceArgs(MinecraftVersion.MC1_9_R1, new Class[]{ClassWrapper.NMS_IBlockData.getClazz()})}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "b"),
+    NMS_ItemStack_canDestroySpecialBlock(ClassWrapper.NMS_ITEMSTACK.getClazz(), new SinceArgs[]{new SinceArgs(MinecraftVersion.MC1_7_R4, new Class[]{ClassWrapper.NMS_Block.getClazz()}),
+            new SinceArgs(MinecraftVersion.MC1_9_R1, new Class[]{ClassWrapper.NMS_IBLOCKDATA.getClazz()})}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "b"),
             new Since(MinecraftVersion.MC1_15_R1, "canDestroySpecialBlock"),
             new Since(MinecraftVersion.MC1_18_R1, "b"),
             new Since(MinecraftVersion.MC1_19_R2, "b"), new Since(MinecraftVersion.MC1_19_R3, "b")),
 
     // Entities
     CRAFT_Entity_getHandle(ClassWrapper.CRAFT_Entity.getClazz(), new Class[]{}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "getHandle")),
-    NMS_Entity_damageEntity(ClassWrapper.NMS_Entity.getClazz(), new Class[]{ClassWrapper.NMS_DamageSource.getClazz(), float.class}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "damageEntity"),
+    NMS_Entity_damageEntity(ClassWrapper.NMS_ENTITY.getClazz(), new Class[]{ClassWrapper.NMS_DamageSource.getClazz(), float.class}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "damageEntity"),
             new Since(MinecraftVersion.MC1_18_R1, "a")),// TODO: remove if fixed in new 1.18),
-    NMS_EntityPlayer_attack(ClassWrapper.NMS_EntityPlayer.getClazz(), new Class[]{ClassWrapper.NMS_Entity.getClazz()}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "attack"),
+    NMS_EntityPlayer_attack(ClassWrapper.NMS_EntityPlayer.getClazz(), new Class[]{ClassWrapper.NMS_ENTITY.getClazz()}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "attack"),
             new Since(MinecraftVersion.MC1_18_R1, "d")),// TODO: remove if fixed in new 1.18),
 
     NMS_ENTITY_GETNAVIGATION(ClassWrapper.NMS_ENTITY_INSENTIENT.getClazz(), new Class[]{}, MinecraftVersion.MC1_13_R1,
@@ -180,10 +181,16 @@ public enum ReflectionMethod {
     NMSSERVER_GETREGISTRYACCESS(ClassWrapper.NMS_SERVER, new Class[] {},
 
             MinecraftVersion.MC1_20_R4, new Since(MinecraftVersion.MC1_20_R4, "registryAccess()")),
+    NMSSERVER_GETSERVER(ClassWrapper.CRAFT_SERVER, new Class[] {},
+            MinecraftVersion.MC1_20_R4, new Since(MinecraftVersion.MC1_20_R4, "getServer()")),
+    TILEENTITY_GET_NBT_1205(ClassWrapper.NMS_TILEENTITY, new Class[] {ClassWrapper.NMS_PROVIDER.getClazz()}, MinecraftVersion.MC1_20_R4,
+            new Since(MinecraftVersion.MC1_20_R4, "saveWithId(net.minecraft.core.HolderLookup$Provider)")),
+    TILEENTITY_SET_NBT_1205(ClassWrapper.NMS_TILEENTITY, new Class[] {ClassWrapper.NMS_NBTTAGCOMPOUND.getClazz(), ClassWrapper.NMS_PROVIDER.getClazz() },
+            MinecraftVersion.MC1_20_R4, new Since(MinecraftVersion.MC1_20_R4, "loadWithComponents(net.minecraft.nbt.CompoundTag,net.minecraft.core.HolderLookup$Provider)")),
     GET_DATAFIXER(ClassWrapper.NMS_DATAFIXERS, new Class[] {}, MinecraftVersion.MC1_20_R4,
             new Since(MinecraftVersion.MC1_20_R4, "getDataFixer()")),
-    NMS_REGISTER_BIOME(ClassWrapper.NMS_REGISTRYMATERIALS.getClazz(), new Class[]{}, MinecraftVersion.MC1_19_R2, new Since(MinecraftVersion.MC1_19_R3, "m"), new Since(MinecraftVersion.MC1_20_R1, "m"));
 
+    ;
 
     private MinecraftVersion removedAfter;
     private Since targetVersion;

@@ -33,7 +33,7 @@ public class SmeltMaterial {
             case "DEEPSLATE_COPPER_ORE":
             case "RAW_COPPER":
             case "COPPER_ORE":
-                return new ItemStack(Material.COPPER_INGOT);
+                return new ItemStack(Material.COPPER_INGOT); // todo: fix
             case "DEEPSLATE_GOLD_ORE":
             case "RAW_GOLD":
             case "GOLD_ORE":

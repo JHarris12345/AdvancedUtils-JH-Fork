@@ -57,7 +57,7 @@ public class ItemDurability {
     }
 
     public int getUnbreakingLevel() {
-        return item.getEnchantmentLevel(Enchantment.DURABILITY);
+        return item.getEnchantmentLevel(VanillaEnchants.displayNameToEnchant("unbreaking"));
     }
 
     /**

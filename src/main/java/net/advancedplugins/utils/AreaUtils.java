@@ -17,14 +17,14 @@ import java.util.List;
 public class AreaUtils {
 
     private static final List<EntityType> ignoredEntities = Collections.unmodifiableList(Arrays.asList(EntityType.ARMOR_STAND,
-            EntityType.ITEM_FRAME, EntityType.PAINTING, EntityType.LEASH_HITCH, EntityType.MINECART,
-            EntityType.MINECART_CHEST, EntityType.MINECART_COMMAND, EntityType.MINECART_FURNACE, EntityType.MINECART_HOPPER,
-            EntityType.MINECART_MOB_SPAWNER, EntityType.MINECART_TNT, EntityType.BOAT, EntityType.FISHING_HOOK,
-            EntityType.DROPPED_ITEM, EntityType.ARROW, EntityType.SPECTRAL_ARROW, EntityType.EGG, EntityType.ENDER_PEARL,
-            EntityType.ENDER_SIGNAL, EntityType.EXPERIENCE_ORB, EntityType.FIREBALL, EntityType.FIREWORK,
-            EntityType.SMALL_FIREBALL, EntityType.LLAMA_SPIT, EntityType.SNOWBALL, EntityType.SPLASH_POTION,
-            EntityType.THROWN_EXP_BOTTLE, EntityType.WITHER_SKULL, EntityType.SHULKER_BULLET, EntityType.PRIMED_TNT,
-            EntityType.TRIDENT, EntityType.DRAGON_FIREBALL, EntityType.LIGHTNING, EntityType.AREA_EFFECT_CLOUD, EntityType.UNKNOWN));
+            EntityType.ITEM_FRAME, EntityType.PAINTING, EntityType.LEASH_KNOT, EntityType.MINECART,
+            EntityType.CHEST_MINECART, EntityType.COMMAND_BLOCK_MINECART, EntityType.FURNACE_MINECART, EntityType.HOPPER_MINECART,
+            EntityType.SPAWNER_MINECART, EntityType.TNT_MINECART, EntityType.BOAT,
+            EntityType.ITEM, EntityType.ARROW, EntityType.SPECTRAL_ARROW, EntityType.EGG, EntityType.ENDER_PEARL
+            , EntityType.EXPERIENCE_ORB, EntityType.FIREBALL, EntityType.FIREWORK_ROCKET,
+            EntityType.SMALL_FIREBALL, EntityType.LLAMA_SPIT, EntityType.SNOWBALL, EntityType.POTION,
+            EntityType.EXPERIENCE_BOTTLE, EntityType.WITHER_SKULL, EntityType.SHULKER_BULLET, EntityType.TNT,
+            EntityType.TRIDENT, EntityType.DRAGON_FIREBALL, EntityType.LIGHTNING_BOLT, EntityType.AREA_EFFECT_CLOUD, EntityType.UNKNOWN));
 
     // done for AE version 3.0.0 release (to be concluded)
     // OLD IMPLEMENTATION
@@ -38,7 +38,7 @@ public class AreaUtils {
                 Player target = (Player) entity;
                 if (checkForDamage) {
                     target.setMetadata("ae_ignore", new FixedMetadataValue(ASManager.getInstance(), true));
-                    EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(p, target, EntityDamageEvent.DamageCause.CUSTOM, 0);
+                    EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(p, target, EntityDamageEvent.DamageCause.CUSTOM,0);
                     Bukkit.getPluginManager().callEvent(event);
                     target.removeMetadata("ae_ignore", ASManager.getInstance());
                     if (event.isCancelled()) {
@@ -114,7 +114,7 @@ public class AreaUtils {
 
     private static boolean isDamageable(Entity initiator, Entity entity) {
         entity.setMetadata("ae_ignore", new FixedMetadataValue(ASManager.getInstance(), true));
-        EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(entity, entity, EntityDamageEvent.DamageCause.CUSTOM, 0);
+        EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(entity, entity, EntityDamageEvent.DamageCause.CUSTOM,0);
         Bukkit.getPluginManager().callEvent(event);
         entity.removeMetadata("ae_ignore", ASManager.getInstance());
 
