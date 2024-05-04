@@ -3,6 +3,7 @@ package net.advancedplugins.utils;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import net.advancedplugins.utils.nbt.backend.ReflectionMethod;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
@@ -152,12 +153,10 @@ public class SkullCreator {
      * @return The head with a custom texture.
      */
     public static ItemStack itemWithBase64(ItemStack item, String base64) {
-        notNull(item, "item");
-        notNull(base64, "base64");
-
         if (!(item.getItemMeta() instanceof SkullMeta)) {
             return null;
         }
+
         SkullMeta meta = (SkullMeta) item.getItemMeta();
         mutateItemMeta(meta, base64);
         item.setItemMeta(meta);
@@ -259,12 +258,30 @@ public class SkullCreator {
     }
 
     private static GameProfile makeProfile(String b64) {
-        // random uuid based on the b64 string
-        UUID id = UUID.randomUUID();
+        final UUID id = new UUID(
+                b64.substring(b64.length() - 20).hashCode(),
+                b64.substring(b64.length() - 10).hashCode());
 
-        GameProfile profile = new GameProfile(id, (ThreadLocalRandom.current().nextDouble() * ThreadLocalRandom.current().nextDouble()) + "");
-        profile.getProperties().put("textures", new Property("textures", b64));
-        return profile;
+        try {
+            Class<?> gameProfileClass = Class.forName("com.mojang.authlib.GameProfile");
+            Class<?> propertyClass = Class.forName("com.mojang.authlib.properties.Property");
+
+            Object fakeProfileInstance = gameProfileClass.getConstructor(UUID.class, String.class).newInstance(id, "aaaaa");
+            Object propertyInstance = propertyClass.getConstructor(String.class, String.class).newInstance("textures", b64);
+
+            Method getProperties = fakeProfileInstance.getClass().getMethod("getProperties");
+            Object propertyMap = getProperties.invoke(fakeProfileInstance);
+
+            Method putMethod = propertyMap.getClass().getMethod("put", Object.class, Object.class);
+            putMethod.invoke(propertyMap,"textures", propertyInstance);
+
+            return (GameProfile) fakeProfileInstance;
+
+        } catch (final ReflectiveOperationException ex) {
+            ex.printStackTrace();
+
+            return null;
+        }
     }
 
     private static void mutateBlockState(Skull block, String b64) {
@@ -280,6 +297,7 @@ public class SkullCreator {
     }
 
     private static void mutateItemMeta(SkullMeta meta, String b64) {
+
         try {
             if (metaSetProfileMethod == null) {
                 metaSetProfileMethod = meta.getClass().getDeclaredMethod("setProfile", GameProfile.class);
