@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Nullable;
 
 public class HooksHandler {
     @Getter
@@ -92,6 +93,12 @@ public class HooksHandler {
         if (isPluginEnabled(HookPlugin.BEACONPLUS3.getPluginName()))
             registerNew(HookPlugin.BEACONPLUS3, new BeaconsPlus3Hook());
 
+        if (isPluginEnabled(HookPlugin.VAULT.getPluginName()))
+            registerNew(HookPlugin.VAULT, new VaultHook());
+
+        if (isPluginEnabled(HookPlugin.LUCKPERMS.getPluginName()))
+            registerNew(HookPlugin.LUCKPERMS, new LuckPermsHook());
+
         // Do this after server is loaded, so all softdepends that aren't in the plugin.yml file will be enabled by this time
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
             // Figure out which factions plugin is loaded and hook into the correct one
@@ -171,5 +178,11 @@ public class HooksHandler {
             return ((EssentialsHook) getHook(HookPlugin.ESSENTIALS)).isPlayerVanished(player);
         else
             return false;
+    }
+
+    public static @Nullable PermissionHook getPermissionHook() {
+        if (isEnabled(HookPlugin.LUCKPERMS))
+            return (LuckPermsHook) getHook(HookPlugin.LUCKPERMS);
+        return (VaultHook) getHook(HookPlugin.VAULT);
     }
 }
