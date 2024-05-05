@@ -1,30 +1,50 @@
 package net.advancedplugins.utils.nbt;
 
 import net.advancedplugins.utils.nbt.backend.NBTItem;
+import net.advancedplugins.utils.pdc.PDCHandler;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataType;
 
 public class NBTapi {
 
-    public static String getEntity(ItemStack spawner) {
-        return get("spawnerType", spawner);
-    }
-
     public static ItemStack addNBTTag(String type, String arguments, ItemStack i) {
-        NBTItem nbti = new NBTItem(i);
-        nbti.setString(type, arguments);
-        return nbti.getItem();
+        ItemMeta meta = i.getItemMeta();
+        PDCHandler.setString(meta, type, arguments);
+        i.setItemMeta(meta);
+        return i;
     }
 
     public static ItemStack addNBTTag(String type, int arguments, ItemStack i) {
-        NBTItem nbti = new NBTItem(i);
-        nbti.setInteger(type, arguments);
-        return nbti.getItem();
+        ItemMeta meta = i.getItemMeta();
+        PDCHandler.setInt(meta, type, arguments);
+        i.setItemMeta(meta);
+        return i;
     }
 
+    public static ItemStack addNBTTag(String type, long arguments, ItemStack i) {
+        ItemMeta meta = i.getItemMeta();
+        PDCHandler.setLong(meta, type, arguments);
+        i.setItemMeta(meta);
+        return i;
+    }
     public static boolean contains(String type, ItemStack i) {
-        if (i == null || i.getType().equals(Material.AIR))
+        if (i == null || i.getType().equals(Material.AIR)) return false;
+
+        // This checks for all possible PDC types if item has it
+        if (i.hasItemMeta() && PDCHandler.contains(i.getItemMeta(), type)) return true;
+
+        try {
+            NBTItem nbti = new NBTItem(i);
+            return nbti.hasKey(type);
+        } catch (NullPointerException ex) {
             return false;
+        }
+    }
+
+    public static boolean containsNbt(String type, ItemStack i) {
+        if (i == null || i.getType().equals(Material.AIR)) return false;
 
         try {
             NBTItem nbti = new NBTItem(i);
@@ -35,33 +55,55 @@ public class NBTapi {
     }
 
     public static String get(String argument, ItemStack i) {
-        NBTItem nbti = new NBTItem(i);
-        return nbti.getString(argument);
+        if (i == null || i.getType().isAir()) return null;
+        if (i.hasItemMeta() && PDCHandler.hasString(i.getItemMeta(), argument))
+            return PDCHandler.getString(i.getItemMeta(), argument);
+
+        if (!containsNbt(argument, i)) return null;
+
+        String nbtValue = new NBTItem(i).getString(argument);
+        addNBTTag(argument, nbtValue, i);
+        return nbtValue;
     }
 
     public static Integer getInt(String argument, ItemStack i) {
-        NBTItem nbti = new NBTItem(i);
-        return nbti.getInteger(argument);
+        if (i == null || i.getType().isAir()) return null;
+        if (PDCHandler.hasInt(i.getItemMeta(), argument)) return PDCHandler.getInt(i.getItemMeta(), argument);
+
+        if (!containsNbt(argument, i)) {
+            return 0;
+        }
+
+        Integer nbtValue = new NBTItem(i).getInteger(argument);
+        addNBTTag(argument, nbtValue, i);
+        return nbtValue;
     }
 
-    public static boolean hasNBT(ItemStack i) {
-        if (i == null) {
-            return false;
-        }
-        if (i.getType().equals(Material.AIR)) {
-            return false;
-        }
-        NBTItem nbti = new NBTItem(i);
-        if (nbti.getKeys().size() == 0) {
-            return false;
-        }
-        return true;
-    }
+    public static long getLong(String argument, ItemStack i) {
+        if (i == null) return 0;
+        if (PDCHandler.has(i.getItemMeta(), argument, PersistentDataType.LONG))
+            return PDCHandler.getLong(i.getItemMeta(), argument);
 
+        if (!containsNbt(argument, i)) return 0;
+
+        long nbtValue = new NBTItem(i).getLong(argument);
+        ItemMeta meta = i.getItemMeta();
+        PDCHandler.setLong(meta, argument, nbtValue);
+        i.setItemMeta(meta);
+        return nbtValue;
+    }
 
     public static ItemStack removeTag(String key, ItemStack item) {
-        NBTItem nbti = new NBTItem(item);
-        nbti.removeKey(key);
-        return nbti.getItem();
+        if (containsNbt(key, item)) {
+            NBTItem nbti = new NBTItem(item);
+            nbti.removeKey(key);
+
+            item = nbti.getItem();
+        }
+
+        ItemMeta meta = item.getItemMeta();
+        PDCHandler.remove(meta, key);
+        item.setItemMeta(meta);
+        return item;
     }
 }

@@ -3,6 +3,7 @@ package net.advancedplugins.utils.nbt.utils;
 import lombok.Getter;
 import net.advancedplugins.ae.Core;
 import net.advancedplugins.utils.ASManager;
+import net.advancedplugins.utils.nbt.backend.ClassWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -95,6 +96,9 @@ public enum MinecraftVersion {
         if (version == Unknown) {
             Bukkit.getServer().getLogger().warning("You are using invalid version of Minecraft [" + Bukkit.getServer().getBukkitVersion() + "]! Disabling...");
         }
+
+        // init the ClassWrapper
+        ClassWrapper.NMS_WORLD.getMojangName();
         return version;
     }
 

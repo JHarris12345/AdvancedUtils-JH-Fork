@@ -143,22 +143,32 @@ public enum ClassWrapper {
         try {
             if (packageId == PackageWrapper.NONE) {
                 clazz = Class.forName(clazzName);
+            } else if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
+                if (MinecraftVersion.isPaper())
+                    if (mojangMap != null) {
+                        clazz = Class.forName(mojangMap + "." + clazzName);
+                    } else
+                        clazz = Class.forName((packageId.equals(PackageWrapper.NMS) ? packageId.getUri().split(".server")[0] + "." : packageId.getUri() + ".") + clazzName);
+                else {
+                    String version = MinecraftVersion.getVersion().getPackageName();
+                    if (mojangMap != null) {
+                        clazz = Class.forName(mojangMap + "." + clazzName);
+                    } else
+                        clazz = Class.forName((packageId.equals(PackageWrapper.NMS) ? packageId.getUri().split(".server")[0] + "." : packageId.getUri() + "." + version + ".") + clazzName);
+                }
+
             } else if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_18_R1) && mojangName != null) {
                 // check for Mojmapped enviroment
                 try {
                     clazz = Class.forName(mojangName);
                 } catch (ClassNotFoundException ex) {
-                    Bukkit.getLogger().warning("cant load "+mojangName);
+                    clazz = Class.forName(mojangMap + "." + clazzName);
                     // ignored, not mojang mapped
+                } finally {
+                    if (clazz == null) {
+                        Bukkit.getLogger().warning("Failed to load class " + clazzName);
+                    }
                 }
-            } else if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
-                if (MinecraftVersion.isPaper())
-                    clazz = Class.forName((packageId.equals(PackageWrapper.NMS) ? packageId.getUri().split(".server")[0] + "." : packageId.getUri() + ".") + clazzName);
-                else {
-                    String version = MinecraftVersion.getVersion().getPackageName();
-                    clazz = Class.forName((packageId.equals(PackageWrapper.NMS) ? packageId.getUri().split(".server")[0] + "." : packageId.getUri() + "." + version + ".") + clazzName);
-                }
-
             } else if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_17_R1) && mojangMap != null) {
                 clazz = Class.forName(mojangMap + "." + clazzName);
             } else if (packageId == PackageWrapper.CRAFTBUKKIT) {
@@ -167,11 +177,12 @@ public enum ClassWrapper {
             } else {
                 // fallback for old versions pre mojmap and in the nms package
                 String version = MinecraftVersion.getVersion().getPackageName();
-                clazz = Class.forName(packageId.getUri() + "." + version + "." + clazzName);
+                String uri = packageId.equals(PackageWrapper.NMS) ? packageId.getUri().split(".server")[0] : packageId.getUri() + "." + version;
+                clazz = Class.forName(uri + "." + clazzName);
 
             }
 
-            if(clazz == null) {
+            if (clazz == null) {
                 Bukkit.getLogger().warning("Failed to load class " + clazzName);
             }
         } catch (Throwable ex) {
