@@ -161,10 +161,7 @@ public abstract class SubCommand<T extends CommandSender> extends Command<T> {
 
     private boolean isArgumentValid(String[] arguments, int index) {
         if (getArgumentsSizeReal() - 1 < index) {
-            if (this.endless) {
-                return true;
-            }
-            return false;
+            return this.endless;
         }
 
         Argument<?> argument = this.arguments.get(index);
