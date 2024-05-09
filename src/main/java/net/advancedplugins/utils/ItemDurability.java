@@ -7,7 +7,6 @@ import net.advancedplugins.utils.hooks.plugins.ItemsAdderHook;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerItemBreakEvent;
@@ -19,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings({"UnusedReturnValue", "deprecation"})
 public class ItemDurability {
-    private @Nullable LivingEntity itemHolder;
+    private final @Nullable LivingEntity itemHolder;
     private ItemStack item;
     @Getter
     private int dealtDamage = 0;
@@ -76,11 +75,13 @@ public class ItemDurability {
             }
 
             int max = getMaxDurability();
+//            Bukkit.broadcastMessage("§aDo damage: " + amount + ", Max durability: " + max);
             if (getDurability() + amount > max) {
                 setDurability(max);
                 return this;
             }
 
+//            Bukkit.broadcastMessage("§cDo damage: " + amount + ", new dur: " + (getDurability() + amount));
             setDurability(getDurability() + amount);
             dealtDamage += amount;
         } catch (Exception ignored) {

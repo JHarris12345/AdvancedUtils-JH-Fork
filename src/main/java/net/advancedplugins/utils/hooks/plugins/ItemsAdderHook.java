@@ -3,6 +3,7 @@ package net.advancedplugins.utils.hooks.plugins;
 import dev.lone.itemsadder.api.CustomBlock;
 import dev.lone.itemsadder.api.CustomStack;
 import dev.lone.itemsadder.api.Events.CustomBlockBreakEvent;
+import dev.lone.itemsadder.api.ItemsAdder;
 import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.SchedulerUtils;
 import net.advancedplugins.utils.hooks.HookPlugin;
@@ -83,11 +84,11 @@ public class ItemsAdderHook extends PluginHookInstance implements Listener {
     }
 
     public int getCustomItemDurability(ItemStack itemStack) {
-        return CustomStack.byItemStack(itemStack).getDurability();
+        return ItemsAdder.getCustomItemDurability(itemStack);
     }
 
     public int getCustomItemMaxDurability(ItemStack itemStack) {
-        return CustomStack.byItemStack(itemStack).getMaxDurability();
+        return ItemsAdder.getCustomItemMaxDurability(itemStack);
     }
 
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
