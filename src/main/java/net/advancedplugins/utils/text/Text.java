@@ -1,6 +1,7 @@
 package net.advancedplugins.utils.text;
 
 import com.google.common.collect.Lists;
+import me.clip.placeholderapi.PlaceholderAPI;
 import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.hooks.HooksHandler;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
@@ -37,7 +38,7 @@ public class Text {
     public static void sendMessage(CommandSender recipient, String message) {
         Supplier<String> processor = () -> {
             if (recipient instanceof OfflinePlayer && Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-                // return PlaceholderAPI.setPlaceholders((OfflinePlayer) recipient, message);
+                return PlaceholderAPI.setPlaceholders((OfflinePlayer) recipient, message);
             }
             return message;
         };
