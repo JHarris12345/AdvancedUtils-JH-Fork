@@ -26,6 +26,7 @@ public class Text {
     private static final char SECTION_CHAR = '\u00A7';
     private static final char AMPERSAND_CHAR = '&';
     private static final String COLOR_CODES = "0123456789AaBbCcDdEeFfKkLlMmNnOoRr";
+    private static final String FORMAT_CODES = "KkLlMmMnOo";
     private static final Pattern STRIP_COLOR_PATTERN = Pattern.compile("(?i)" + SECTION_CHAR + "[0-9A-FK-OR]");
     private static final Pattern HEX_PATTERN = Pattern.compile("\\{#[a-fA-F0-9]{6}}");
 
@@ -183,19 +184,39 @@ public class Text {
     private static String gradient(String msg) {
         while (msg.contains("<gradient") && msg.contains("</gradient>")) {
             int start = msg.indexOf("<gradient");
+
+            char[] charArray = msg.toCharArray();
+            StringBuilder formatCode = new StringBuilder();
+            for (int i = 0; i < start - 1; i++) {
+                if (charArray[i] == Text.AMPERSAND_CHAR && COLOR_CODES.indexOf(charArray[i + 1]) > -1) {
+                    if(FORMAT_CODES.indexOf(charArray[i+1]) > -1) {
+                        formatCode.append(Text.AMPERSAND_CHAR).append(charArray[i + 1]);
+                    } else {
+                        formatCode = new StringBuilder();
+                    }
+                }
+                if(charArray[i] == '{' && charArray[i+1] == '#') {
+                    formatCode = new StringBuilder();
+                }
+            }
+            int gradientSize = 10;
+            if(formatCode.length() > 0) {
+                gradientSize += formatCode.length();
+            }
+
             int firstHex = msg.indexOf("#", start);
             int secondHex = msg.indexOf("#", firstHex + 1);
             String hex1 = msg.substring(firstHex, firstHex + 7);
             String hex2 = msg.substring(secondHex, secondHex + 7);
             String str = msg.substring(msg.indexOf(">", start) + 1, msg.indexOf("</gradient>"));
-            msg = msg.replaceFirst(msg.substring(start, msg.indexOf(">", start) + 1), "");
-            msg = msg.replaceFirst("</gradient>", ChatColor.WHITE + "");
+            String toReplaceStart = msg.substring(start, msg.indexOf(">", start) + 1);
+            String toReplaceEnd = "</gradient>";
             String newStr = str;
             for (int i = 0; i < str.length(); i++) {
-                newStr = newStr.substring(0, i * 10) + gradient(hex2, hex1, (float) i / (str.length() - 1))
-                        + newStr.substring(i * 10);
+                newStr = newStr.substring(0, i * gradientSize) + gradient(hex2, hex1, (float) i / (str.length() - 1))
+                        + formatCode + newStr.substring(i * gradientSize);
             }
-            msg = msg.replace(str, newStr);
+            msg = msg.replaceFirst(toReplaceStart + str + toReplaceEnd, newStr);
         }
         return msg;
     }
