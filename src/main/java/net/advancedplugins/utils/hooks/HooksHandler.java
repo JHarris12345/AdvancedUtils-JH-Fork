@@ -31,8 +31,8 @@ public class HooksHandler {
             registerNew(HookPlugin.PROTOCOLLIB, new PluginHookInstance()); // Generic plugin hook
 
         // AureliumSKills hook must be loaded instantly without runnable
-        if (isPluginEnabled(HookPlugin.AURELIUMSKILLS.getPluginName()))
-            registerNew(HookPlugin.AURELIUMSKILLS, new AureliumSkillsHook(), true);
+        if (isPluginEnabled(HookPlugin.AURASKILLS.getPluginName()))
+            registerNew(HookPlugin.AURASKILLS, new AuraSkillsHook(), true);
 
         // these should be fine loading rn as well, as they are softdepend in plugin.yml (Wega)
         if (isPluginEnabled(HookPlugin.MCMMO.getPluginName()))
