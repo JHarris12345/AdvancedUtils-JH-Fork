@@ -18,6 +18,8 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -38,6 +40,7 @@ public class SkullCreator {
     private static Field blockProfileField;
     private static Method metaSetProfileMethod;
     private static Field metaProfileField;
+    private static Map<String,GameProfile> profilesCache = new HashMap<>();
 
     /**
      * Creates a player skull, should work in both legacy and new Bukkit APIs.
@@ -258,6 +261,10 @@ public class SkullCreator {
     }
 
     private static GameProfile makeProfile(String b64) {
+        if(profilesCache.containsKey(b64)) {
+            return profilesCache.get(b64);
+        }
+
         final UUID id = new UUID(
                 b64.substring(b64.length() - 20).hashCode(),
                 b64.substring(b64.length() - 10).hashCode());
@@ -275,6 +282,7 @@ public class SkullCreator {
             Method putMethod = propertyMap.getClass().getMethod("put", Object.class, Object.class);
             putMethod.invoke(propertyMap,"textures", propertyInstance);
 
+            profilesCache.put(b64, (GameProfile) fakeProfileInstance);
             return (GameProfile) fakeProfileInstance;
 
         } catch (final ReflectiveOperationException ex) {
