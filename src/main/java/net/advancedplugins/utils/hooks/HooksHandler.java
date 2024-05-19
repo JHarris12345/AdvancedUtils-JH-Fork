@@ -99,6 +99,12 @@ public class HooksHandler {
         if (isPluginEnabled(HookPlugin.LUCKPERMS.getPluginName()))
             registerNew(HookPlugin.LUCKPERMS, new LuckPermsHook());
 
+        if (isPluginEnabled(HookPlugin.PREMIUMVANISH.getPluginName()))
+            registerNew(HookPlugin.PREMIUMVANISH, new PremiumVanishHook());
+
+        if (isPluginEnabled(HookPlugin.SUPERVANISH.getPluginName()))
+            registerNew(HookPlugin.SUPERVANISH, new SuperVanishHook());
+
         // Do this after server is loaded, so all softdepends that aren't in the plugin.yml file will be enabled by this time
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
             // Figure out which factions plugin is loaded and hook into the correct one
@@ -172,12 +178,19 @@ public class HooksHandler {
     }
 
     public static boolean isPlayerVanished(Player player) {
-        if (isEnabled(HookPlugin.CMI))
-            return ((CMIHook) getHook(HookPlugin.CMI)).isPlayerVanished(player);
+        return getVanishHook() != null && getVanishHook().isPlayerVanished(player);
+    }
+
+    public static @Nullable VanishHook getVanishHook() {
+        if (isEnabled(HookPlugin.PREMIUMVANISH))
+            return (PremiumVanishHook) getHook(HookPlugin.PREMIUMVANISH);
+        else if (isEnabled(HookPlugin.SUPERVANISH))
+            return (SuperVanishHook) getHook(HookPlugin.SUPERVANISH);
+        else if (isEnabled(HookPlugin.CMI))
+            return (CMIHook) getHook(HookPlugin.CMI);
         else if (isEnabled(HookPlugin.ESSENTIALS))
-            return ((EssentialsHook) getHook(HookPlugin.ESSENTIALS)).isPlayerVanished(player);
-        else
-            return false;
+            return (EssentialsHook) getHook(HookPlugin.ESSENTIALS);
+        return null;
     }
 
     public static @Nullable PermissionHook getPermissionHook() {

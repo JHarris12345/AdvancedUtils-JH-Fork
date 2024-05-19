@@ -32,7 +32,9 @@ public enum HookPlugin {
     ADVANCEDCHESTS("AdvancedChests"),
     BEACONPLUS3("BeaconPlus3"),
     LUCKPERMS("LuckPerms"),
-    VAULT("Vault");
+    VAULT("Vault"),
+    PREMIUMVANISH("PremiumVanish"),
+    SUPERVANISH("SuperVanish");
 
     private final String pluginName;
 
