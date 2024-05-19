@@ -97,20 +97,17 @@ public class ASManager {
 //                    System.out.println(Math.abs(registryLastModified.getTime() - pluginYmlLastModified.getTime()) + " ");
 //                    System.out.println(Math.abs(coreLastModified.getTime() - pluginYmlLastModified.getTime()) + " ");
                     // clearly modified
-                    new BukkitRunnable() {
-                        @Override
-                        public void run() {
-                            Server server = Bukkit.getServer();
-                            try {
-                                Object manager = server.getClass().getMethod("getPluginManager").invoke(server);
-                                // This below, decoded, equals to "disablePlugin". This measure prevents leakers from finding the method by ctrl+f
-                                Method method = manager.getClass().getMethod(new String(Base64.getDecoder().decode("ZGlzYWJsZVBsdWdpbg==")), Plugin.class);
-                                method.invoke(manager, instance);
-                            } catch (Exception ev) {
-                                ev.printStackTrace();
-                            }
+                    FoliaScheduler.runTaskLater(ASManager.getInstance(),() -> {
+                        Server server = Bukkit.getServer();
+                        try {
+                            Object manager = server.getClass().getMethod("getPluginManager").invoke(server);
+                            // This below, decoded, equals to "disablePlugin". This measure prevents leakers from finding the method by ctrl+f
+                            Method method = manager.getClass().getMethod(new String(Base64.getDecoder().decode("ZGlzYWJsZVBsdWdpbg==")), Plugin.class);
+                            method.invoke(manager, instance);
+                        } catch (Exception ev) {
+                            ev.printStackTrace();
                         }
-                    }.runTaskLater(ASManager.getInstance(), 1);
+                    },1);
                 }
 
             }

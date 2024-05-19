@@ -3,6 +3,7 @@ package net.advancedplugins.utils.plugin;
 import lombok.Getter;
 import lombok.Setter;
 import net.advancedplugins.utils.ASManager;
+import net.advancedplugins.utils.FoliaScheduler;
 import net.advancedplugins.utils.text.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -80,7 +81,7 @@ public class AdvancedPlugin extends JavaPlugin implements Listener {
         if (!e.getPlayer().isOp()) return;
         if (startupError == null) return;
 
-        Bukkit.getScheduler().runTaskLater(this, () -> {
+        FoliaScheduler.runTaskLater(this, () -> {
             e.getPlayer().sendMessage(Text.modify("&c[" + pluginName + "] Unable to load the plugin correctly due to errors:"));
             e.getPlayer().sendMessage(Text.modify("&c&o" + startupError));
             e.getPlayer().sendMessage(Text.modify("&cIf the problem persists after checking the config files, please seek assistance at: https://discord.gg/advancedplugins"));

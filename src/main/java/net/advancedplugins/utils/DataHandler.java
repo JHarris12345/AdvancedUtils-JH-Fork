@@ -127,7 +127,7 @@ public class DataHandler {
     }
 
     public void saveAsync() {
-        Bukkit.getScheduler().runTaskAsynchronously(instance, this::save);
+        FoliaScheduler.runTaskAsynchronously(instance, this::save);
     }
 
     public int increaseLoop() {
