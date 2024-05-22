@@ -2,7 +2,6 @@ package net.advancedplugins.utils;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import net.advancedplugins.ae.utils.EnchantsConverter;
 import net.advancedplugins.utils.annotations.ConfigKey;
 import net.advancedplugins.utils.evalex.Expression;
 import net.advancedplugins.utils.nbt.NBTapi;
@@ -672,6 +671,78 @@ public class ASManager {
 
     }
 
+    private static int findIfEnd(String syntax, int position) {
+        if(position > syntax.length()) {
+            return -1;
+        }
+        int end = syntax.indexOf("</if>", position);
+        int possibleInner = syntax.indexOf("<if>", position);
+        if(possibleInner > -1 && possibleInner < end) {
+            int endOfInner = findIfEnd(syntax,possibleInner+4);
+            return findIfEnd(syntax,endOfInner+5);
+        }
+        return end;
+    }
+
+    private static int findResultSplit(String syntax, int position) {
+        if(position > syntax.length()) {
+            return -1;
+        }
+        int split = syntax.indexOf(":", position);
+        int possibleInner = syntax.indexOf("<if>", position);
+        if(possibleInner > -1 && possibleInner < split) {
+            int endOfInner = findIfEnd(syntax,possibleInner+4);
+            return findResultSplit(syntax,endOfInner+1);
+        }
+        return split;
+    }
+
+    private static String[] splitAtIndex(String s, int idx) {
+        if(idx>=s.length()-1) {
+            return new String[]{idx >= s.length() ? s : s.substring(0,idx)};
+        }
+        String s1 = s.substring(0, idx);
+        String s2 = s.substring(idx+1);
+        return new String[]{s1,s2};
+    }
+
+    private static boolean checkStringsEquality(String condition) {
+        if(condition.contains("===")) {
+            String[] equalsElements = condition.split("===",2);
+            return equalsElements[0].equals(equalsElements[1]);
+        }
+        if(condition.contains("==")) {
+            String[] equalsElements = condition.split("==",2);
+            return equalsElements[0].equalsIgnoreCase(equalsElements[1]);
+        }
+        return false;
+    }
+
+    private static String handleIfExpression(String syntax) {
+        while(syntax.contains("<if>")) {
+            int start = syntax.indexOf("<if>");
+            int expressionStart = start + 4;
+            int end = findIfEnd(syntax,expressionStart);
+            String expression = syntax.substring(expressionStart, end);
+            String[] elements = expression.split("\\?", 2);
+            String condition = elements[0];
+            int indexOfSplit = findResultSplit(elements[1], 0);
+            String[] results = splitAtIndex(elements[1], indexOfSplit);
+
+            boolean check;
+            Expression conditionMathExpression = new net.advancedplugins.utils.evalex.Expression(condition, MathContext.UNLIMITED);
+            try {
+                check = conditionMathExpression.eval().intValue() == 1;
+            } catch (Exception e) {
+                check = checkStringsEquality(condition);
+            }
+
+            String result = check ? results[0] : results[1];
+            syntax = syntax.replace("<if>" + expression + "</if>", result);
+        }
+        return syntax;
+    }
+
     public static double parseThroughCalculator(String syntax) {
         if (syntax.contains("<random>")) {
             String current = StringUtils.substringBetween(syntax, "<random>", "</random>");
@@ -680,6 +751,8 @@ public class ASManager {
         }
 
         syntax = syntax.replaceAll(" ", "");
+        syntax = handleIfExpression(syntax);
+
         Expression mathExpression = new net.advancedplugins.utils.evalex.Expression(syntax, MathContext.UNLIMITED);
 
         try {
