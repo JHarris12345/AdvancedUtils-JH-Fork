@@ -158,7 +158,7 @@ public abstract class ConfigCommand<T extends CommandSender> {
         return a;
     }
 
-    protected <S> Argument<S> addArgument(Class<S> clazz, String argument, Function<CommandSender, List<String>> onTabComplete, String... aliases) {
+    protected <S> Argument<S> addArgument(Class<S> clazz, String argument, Function<CommandSender, Collection<String>> onTabComplete, String... aliases) {
         if (argument.equalsIgnoreCase("player")) {
             onTabComplete = sender -> Bukkit.getOnlinePlayers()
                     .stream()
@@ -214,7 +214,7 @@ public abstract class ConfigCommand<T extends CommandSender> {
     }
 
 
-    public List<String> tabCompletionSuggestion(CommandSender commandSender, int index) {
+    public Collection<String> tabCompletionSuggestion(CommandSender commandSender, int index) {
         if (index > this.arguments.size() - 1) {
             return Lists.newArrayList();
         }

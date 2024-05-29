@@ -42,6 +42,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -136,6 +137,20 @@ public class ASManager {
         if (arg != null) {
             throw new IllegalArgumentException(message);
         }
+    }
+
+    /**
+     * {@link Bukkit#getPlayer(String)} includes {@link String#startsWith(String)} which could produce incorrect results. Like Tomousek and Tomousek2 both matching when searching for Tomousek.
+     * @param name Name to search for.
+     * @return Player if found, null otherwise.
+     */
+    public static @Nullable Player getPlayerInsensitive(@NotNull String name) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.getName().equalsIgnoreCase(name)) {
+                return player;
+            }
+        }
+        return null;
     }
 
     /**
