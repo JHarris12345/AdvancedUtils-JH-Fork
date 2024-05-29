@@ -48,7 +48,8 @@ public class AuraSkillsHook extends PluginHookInstance implements Listener {
 
         ItemStack finalItem = item;
         BrokenBlockInformation blockInformation = brokenBlocksMap.get(vector);
-        if (!blockInformation.player.equals(player)) return;
+        if (blockInformation == null) return;
+        if (!player.equals(blockInformation.player)) return;
 
         if (blockInformation.settings.isSmelt())
             finalItem = SmeltMaterial.material(item);
