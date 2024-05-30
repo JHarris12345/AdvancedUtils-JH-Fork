@@ -34,7 +34,8 @@ public enum HookPlugin {
     LUCKPERMS("LuckPerms"),
     VAULT("Vault"),
     PREMIUMVANISH("PremiumVanish"),
-    SUPERVANISH("SuperVanish");
+    SUPERVANISH("SuperVanish"),
+    DISCORDSRV("DiscordSRV");
 
     private final String pluginName;
 
