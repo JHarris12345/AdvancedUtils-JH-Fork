@@ -15,7 +15,7 @@ public enum HookPlugin {
     ADVANCEDPETS("AdvancedPets"),
     DYNMAP("dynmap"),
     RESIDENCE("Residence"),
-    AURELIUMSKILLS("AureliumSkills"),
+    AURASKILLS("AuraSkills"),
     PLACEHOLDERAPI("PlaceholderAPI"),
     ESSENTIALS("Essentials"),
     CMI("CMI"),
