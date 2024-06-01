@@ -37,6 +37,11 @@ public class LandsCheck implements ProtectionType {
 
     @Override
     public boolean isProtected(Location loc) {
-        return false;
+        LandsHook hook = (LandsHook) HooksHandler.getHook(HookPlugin.LANDS);
+
+        if (hook == null)
+            return false;
+
+        return hook.isProtected(loc);
     }
 }
