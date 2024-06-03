@@ -64,7 +64,7 @@ public class ItemDurability {
      *
      * @param amount Amount to damage item by.
      */
-    public ItemDurability damageItem(short amount) {
+    public ItemDurability damageItem(int amount) {
         try {
             if (!ASManager.isDamageable(item.getType()) || item.getType().name().contains("SKULL") || ASManager.isUnbreakable(item))
                 return this;
@@ -72,6 +72,13 @@ public class ItemDurability {
             if (amount < 0) {
                 healItem(amount);
                 return this;
+            }
+
+            if (this.itemHolder instanceof Player) {
+                PlayerItemDamageEvent event = new PlayerItemDamageEvent((Player) this.itemHolder, this.item, amount);
+                Bukkit.getPluginManager().callEvent(event);
+                if (event.isCancelled()) return this;
+                amount = event.getDamage();
             }
 
             int max = getMaxDurability();
@@ -101,13 +108,20 @@ public class ItemDurability {
      *
      * @param amount Amount to heal the item by.
      */
-    public ItemDurability healItem(short amount) {
+    public ItemDurability healItem(int amount) {
         amount = (short) Math.abs(amount);
 
         if (!ASManager.isDamageable(item.getType())) return this;
 
         if (item.getType().name().contains("SKULL"))
             return this;
+
+        if (this.itemHolder instanceof Player) {
+            PlayerItemDamageEvent event = new PlayerItemDamageEvent((Player) this.itemHolder, this.item, amount);
+            Bukkit.getPluginManager().callEvent(event);
+            if (event.isCancelled()) return this;
+            amount = event.getDamage();
+        }
 
         if (getDurability() - amount < 0) {
             repairItem();
@@ -152,25 +166,18 @@ public class ItemDurability {
      * @param amount Durability to set.
      */
     public ItemDurability setDurability(int amount) {
-        boolean cancelled = false;
-        if (this.itemHolder instanceof Player) {
-            PlayerItemDamageEvent event = new PlayerItemDamageEvent((Player) this.itemHolder, this.item, amount);
-            Bukkit.getPluginManager().callEvent(event);
-            cancelled = event.isCancelled();
-            amount = event.getDamage();
-        }
-        if (itemsAdder && !cancelled) {
+        if (itemsAdder) {
             this.item = ((ItemsAdderHook) HooksHandler.getHook(HookPlugin.ITEMSADDER)).setCustomItemDurability(item,
                     amount < getMaxDurability() ? getMaxDurability() - amount : -1);
             return this;
         }
 
-        if (!cancelled && amount >= this.getMaxDurability() && this.itemHolder != null && this.itemHolder instanceof Player && item.getItemMeta() instanceof Damageable) {
+        if (amount >= this.getMaxDurability() && this.itemHolder != null && this.itemHolder instanceof Player && item.getItemMeta() instanceof Damageable) {
+            // is not cancellable
             Bukkit.getPluginManager().callEvent(new PlayerItemBreakEvent((Player) this.itemHolder, this.item));
         }
 
-        if (!cancelled)
-            this.setDurabilityVersionSave(amount);
+        this.setDurabilityVersionSave(amount);
         return this;
     }
 
@@ -202,5 +209,4 @@ public class ItemDurability {
         setDurability(0);
         return this;
     }
-
 }
