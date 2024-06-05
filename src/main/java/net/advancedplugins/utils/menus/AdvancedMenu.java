@@ -51,7 +51,7 @@ public class AdvancedMenu implements InventoryHolder {
     public AdvancedMenu(Player player, ConfigurationSection section, Replace replace) {
 //        this.section = section;
         this.player = player;
-        this.title = ASManager.limit(Text.modify(section.getString(handler.getPath("name")), (Replace) replace), 16, "");
+        this.title = Text.modify(section.getString(handler.getPath("name")), replace);
         this.invSize = section.getInt(handler.getPath("size"));
         this.replace = replace;
         this.section = section;
