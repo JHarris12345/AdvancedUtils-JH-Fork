@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -193,6 +194,10 @@ public class DataHandler {
         for (int id : activeTasks) {
             Bukkit.getScheduler().cancelTask(id);
         }
+
+        for (Listener listener : listeners) {
+            HandlerList.unregisterAll(listener);
+        }
     }
 
     public UUID stringToId(String input) {
@@ -245,6 +250,8 @@ public class DataHandler {
 
     @Getter
     private List<Integer> activeTasks = new ArrayList<>();
+    @Getter
+    private List<Listener> listeners = new ArrayList<>();
 
     public void addTask(int id) {
         this.activeTasks.add(id);
@@ -252,5 +259,6 @@ public class DataHandler {
 
     public void registerListener(Listener l) {
         Bukkit.getPluginManager().registerEvents(l, ASManager.getInstance());
+        this.listeners.add(l);
     }
 }
