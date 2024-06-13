@@ -1662,8 +1662,7 @@ public class ASManager {
         }
     }
 
-    public static ItemStack makeItemGlow(ItemStack itemstack) {
-
+    public static ItemStack makeItemGlow(ItemStack itemstack, boolean glow) {
         /* Compound got removed when using durability effects (https://github.com/GC-spigot/AdvancedEnchantments/issues/3982)
         NBTItem item = new NBTItem(itemstack);
         NBTCompound compound = item.getCompoundList("Enchantments").addCompound();
@@ -1672,7 +1671,18 @@ public class ASManager {
          */
 
 //        itemstack.addEnchantment(Glow.ench, 0);
+
+        // 1.20.5 added a proper way for ench glow
+        if (itemstack.hasItemMeta() && MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
+            ItemMeta meta = itemstack.getItemMeta();
+            meta.setEnchantmentGlintOverride(glow ? true : null);
+            itemstack.setItemMeta(meta);
+        }
         return itemstack;
+    }
+
+    public static ItemStack makeItemGlow(ItemStack itemstack) {
+        return makeItemGlow(itemstack, true);
     }
 
     public static Pair<String, Integer> parseEnchantment(String ench) {
