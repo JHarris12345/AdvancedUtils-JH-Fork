@@ -167,10 +167,21 @@ public class MojangToMapping {
         }
 
     };
+    @SuppressWarnings("serial")
+    private static Map<String, String> MC1_21R1 = new HashMap<String, String>() {
 
+        {
+            putAll(MC1_20R4);
+
+            put("net.minecraft.world.entity.Entity#getEncodeId()", "bD");
+        }
+
+    };
 
     public static Map<String, String> getMapping() {
         switch (MinecraftVersion.getVersion()) {
+            case MC1_21_R1:
+                return MC1_21R1;
             case MC1_20_R4:
                 return MC1_20R4;
             case MC1_20_R3:
