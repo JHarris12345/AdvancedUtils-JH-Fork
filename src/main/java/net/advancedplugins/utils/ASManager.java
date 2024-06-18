@@ -1769,4 +1769,9 @@ public class ASManager {
         Collections.reverse(list);
         return list;
     }
+
+    public static boolean isOnline(LivingEntity ent) {
+        if(!(ent instanceof Player)) return true;
+        return ((Player) ent).isOnline();
+    }
 }
