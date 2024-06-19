@@ -53,6 +53,13 @@ public class Text {
         return message;
     }
 
+    public static List<String> parsePapi(List<String> messages, OfflinePlayer player) {
+        if (HooksHandler.getHook(HookPlugin.PLACEHOLDERAPI) != null) {
+            return messages.stream().map(message -> me.clip.placeholderapi.PlaceholderAPI.setPlaceholders(player, message)).collect(Collectors.toList());
+        }
+        return messages;
+    }
+
     /**
      * Sends a message to multiple players, inserts placeholders and replaces colours.
      *
