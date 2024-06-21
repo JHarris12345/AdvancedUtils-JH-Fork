@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -29,6 +30,9 @@ public class Replacer {
     }
 
     public Replacer set(String variable, Object value) {
+        if(value instanceof BigDecimal) {
+            value = ((BigDecimal) value).stripTrailingZeros().toPlainString();
+        }
         this.variables.put("%" + variable + "%", value);
         return this;
     }
