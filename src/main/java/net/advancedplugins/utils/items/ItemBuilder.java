@@ -365,6 +365,7 @@ public class ItemBuilder {
      * @param flag ItemFlag to add.
      */
     public ItemBuilder addItemFlag(ItemFlag... flag) {
+        ItemFlagFix.fix(im);
         im.addItemFlags(flag);
         return this;
     }
