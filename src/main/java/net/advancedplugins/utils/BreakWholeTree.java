@@ -1,140 +1,81 @@
 package net.advancedplugins.utils;
 
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
+/***
+ * "Borrowed" from decompiled
+ * <a href="https://www.spigotmc.org/resources/treefix.17267/">TreeFix</a>
+ */
 public class BreakWholeTree {
-
-    private final int maxLeavesToSearch = 90;
-    private final int maxLogsToSearch = 95; // may need further tinkering
+    private static final int MAX_LEAVES_TO_SEARCH = 1000;
+    private static final int MAX_LOGS_TO_SEARCH = 300;
     private int leavesScanned = 0;
 
     private final Set<Block> foundBlocks;
+    private final List<Location> logs = new ArrayList<>();
+    private final List<Location> leaves = new ArrayList<>();
+
+    private final List<BlockFace> dirs = Arrays.asList(
+            BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST,
+            BlockFace.NORTH_EAST, BlockFace.SOUTH_EAST, BlockFace.SOUTH_WEST, BlockFace.NORTH_WEST
+    );
 
     public BreakWholeTree(final Block block) {
-        Location originLocation = block.getLocation();
         this.foundBlocks = new HashSet<>();
-        //Material originType = block.getType();
-        final World world = originLocation.getWorld();
+        Location lowestBlock = block.getLocation();
 
-        int maxTreeRadius = 2;
-        final int stopX = originLocation.getBlockX() + maxTreeRadius;
-        final int stopZ = originLocation.getBlockZ() + maxTreeRadius;
+        findLog(block, true, true);
+        findLog(block, false, true);
 
-        for (int x = originLocation.getBlockX(); x <= stopX; x++) {
-            for (int z = originLocation.getBlockZ(); z <= stopZ; z++) {
-                if (this.foundBlocks.size() >= maxLogsToSearch || leavesScanned >= maxLeavesToSearch) {
-                    return;
-                }
-
-                final Location toScan = new Location(world, x, originLocation.getY(), z);
-                final Block locBlock = toScan.getBlock();
-                if (!ASManager.isLog(locBlock.getType())) {
-                    if (locBlock.getType().name().endsWith("LEAVES")) {
-                        leavesScanned++;
-                        continue;
-                    } else if (locBlock.getType().name().contains("AIR")) {
-                        continue;
-                    }
-                }
-
-                if (locBlock.hasMetadata("AE_Placed")) continue;
-                // don't break player placed blocks
-                if (locBlock.hasMetadata("non-natural") /*&& YamlFile.CONFIG.getBoolean("settings.respect-player-placed-blocks", true)*/) {
-                    continue;
-                }
-
-
-                for (final BlockFace face : BlockFace.values()) {
-                    final Block toSearch = locBlock.getRelative(face);
-                    if (!ASManager.isLog(toSearch.getType()) || toSearch.getType().name().endsWith("LEAVES")) continue;
-                    this.foundBlocks.add(toSearch);
-                    switch (face) {
-
-                        case UP: {
-                            this.scanUp(toSearch);
-                            break;
-                        }
-
-                        case DOWN: {
-                            this.scanDown(toSearch);
-                            break;
-                        }
-
-                        case NORTH_WEST:
-                        case NORTH_EAST:
-                        case SOUTH_WEST:
-                        case SOUTH_EAST:
-                        case NORTH:
-                        case WEST:
-                        case SOUTH:
-                        case EAST: {
-                            this.scanDirectional(toSearch, face);
-                            break;
-                        }
-                        default: {
-                            break;
-                        }
-                    }
-
-                }
-
+        for (Location log : this.logs) {
+            if (log.getY() < lowestBlock.getY()) {
+                lowestBlock = log;
             }
         }
-        foundBlocks.remove(block); // Remove the main block to avoid breaking it twice. (https://github.com/GC-spigot/AdvancedEnchantments/issues/3269)
+
+        foundBlocks.addAll(logs.stream().map(Location::getBlock).collect(Collectors.toSet()));
+        foundBlocks.remove(block); // Remove the main block to avoid breaking it twice.
     }
 
-    private void scanUp(final Block start) {
-        if (this.foundBlocks.size() >= maxLogsToSearch || leavesScanned >= maxLeavesToSearch) {
-            return;
+    private boolean findLog(Block block, boolean up, boolean prevFound) {
+        if (foundBlocks.size() >= MAX_LOGS_TO_SEARCH || leavesScanned >= MAX_LEAVES_TO_SEARCH) {
+            return false;
         }
-        if (start.hasMetadata("AE_Placed")) return;
-        // don't break player placed blocks
-        if (start.hasMetadata("non-natural") /*&& YamlFile.CONFIG.getBoolean("settings.respect-player-placed-blocks", true)*/) {
-            return;
+
+        boolean found = false;
+        if (ASManager.isLog(block.getType()) && !logs.contains(block.getLocation())) {
+            logs.add(block.getLocation());
+            found = true;
         }
-        if (!ASManager.isLog(start.getType())) {
-            if (start.getType().name().endsWith("LEAVES")) {
-                leavesScanned++;
-                scanUp(start.getRelative(BlockFace.UP));
+
+        if (block.getType().name().endsWith("LEAVES") && !leaves.contains(block.getLocation())) {
+            leaves.add(block.getLocation());
+            leavesScanned++;
+        }
+
+        if (found) {
+            for (BlockFace dir : dirs) {
+                findLog(block.getRelative(dir), up, true);
             }
-        } else {
-            this.foundBlocks.add(start);
-            scanUp(start.getRelative(BlockFace.UP));
         }
-    }
 
-    private void scanDown(final Block start) {
-        if (this.foundBlocks.size() >= maxLogsToSearch || leavesScanned >= maxLeavesToSearch) {
-            return;
+        if (found || prevFound) {
+            findLog(block.getRelative(up ? BlockFace.UP : BlockFace.DOWN), up, found);
         }
-        if (start.hasMetadata("AE_Placed")) return;
-        if (start.hasMetadata("non-natural")/* && YamlFile.CONFIG.getBoolean("settings.respect-player-placed-blocks", true)*/) {
-            return;
-        }
-        if (!ASManager.isLog(start.getType())) {
-            if (start.getType().name().endsWith("LEAVES")) {
-                leavesScanned++;
-                scanDown(start.getRelative(BlockFace.DOWN));
-            }
-        } else {
-            this.foundBlocks.add(start);
-            scanUp(start.getRelative(BlockFace.DOWN));
-        }
-    }
 
-    private void scanDirectional(Block start, final BlockFace direction) {
-        this.scanUp(start);
-        this.scanDown(start);
+        return found;
     }
 
     public Set<Block> get() {
         return this.foundBlocks;
     }
-
 }
