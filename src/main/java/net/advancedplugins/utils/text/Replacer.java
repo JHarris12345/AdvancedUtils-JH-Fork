@@ -4,9 +4,7 @@ import com.google.common.collect.Maps;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
@@ -29,6 +27,9 @@ public class Replacer {
     }
 
     public Replacer set(String variable, Object value) {
+        if(value instanceof Iterable<?>) {
+            value = String.join("<new>", (Iterable<? extends CharSequence>)value);
+        }
         this.variables.put("%" + variable + "%", value);
         return this;
     }
