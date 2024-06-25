@@ -30,6 +30,9 @@ public class Replacer {
         if(value instanceof Iterable<?>) {
             value = String.join("<new>", (Iterable<? extends CharSequence>)value);
         }
+        if(value instanceof BigDecimal) {
+            value = ((BigDecimal) value).stripTrailingZeros().toPlainString();
+        }
         this.variables.put("%" + variable + "%", value);
         return this;
     }
