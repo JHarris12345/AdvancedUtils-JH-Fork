@@ -166,7 +166,7 @@ public class Text {
         return input == null ? null : STRIP_COLOR_PATTERN.matcher(input).replaceAll("");
     }
 
-    private static String renderColorCodes(String textToRender) {
+    public static String renderColorCodes(String textToRender) {
         if (MinecraftVersion.getVersion().getVersionId() >= 1160)
             textToRender = RENDER_GRADIENT ? gradient(textToRender) : textToRender;{
             Matcher match = HEX_PATTERN.matcher(textToRender);
