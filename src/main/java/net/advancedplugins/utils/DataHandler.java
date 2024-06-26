@@ -18,14 +18,15 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class DataHandler {
-
     private File file = null;
     private FileConfiguration fileConfiguration;
 
+    @Getter
     private String fileName;
     private int loopNumber;
 
-    private static JavaPlugin instance;
+    @Getter
+    private JavaPlugin instance;
 
     public DataHandler(File f, JavaPlugin plugin) {
         this.file = f;
