@@ -1,6 +1,5 @@
 package net.advancedplugins.utils;
 
-import net.advancedplugins.ae.Core;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import org.bukkit.enchantments.Enchantment;
 
@@ -28,7 +27,7 @@ public class VanillaEnchants {
             return enchant;
 
         if (displayError)
-            Core.getInstance().getLogger().warning("Invalid vanilla enchantment: " + paramString
+            ASManager.getInstance().getLogger().warning("Invalid vanilla enchantment: " + paramString
                     + ". Enchantment names can be found here: " +
                     "https://hub.spigotmc.org/javadocs/spigot/org/bukkit/enchantments/Enchantment.html");
         return null;

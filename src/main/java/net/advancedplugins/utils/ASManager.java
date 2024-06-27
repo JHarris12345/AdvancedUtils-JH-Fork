@@ -1774,4 +1774,12 @@ public class ASManager {
         if(!(ent instanceof Player)) return true;
         return ((Player) ent).isOnline();
     }
+
+    public static String[] listFiles(String folder) {
+        return new File(instance.getDataFolder(), folder).list();
+    }
+
+    public static File getFile(String s) {
+        return new File(instance.getDataFolder(), s);
+    }
 }
