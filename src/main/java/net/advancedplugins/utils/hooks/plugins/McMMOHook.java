@@ -9,11 +9,9 @@ import com.gmail.nossr50.datatypes.skills.SubSkillType;
 import com.gmail.nossr50.events.fake.FakePlayerFishEvent;
 import com.gmail.nossr50.events.items.McMMOItemSpawnEvent;
 import com.gmail.nossr50.mcMMO;
-import com.gmail.nossr50.skills.herbalism.HerbalismManager;
 import com.gmail.nossr50.util.BlockUtils;
 import com.gmail.nossr50.util.ItemUtils;
 import com.gmail.nossr50.util.MetadataConstants;
-import com.gmail.nossr50.util.Misc;
 import com.gmail.nossr50.util.player.UserManager;
 import com.gmail.nossr50.util.random.ProbabilityUtil;
 import net.advancedplugins.utils.ASManager;
@@ -24,10 +22,8 @@ import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
@@ -124,7 +120,7 @@ public class McMMOHook extends PluginHookInstance implements Listener {
         if (BlockUtils.affectedBySuperBreaker(blockState)
                 && (ItemUtils.isPickaxe(heldItem) || ItemUtils.isHoe(heldItem))
                 && mcMMO.p.getSkillTools().doesPlayerHaveSkillPermission(player, PrimarySkillType.MINING)
-                && !mcMMO.getPlaceStore().isTrue(blockState)) {
+                && mcMMO.getChunkManager().isEligible(blockState)) {
             this.miningCheck(player, event, telepathy);
         }
     }
@@ -136,7 +132,7 @@ public class McMMOHook extends PluginHookInstance implements Listener {
         McMMOPlayer mmoPlayer = UserManager.getPlayer(player);
         if (mmoPlayer == null) return;
 
-        if (ProbabilityUtil.isSkillRNGSuccessful(SubSkillType.MINING_DOUBLE_DROPS, player)) {
+        if (ProbabilityUtil.isSkillRNGSuccessful(SubSkillType.MINING_DOUBLE_DROPS, mmoPlayer)) {
             boolean useTriple = mmoPlayer.getAbilityMode(mcMMO.p.getSkillTools().getSuperAbility(PrimarySkillType.MINING)) && mcMMO.p.getAdvancedConfig().getAllowMiningTripleDrops();
 
             BlockUtils.markDropsAsBonus(blockState, useTriple);
@@ -150,7 +146,7 @@ public class McMMOHook extends PluginHookInstance implements Listener {
                         if (telepathy)
                             blockState.setMetadata("ae_mcmmoTelepathy", new FixedMetadataValue(ASManager.getInstance(), true));
 
-                        Misc.spawnItemNaturally(event.getPlayer(), blockState.getLocation(), itemStack, ItemSpawnReason.BONUS_DROPS);
+                        ItemUtils.spawnItems(event.getPlayer(), blockState.getLocation(), itemStack, itemStack.getAmount(), ItemSpawnReason.BONUS_DROPS);
                     }
                 }
             }
