@@ -1782,4 +1782,13 @@ public class ASManager {
     public static File getFile(String s) {
         return new File(instance.getDataFolder(), s);
     }
+
+    public static String join(Map map, String format) {
+        StringBuilder builder = new StringBuilder();
+        for (Object loopItem : map.entrySet()) {
+            Map.Entry entry = (Map.Entry) loopItem;
+            builder.append(format.replace("%k%", entry.getKey().toString()).replace("%v%", entry.getValue().toString()));
+        }
+        return builder.toString();
+    }
 }

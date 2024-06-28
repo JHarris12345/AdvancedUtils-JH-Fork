@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
