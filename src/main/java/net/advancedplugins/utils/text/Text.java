@@ -23,6 +23,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Text {
+    // some plugins may use minimessage, and they could clash with this
+    public static boolean RENDER_GRADIENT = true;
     private static final char SECTION_CHAR = '\u00A7';
     private static final char AMPERSAND_CHAR = '&';
     private static final String COLOR_CODES = "0123456789AaBbCcDdEeFfKkLlMmNnOoRr";
@@ -164,9 +166,9 @@ public class Text {
         return input == null ? null : STRIP_COLOR_PATTERN.matcher(input).replaceAll("");
     }
 
-    private static String renderColorCodes(String textToRender) {
+    public static String renderColorCodes(String textToRender) {
         if (MinecraftVersion.getVersion().getVersionId() >= 1160)
-            textToRender = gradient(textToRender);{
+            textToRender = RENDER_GRADIENT ? gradient(textToRender) : textToRender;{
             Matcher match = HEX_PATTERN.matcher(textToRender);
             while (match.find()) {
                 String hex = textToRender.substring(match.start(), match.end());
