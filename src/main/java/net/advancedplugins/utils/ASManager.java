@@ -744,18 +744,23 @@ public class ASManager {
             int indexOfSplit = findResultSplit(elements[1], 0);
             String[] results = splitAtIndex(elements[1], indexOfSplit);
 
-            boolean check;
-            Expression conditionMathExpression = new net.advancedplugins.utils.evalex.Expression(condition, MathContext.UNLIMITED);
-            try {
-                check = conditionMathExpression.eval().intValue() == 1;
-            } catch (Exception e) {
-                check = checkStringsEquality(condition);
-            }
-
+            boolean check = parseCondition(condition);
             String result = check ? results[0] : results[1];
             syntax = syntax.replace("<if>" + expression + "</if>", result);
         }
         return syntax;
+    }
+
+    public static boolean parseCondition(String condition) {
+        condition = condition.replaceAll(" ", "");
+        boolean check;
+        Expression conditionMathExpression = new net.advancedplugins.utils.evalex.Expression(condition, MathContext.UNLIMITED);
+        try {
+            check = conditionMathExpression.eval().intValue() == 1;
+        } catch (Exception e) {
+            check = checkStringsEquality(condition);
+        }
+        return check;
     }
 
     public static double parseThroughCalculator(String syntax) {
