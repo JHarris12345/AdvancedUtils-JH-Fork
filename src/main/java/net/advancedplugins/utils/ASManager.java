@@ -25,10 +25,7 @@ import org.bukkit.block.data.type.Bed;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Monster;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -141,6 +138,7 @@ public class ASManager {
 
     /**
      * {@link Bukkit#getPlayer(String)} includes {@link String#startsWith(String)} which could produce incorrect results. Like Tomousek and Tomousek2 both matching when searching for Tomousek.
+     *
      * @param name Name to search for.
      * @return Player if found, null otherwise.
      */
@@ -687,57 +685,57 @@ public class ASManager {
     }
 
     private static int findIfEnd(String syntax, int position) {
-        if(position > syntax.length()) {
+        if (position > syntax.length()) {
             return -1;
         }
         int end = syntax.indexOf("</if>", position);
         int possibleInner = syntax.indexOf("<if>", position);
-        if(possibleInner > -1 && possibleInner < end) {
-            int endOfInner = findIfEnd(syntax,possibleInner+4);
-            return findIfEnd(syntax,endOfInner+5);
+        if (possibleInner > -1 && possibleInner < end) {
+            int endOfInner = findIfEnd(syntax, possibleInner + 4);
+            return findIfEnd(syntax, endOfInner + 5);
         }
         return end;
     }
 
     private static int findResultSplit(String syntax, int position) {
-        if(position > syntax.length()) {
+        if (position > syntax.length()) {
             return -1;
         }
         int split = syntax.indexOf(":", position);
         int possibleInner = syntax.indexOf("<if>", position);
-        if(possibleInner > -1 && possibleInner < split) {
-            int endOfInner = findIfEnd(syntax,possibleInner+4);
-            return findResultSplit(syntax,endOfInner+1);
+        if (possibleInner > -1 && possibleInner < split) {
+            int endOfInner = findIfEnd(syntax, possibleInner + 4);
+            return findResultSplit(syntax, endOfInner + 1);
         }
         return split;
     }
 
     private static String[] splitAtIndex(String s, int idx) {
-        if(idx>=s.length()-1) {
-            return new String[]{idx >= s.length() ? s : s.substring(0,idx)};
+        if (idx >= s.length() - 1) {
+            return new String[]{idx >= s.length() ? s : s.substring(0, idx)};
         }
         String s1 = s.substring(0, idx);
-        String s2 = s.substring(idx+1);
-        return new String[]{s1,s2};
+        String s2 = s.substring(idx + 1);
+        return new String[]{s1, s2};
     }
 
     private static boolean checkStringsEquality(String condition) {
-        if(condition.contains("===")) {
-            String[] equalsElements = condition.split("===",2);
+        if (condition.contains("===")) {
+            String[] equalsElements = condition.split("===", 2);
             return equalsElements[0].equals(equalsElements[1]);
         }
-        if(condition.contains("==")) {
-            String[] equalsElements = condition.split("==",2);
+        if (condition.contains("==")) {
+            String[] equalsElements = condition.split("==", 2);
             return equalsElements[0].equalsIgnoreCase(equalsElements[1]);
         }
         return false;
     }
 
     private static String handleIfExpression(String syntax) {
-        while(syntax.contains("<if>")) {
+        while (syntax.contains("<if>")) {
             int start = syntax.indexOf("<if>");
             int expressionStart = start + 4;
-            int end = findIfEnd(syntax,expressionStart);
+            int end = findIfEnd(syntax, expressionStart);
             String expression = syntax.substring(expressionStart, end);
             String[] elements = expression.split("\\?", 2);
             String condition = elements[0];
@@ -1776,7 +1774,7 @@ public class ASManager {
     }
 
     public static boolean isOnline(LivingEntity ent) {
-        if(!(ent instanceof Player)) return true;
+        if (!(ent instanceof Player)) return true;
         return ((Player) ent).isOnline();
     }
 
@@ -1788,12 +1786,23 @@ public class ASManager {
         return new File(instance.getDataFolder(), s);
     }
 
-    public static String join(Map map, String format) {
+    public static String join(Map map, String format, int maxLineLength) {
         StringBuilder builder = new StringBuilder();
+        int i = 1;
         for (Object loopItem : map.entrySet()) {
             Map.Entry entry = (Map.Entry) loopItem;
-            builder.append(format.replace("%k%", entry.getKey().toString()).replace("%v%", entry.getValue().toString()));
+            builder.append(format.replace("%k%", capitalize(entry.getKey().toString())).replace("%v%", entry.getValue().toString()));
+
+            // If the line is too long, move to a new line
+            if (builder.length() > maxLineLength * i) {
+                builder.append("\n");
+                i++;
+            }
         }
         return builder.toString();
+    }
+
+    public static boolean isPlayer(Entity ent) {
+        return ent instanceof Player;
     }
 }
