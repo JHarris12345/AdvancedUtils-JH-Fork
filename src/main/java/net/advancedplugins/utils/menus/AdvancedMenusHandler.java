@@ -2,6 +2,7 @@ package net.advancedplugins.utils.menus;
 
 import lombok.Getter;
 import net.advancedplugins.utils.menus.item.ClickAction;
+import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -11,6 +12,7 @@ public class AdvancedMenusHandler {
 
     // inventory paths
     private final HashMap<String, String> paths = new HashMap<>();
+    @Getter
     private static AdvancedMenusHandler instance = null;
 
     @Getter
@@ -32,22 +34,17 @@ public class AdvancedMenusHandler {
     }
 
     private void loadDefaultActions() {
-        defaultActions.put("close", (player, inventory, item, slot, type) -> player.closeInventory());
+        defaultActions.put("CLOSE", (player, inventory, item, slot, type) -> player.closeInventory());
         defaultActions.put("PREVIOUS_PAGE", (player, inventory, item, slot, type) -> {
             inventory.openInventory(inventory.getPage()-1);
         });
         defaultActions.put("NEXT_PAGE", (player, inventory, item, slot, type) -> {
             inventory.openInventory(inventory.getPage()+1);
         });
-        // Todo: add previous_page, next_page action
     }
 
     public String getPath(String type) {
         return paths.getOrDefault(type, type);
-    }
-
-    public static AdvancedMenusHandler getInstance() {
-        return instance;
     }
 
     public void unload() {

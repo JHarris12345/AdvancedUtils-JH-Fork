@@ -96,7 +96,7 @@ public class AdvancedMenu implements InventoryHolder {
             try {
                 i.addToInventory(inventory);
             } catch (Exception ev) {
-                ASManager.log("[AdvancedMenu] Error adding item to inventory: ["+i.getSlots()+"] " + i.getItem());
+                ASManager.log("[AdvancedMenu] Error adding item to inventory: [" + i.getSlots() + "] " + i.getItem());
                 ev.printStackTrace();
             }
         });
