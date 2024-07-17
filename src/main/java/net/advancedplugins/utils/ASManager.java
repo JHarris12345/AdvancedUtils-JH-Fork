@@ -1344,7 +1344,7 @@ public class ASManager {
     }
 
     public static boolean isUnbreakable(ItemStack itemStack) {
-        return (itemStack.hasItemMeta() && itemStack.getItemMeta().isUnbreakable()) || NBTapi.contains("Unbreakable", itemStack);
+        return (itemStack != null && itemStack.hasItemMeta() && itemStack.getItemMeta().isUnbreakable()) || NBTapi.contains("Unbreakable", itemStack);
     }
 
     /**
