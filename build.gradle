@@ -8,8 +8,8 @@ plugins {
 group 'net.advancedplugins.utils'
 version '1.0.0'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+java.sourceCompatibility = 1.8
+java.targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
@@ -50,7 +50,18 @@ repositories {
     maven { url 'https://papermc.io/repo/repository/maven-public/' }
 }
 
+test {
+    useJUnitPlatform()
+}
+
 dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.0-M2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.11.0-M2'
+    testImplementation 'org.mockito:mockito-core:5.12.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.12.0'
+    // load before spigot
+    testImplementation 'com.github.seeseemelk:MockBukkit-v1.20:3.9.0'
+
     compileOnly 'org.projectlombok:lombok:1.18.30'
     compileOnly fileTree(include: ['*.jar'], dir: 'libs') // Add everything in the libs folder.
 //    compileOnly group: 'com.sk89q.worldguard', name: 'worldguard-bukkit', version: '7.0.5'
@@ -81,7 +92,7 @@ processResources {
 shadowJar {
 }
 
-def getDate() {
+static def getDate() {
     def date = new Date()
     def formattedDate = date.format('dd/MM/yyyy')
     return formattedDate
