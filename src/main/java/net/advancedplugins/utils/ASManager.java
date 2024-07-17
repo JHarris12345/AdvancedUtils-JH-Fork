@@ -2,6 +2,7 @@ package net.advancedplugins.utils;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import lombok.Getter;
 import net.advancedplugins.utils.annotations.ConfigKey;
 import net.advancedplugins.utils.evalex.Expression;
 import net.advancedplugins.utils.nbt.NBTapi;
@@ -62,11 +63,8 @@ import java.util.zip.ZipFile;
 public class ASManager {
     private static final HashSet<String> silkOnly = new HashSet<>(Arrays.asList("LEAVE", "LEAVES", "MUSHROOM_STEM", "TURTLE_EGG", "CORAL"));
 
+    @Getter
     private static JavaPlugin instance;
-
-    public static JavaPlugin getInstance() {
-        return instance;
-    }
 
     public static void setInstance(JavaPlugin instance) {
         ASManager.instance = instance;
@@ -1346,7 +1344,7 @@ public class ASManager {
     }
 
     public static boolean isUnbreakable(ItemStack itemStack) {
-        return NBTapi.contains("Unbreakable", itemStack);
+        return (itemStack.hasItemMeta() && itemStack.getItemMeta().isUnbreakable()) || NBTapi.contains("Unbreakable", itemStack);
     }
 
     /**
