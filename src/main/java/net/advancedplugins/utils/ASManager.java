@@ -455,6 +455,10 @@ public class ASManager {
         return r == null ? def : r.toString();
     }
 
+    public static Object getOrDefault(Object obj, Object def) {
+        return obj == null ? def : obj;
+    }
+
     public static boolean doChancesPass(int chance) {
         return chance > ThreadLocalRandom.current().nextDouble() * 100;
     }

@@ -7,8 +7,8 @@ import net.advancedplugins.utils.items.ConfigItemCreator;
 import net.advancedplugins.utils.items.ItemBuilder;
 import net.advancedplugins.utils.text.Replace;
 import net.advancedplugins.utils.text.Replacer;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -73,7 +73,7 @@ public class AdvancedMenuItem {
         ItemStack item = getItem();
         boolean range = slots.length > 1;
         for (int slot : slots) {
-            if(!range)
+            if (!range)
                 inv.setItem(slot, item);
             else if (ASManager.isAir(inv.getItem(slot))) // range check
                 inv.setItem(slot, item);
