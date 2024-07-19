@@ -176,8 +176,10 @@ public class McMMOHook extends PluginHookInstance implements Listener {
                 event.setItemStack(smelted);
 
                 // This is just a workaround and the above method only should be used once McMMO fixes this!
-                ASManager.dropItem(event.getLocation(), smelted);
-                event.getLocation().subtract(0, 10000, 0);
+                if (!block.hasMetadata("ae_mcmmoTP_DROPS")) {
+                    ASManager.dropItem(event.getLocation(), smelted);
+                    event.getLocation().subtract(0, 10000, 0);
+                }
             }
         }
         if (block.hasMetadata("ae_mcmmoTP_DROPS")) {
