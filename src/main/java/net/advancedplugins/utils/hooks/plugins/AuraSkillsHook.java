@@ -56,7 +56,9 @@ public class AuraSkillsHook extends PluginHookInstance implements Listener {
 
         e.setItem(finalItem);
         e.setToInventory(blockInformation.settings.isAddToInventory());
-        brokenBlocksMap.remove(vector);
+        // don't remove because multiple events can be called after each other and we want to keep the block in the map.
+        // it is already scheduled to be removed anyways
+       // brokenBlocksMap.remove(vector);
     }
 
     public boolean isTerraformEvent(BlockBreakEvent event) {
@@ -69,7 +71,7 @@ public class AuraSkillsHook extends PluginHookInstance implements Listener {
         executorService.schedule(() -> brokenBlocksMap.remove(blockLocation.toVector()), 2000, TimeUnit.MILLISECONDS);
     }
 
-    class BrokenBlockInformation {
+    static class BrokenBlockInformation {
         public final Player player;
         public final DropsSettings settings;
 
