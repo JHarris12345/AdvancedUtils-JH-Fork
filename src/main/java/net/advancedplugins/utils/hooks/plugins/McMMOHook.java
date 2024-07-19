@@ -170,7 +170,6 @@ public class McMMOHook extends PluginHookInstance implements Listener {
             block.removeMetadata("ae_mcmmoSMELT", ASManager.getInstance());
 
             ItemStack smelted = SmeltMaterial.material(event.getItemStack());
-            System.out.println("SMELTED: " + smelted);
             if (smelted != null) {
                 // Doesn't change the actual ItemStack dropped on the event
                 event.setItemStack(smelted);
