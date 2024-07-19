@@ -163,7 +163,6 @@ public class McMMOHook extends PluginHookInstance implements Listener {
     */
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onBonusDrop(McMMOItemSpawnEvent event) {
-        System.out.println("MMO BONUS EVENT = " + event.getItemStack());
         if (event.getItemSpawnReason() != ItemSpawnReason.BONUS_DROPS) return;
         Block block = event.getLocation().getBlock();
 
