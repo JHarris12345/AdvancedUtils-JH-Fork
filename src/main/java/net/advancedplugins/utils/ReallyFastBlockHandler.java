@@ -40,7 +40,7 @@ public class ReallyFastBlockHandler {
     private static Method getMagicBlock;
     private static Method getMagicBlockData;
 
-    static {
+    public static void init() {
         try {
             Class<?> nmsWorldClass = ClassWrapper.NMS_WORLD.getClazz();
             craftWorldClass = ClassWrapper.CRAFT_World.getClazz();

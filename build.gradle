@@ -8,8 +8,8 @@ plugins {
 group 'net.advancedplugins.utils'
 version '1.0.0'
 
-java.sourceCompatibility = 1.8
-java.targetCompatibility = 1.8
+java.sourceCompatibility = 1.17
+java.targetCompatibility = 1.17
 
 repositories {
     mavenCentral()
