@@ -16,12 +16,14 @@ import com.gmail.nossr50.util.player.UserManager;
 import com.gmail.nossr50.util.random.ProbabilityUtil;
 import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.SchedulerUtils;
+import net.advancedplugins.utils.abilities.SmeltMaterial;
 import net.advancedplugins.utils.hooks.PluginHookInstance;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
@@ -112,7 +114,7 @@ public class McMMOHook extends PluginHookInstance implements Listener {
     }
 
     // https://github.com/mcMMO-Dev/mcMMO/blob/master/src/main/java/com/gmail/nossr50/listeners/BlockListener.java#L400
-    public void processBlockBreakEvent(Player player, BlockBreakEvent event, boolean telepathy) {
+    public void processBlockBreakEvent(Player player, BlockBreakEvent event, boolean telepathy, boolean smelt) {
         Block block = event.getBlock();
         BlockState blockState = block.getState();
         ItemStack heldItem = player.getInventory().getItemInMainHand();
@@ -121,12 +123,12 @@ public class McMMOHook extends PluginHookInstance implements Listener {
                 && (ItemUtils.isPickaxe(heldItem) || ItemUtils.isHoe(heldItem))
                 && mcMMO.p.getSkillTools().doesPlayerHaveSkillPermission(player, PrimarySkillType.MINING)
                 && mcMMO.getChunkManager().isEligible(blockState)) {
-            this.miningCheck(player, event, telepathy);
+            this.miningCheck(player, event, telepathy, smelt);
         }
     }
 
     // https://github.com/mcMMO-Dev/mcMMO/blob/master/src/main/java/com/gmail/nossr50/skills/mining/MiningManager.java#L78
-    private void miningCheck(Player player, BlockBreakEvent event, boolean telepathy) {
+    private void miningCheck(Player player, BlockBreakEvent event, boolean telepathy, boolean smelt) {
         Block block = event.getBlock();
         BlockState blockState = block.getState();
         McMMOPlayer mmoPlayer = UserManager.getPlayer(player);
@@ -144,7 +146,9 @@ public class McMMOHook extends PluginHookInstance implements Listener {
                 for (ItemStack itemStack : block.getDrops()) {
                     for (int i = 0; i < bonusCount; i++) {
                         if (telepathy)
-                            blockState.setMetadata("ae_mcmmoTelepathy", new FixedMetadataValue(ASManager.getInstance(), true));
+                            blockState.setMetadata("ae_mcmmoTP_DROPS", new FixedMetadataValue(ASManager.getInstance(), true));
+                        if (smelt)
+                            blockState.setMetadata("ae_mcmmoSMELT", new FixedMetadataValue(ASManager.getInstance(), true));
 
                         ItemUtils.spawnItems(event.getPlayer(), blockState.getLocation(), itemStack, itemStack.getAmount(), ItemSpawnReason.BONUS_DROPS);
                     }
@@ -157,16 +161,33 @@ public class McMMOHook extends PluginHookInstance implements Listener {
      workaround for https://github.com/GC-spigot/AdvancedEnchantments/issues/4079
      stupid but it works :D
     */
-    @EventHandler
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onBonusDrop(McMMOItemSpawnEvent event) {
         if (event.getItemSpawnReason() != ItemSpawnReason.BONUS_DROPS) return;
         Block block = event.getLocation().getBlock();
-        if (!block.hasMetadata("ae_mcmmoTelepathy")) return;
-        block.removeMetadata("ae_mcmmoTelepathy", ASManager.getInstance());
 
-        event.getLocation().subtract(0, 10000, 0);
-        ItemStack bonusItem = event.getItemStack().clone();
-        ASManager.giveItem(event.getPlayer(), bonusItem);
+        if (block.hasMetadata("ae_mcmmoSMELT")) {
+            block.removeMetadata("ae_mcmmoSMELT", ASManager.getInstance());
+
+            ItemStack smelted = SmeltMaterial.material(event.getItemStack());
+            if (smelted != null) {
+                // Doesn't change the actual ItemStack dropped on the event
+                event.setItemStack(smelted);
+
+                // This is just a workaround and the above method only should be used once McMMO fixes this!
+                if (!block.hasMetadata("ae_mcmmoTP_DROPS")) {
+                    ASManager.dropItem(event.getLocation(), smelted);
+                    event.getLocation().subtract(0, 10000, 0);
+                }
+            }
+        }
+        if (block.hasMetadata("ae_mcmmoTP_DROPS")) {
+            block.removeMetadata("ae_mcmmoTP_DROPS", ASManager.getInstance());
+
+            event.getLocation().subtract(0, 10000, 0);
+            ItemStack bonusItem = event.getItemStack().clone();
+            ASManager.giveItem(event.getPlayer(), bonusItem);
+        }
     }
 
     public boolean blockHasHerbalismBonusDrops(Block block) {

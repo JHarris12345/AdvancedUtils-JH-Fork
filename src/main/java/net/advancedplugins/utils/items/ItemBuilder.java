@@ -14,10 +14,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.FireworkEffectMeta;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
-import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.meta.*;
 
 import java.util.*;
 
@@ -169,7 +166,15 @@ public class ItemBuilder {
      * @param level The level to put the enchant on.
      */
     public ItemBuilder addUnsafeEnchantment(Enchantment ench, int level) {
-        im.addEnchant(ench, level, true);
+        if (im instanceof EnchantmentStorageMeta) {
+            // if this is not used, this will cause enchanting enchantment books
+            // to not show their enchantment in getStoredEnchants()
+            EnchantmentStorageMeta meta = (EnchantmentStorageMeta) im;
+            meta.addStoredEnchant(ench, level, true);
+            im = meta;
+        } else {
+            im.addEnchant(ench, level, true);
+        }
         return this;
     }
 
@@ -179,7 +184,12 @@ public class ItemBuilder {
      * @param ench The enchantment to remove
      */
     public ItemBuilder removeEnchantment(Enchantment ench) {
-        is.removeEnchantment(ench);
+        if (im instanceof EnchantmentStorageMeta) {
+            EnchantmentStorageMeta meta = (EnchantmentStorageMeta) im;
+            meta.removeStoredEnchant(ench);
+        } else {
+            im.removeEnchant(ench);
+        }
         return this;
     }
 
