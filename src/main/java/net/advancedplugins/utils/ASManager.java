@@ -1026,8 +1026,8 @@ public class ASManager {
      * @param items Items to drop.
      */
     public static void dropItem(Location loc, ItemStack... items) {
-        System.out.println("DROP ITEM " + loc + " " + Arrays.toString(items));
-        for (ItemStack i : items) loc.getWorld().dropItem(loc, i);
+        for (ItemStack i : items)
+            loc.getWorld().dropItem(loc, i);
     }
 
     /**
