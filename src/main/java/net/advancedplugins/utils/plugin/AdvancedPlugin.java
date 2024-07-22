@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.FoliaScheduler;
+import net.advancedplugins.utils.menus.AdvancedMenu;
 import net.advancedplugins.utils.text.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -14,11 +15,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
 public class AdvancedPlugin extends JavaPlugin implements Listener {
 
+
     @Getter
-    private static JavaPlugin instance;
+    private static AdvancedPlugin instance;
 
     private String startupError = null;
     private String pluginName = "";
@@ -30,6 +33,13 @@ public class AdvancedPlugin extends JavaPlugin implements Listener {
     }
 
     public void unload() throws Exception {
+    }
+
+    public void registerListeners() {
+        // register listeners
+    }
+    public void registerCommands() {
+        // register commands
     }
 
     @Override
@@ -86,6 +96,12 @@ public class AdvancedPlugin extends JavaPlugin implements Listener {
             e.getPlayer().sendMessage(Text.modify("&c&o" + startupError));
             e.getPlayer().sendMessage(Text.modify("&cIf the problem persists after checking the config files, please seek assistance at: https://discord.gg/advancedplugins"));
         }, 20);
+    }
+
+    public void saveFiles(String... files) {
+        for (String file : files) {
+            saveResource(file);
+        }
     }
 
     public void saveResource(String resourcePath) {

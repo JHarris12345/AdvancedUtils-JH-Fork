@@ -32,8 +32,8 @@ public class HooksHandler {
             registerNew(HookPlugin.PROTOCOLLIB, new PluginHookInstance()); // Generic plugin hook
 
         // AureliumSKills hook must be loaded instantly without runnable
-        if (isPluginEnabled(HookPlugin.AURELIUMSKILLS.getPluginName()))
-            registerNew(HookPlugin.AURELIUMSKILLS, new AureliumSkillsHook(), true);
+        if (isPluginEnabled(HookPlugin.AURASKILLS.getPluginName()))
+            registerNew(HookPlugin.AURASKILLS, new AuraSkillsHook(), true);
 
         // these should be fine loading rn as well, as they are softdepend in plugin.yml (Wega)
         if (isPluginEnabled(HookPlugin.MCMMO.getPluginName()))
@@ -99,6 +99,15 @@ public class HooksHandler {
 
         if (isPluginEnabled(HookPlugin.LUCKPERMS.getPluginName()))
             registerNew(HookPlugin.LUCKPERMS, new LuckPermsHook());
+
+        if (isPluginEnabled(HookPlugin.PREMIUMVANISH.getPluginName()))
+            registerNew(HookPlugin.PREMIUMVANISH, new PremiumVanishHook());
+
+        if (isPluginEnabled(HookPlugin.SUPERVANISH.getPluginName()))
+            registerNew(HookPlugin.SUPERVANISH, new SuperVanishHook());
+
+        if (isPluginEnabled(HookPlugin.DISCORDSRV.getPluginName()))
+            registerNew(HookPlugin.DISCORDSRV, new DiscordSRVHook());
 
         // Do this after server is loaded, so all softdepends that aren't in the plugin.yml file will be enabled by this time
         FoliaScheduler.runTaskLater(plugin, () -> {
@@ -173,12 +182,19 @@ public class HooksHandler {
     }
 
     public static boolean isPlayerVanished(Player player) {
-        if (isEnabled(HookPlugin.CMI))
-            return ((CMIHook) getHook(HookPlugin.CMI)).isPlayerVanished(player);
+        return getVanishHook() != null && getVanishHook().isPlayerVanished(player);
+    }
+
+    public static @Nullable VanishHook getVanishHook() {
+        if (isEnabled(HookPlugin.PREMIUMVANISH))
+            return (PremiumVanishHook) getHook(HookPlugin.PREMIUMVANISH);
+        else if (isEnabled(HookPlugin.SUPERVANISH))
+            return (SuperVanishHook) getHook(HookPlugin.SUPERVANISH);
+        else if (isEnabled(HookPlugin.CMI))
+            return (CMIHook) getHook(HookPlugin.CMI);
         else if (isEnabled(HookPlugin.ESSENTIALS))
-            return ((EssentialsHook) getHook(HookPlugin.ESSENTIALS)).isPlayerVanished(player);
-        else
-            return false;
+            return (EssentialsHook) getHook(HookPlugin.ESSENTIALS);
+        return null;
     }
 
     public static @Nullable PermissionHook getPermissionHook() {

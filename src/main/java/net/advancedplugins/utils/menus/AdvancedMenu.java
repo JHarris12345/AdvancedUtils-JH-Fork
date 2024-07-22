@@ -44,6 +44,8 @@ public class AdvancedMenu implements InventoryHolder {
     private final String title;
     @Getter
     private final int invSize;
+    @Setter
+    private int maxPages = -1;
 
     private ClickAction closeAction = null;
     private final ConfigurationSection section;
@@ -51,10 +53,22 @@ public class AdvancedMenu implements InventoryHolder {
     public AdvancedMenu(Player player, ConfigurationSection section, Replace replace) {
 //        this.section = section;
         this.player = player;
-        this.title = ASManager.limit(Text.modify(section.getString(handler.getPath("name")), (Replace) replace), 16, "");
+        this.title = Text.modify(section.getString(handler.getPath("name")), replace);
         this.invSize = section.getInt(handler.getPath("size"));
         this.replace = replace;
         this.section = section;
+
+        populateItemHashMap(section, itemHashMap, replace);
+    }
+
+    public AdvancedMenu(Player player, ConfigurationSection section, Replace replace, int maxPages) {
+//        this.section = section;
+        this.player = player;
+        this.title = Text.modify(section.getString(handler.getPath("name")), replace);
+        this.invSize = section.getInt(handler.getPath("size"));
+        this.replace = replace;
+        this.section = section;
+        this.maxPages = maxPages;
 
         populateItemHashMap(section, itemHashMap, replace);
     }
@@ -73,13 +87,16 @@ public class AdvancedMenu implements InventoryHolder {
         if (page != null) {
             page = Math.max(0, page);
             this.page = page;
+            // https://github.com/AdvancedPlugins/Chat/issues/54
+            if (maxPages != -1)
+                page = Math.min(page, maxPages - 1);
         }
 
         itemHashMap.values().forEach(i -> {
             try {
                 i.addToInventory(inventory);
             } catch (Exception ev) {
-                ASManager.log("[AdvancedMenu] Error adding item to inventory: ["+i.getSlots()+"] " + i.getItem());
+                ASManager.log("[AdvancedMenu] Error adding item to inventory: [" + i.getSlots() + "] " + i.getItem());
                 ev.printStackTrace();
             }
         });

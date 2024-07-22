@@ -4,9 +4,8 @@ import com.google.common.collect.Maps;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.math.BigDecimal;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
@@ -29,6 +28,12 @@ public class Replacer {
     }
 
     public Replacer set(String variable, Object value) {
+        if(value instanceof Iterable<?>) {
+            value = String.join("<new>", (Iterable<? extends CharSequence>)value);
+        }
+        if(value instanceof BigDecimal) {
+            value = ((BigDecimal) value).stripTrailingZeros().toPlainString();
+        }
         this.variables.put("%" + variable + "%", value);
         return this;
     }

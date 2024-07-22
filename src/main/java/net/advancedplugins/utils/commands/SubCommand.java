@@ -9,6 +9,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
@@ -89,7 +90,7 @@ public abstract class SubCommand<T extends CommandSender> extends Command<T> {
         return a;
     }
 
-    protected <S> Argument<S> addArgument(Class<S> clazz, String argument, Function<CommandSender, List<String>> onTabComplete, String... aliases) {
+    protected <S> Argument<S> addArgument(Class<S> clazz, String argument, Function<CommandSender, Collection<String>> onTabComplete, String... aliases) {
         if (argument.equalsIgnoreCase("player")) {
             onTabComplete = sender -> Bukkit.getOnlinePlayers()
                     .stream()
@@ -152,7 +153,7 @@ public abstract class SubCommand<T extends CommandSender> extends Command<T> {
         return true;
     }
 
-    public List<String> tabCompletionSuggestion(CommandSender commandSender, int index) {
+    public Collection<String> tabCompletionSuggestion(CommandSender commandSender, int index) {
         if (index > this.arguments.size() - 1) {
             return Lists.newArrayList();
         }

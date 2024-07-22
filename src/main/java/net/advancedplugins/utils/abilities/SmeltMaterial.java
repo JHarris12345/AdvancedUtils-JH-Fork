@@ -69,6 +69,8 @@ public class SmeltMaterial {
                 return new ItemBuilder(Material.matchMaterial("BRICK")).setAmount(i.getAmount()).toItemStack();
             case "WET_SPONGE":
                 return new ItemStack(Material.getMaterial("SPONGE"));
+            case "RED_SANDSTONE":
+                return new ItemStack(Material.getMaterial("SMOOTH_RED_SANDSTONE"));
             default:
                 return new ItemStack(i);
         }

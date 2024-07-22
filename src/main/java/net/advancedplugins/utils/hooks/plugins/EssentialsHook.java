@@ -2,9 +2,10 @@ package net.advancedplugins.utils.hooks.plugins;
 
 import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.hooks.PluginHookInstance;
+import net.advancedplugins.utils.hooks.VanishHook;
 import org.bukkit.entity.Player;
 
-public class EssentialsHook extends PluginHookInstance {
+public class EssentialsHook extends PluginHookInstance implements VanishHook {
 
     @Override
     public boolean isEnabled() {

@@ -15,7 +15,7 @@ public enum HookPlugin {
     ADVANCEDPETS("AdvancedPets"),
     DYNMAP("dynmap"),
     RESIDENCE("Residence"),
-    AURELIUMSKILLS("AureliumSkills"),
+    AURASKILLS("AuraSkills"),
     PLACEHOLDERAPI("PlaceholderAPI"),
     ESSENTIALS("Essentials"),
     CMI("CMI"),
@@ -32,7 +32,10 @@ public enum HookPlugin {
     ADVANCEDCHESTS("AdvancedChests"),
     BEACONPLUS3("BeaconPlus3"),
     LUCKPERMS("LuckPerms"),
-    VAULT("Vault");
+    VAULT("Vault"),
+    PREMIUMVANISH("PremiumVanish"),
+    SUPERVANISH("SuperVanish"),
+    DISCORDSRV("DiscordSRV");
 
     private final String pluginName;
 

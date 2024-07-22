@@ -2,7 +2,7 @@ package net.advancedplugins.utils;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import net.advancedplugins.ae.utils.EnchantsConverter;
+import lombok.Getter;
 import net.advancedplugins.utils.annotations.ConfigKey;
 import net.advancedplugins.utils.evalex.Expression;
 import net.advancedplugins.utils.nbt.NBTapi;
@@ -26,10 +26,7 @@ import org.bukkit.block.data.type.Bed;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Monster;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -42,6 +39,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.lang.reflect.Field;
@@ -64,11 +62,8 @@ import java.util.zip.ZipFile;
 public class ASManager {
     private static final HashSet<String> silkOnly = new HashSet<>(Arrays.asList("LEAVE", "LEAVES", "MUSHROOM_STEM", "TURTLE_EGG", "CORAL"));
 
+    @Getter
     private static JavaPlugin instance;
-
-    public static JavaPlugin getInstance() {
-        return instance;
-    }
 
     public static void setInstance(JavaPlugin instance) {
         ASManager.instance = instance;
@@ -133,6 +128,21 @@ public class ASManager {
         if (arg != null) {
             throw new IllegalArgumentException(message);
         }
+    }
+
+    /**
+     * {@link Bukkit#getPlayer(String)} includes {@link String#startsWith(String)} which could produce incorrect results. Like Tomousek and Tomousek2 both matching when searching for Tomousek.
+     *
+     * @param name Name to search for.
+     * @return Player if found, null otherwise.
+     */
+    public static @Nullable Player getPlayerInsensitive(@NotNull String name) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.getName().equalsIgnoreCase(name)) {
+                return player;
+            }
+        }
+        return null;
     }
 
     /**
@@ -439,6 +449,10 @@ public class ASManager {
         return r == null ? def : r.toString();
     }
 
+    public static Object getOrDefault(Object obj, Object def) {
+        return obj == null ? def : obj;
+    }
+
     public static boolean doChancesPass(int chance) {
         return chance > ThreadLocalRandom.current().nextDouble() * 100;
     }
@@ -668,6 +682,83 @@ public class ASManager {
 
     }
 
+    private static int findIfEnd(String syntax, int position) {
+        if (position > syntax.length()) {
+            return -1;
+        }
+        int end = syntax.indexOf("</if>", position);
+        int possibleInner = syntax.indexOf("<if>", position);
+        if (possibleInner > -1 && possibleInner < end) {
+            int endOfInner = findIfEnd(syntax, possibleInner + 4);
+            return findIfEnd(syntax, endOfInner + 5);
+        }
+        return end;
+    }
+
+    private static int findResultSplit(String syntax, int position) {
+        if (position > syntax.length()) {
+            return -1;
+        }
+        int split = syntax.indexOf(":", position);
+        int possibleInner = syntax.indexOf("<if>", position);
+        if (possibleInner > -1 && possibleInner < split) {
+            int endOfInner = findIfEnd(syntax, possibleInner + 4);
+            return findResultSplit(syntax, endOfInner + 1);
+        }
+        return split;
+    }
+
+    private static String[] splitAtIndex(String s, int idx) {
+        if (idx >= s.length() - 1) {
+            return new String[]{idx >= s.length() ? s : s.substring(0, idx)};
+        }
+        String s1 = s.substring(0, idx);
+        String s2 = s.substring(idx + 1);
+        return new String[]{s1, s2};
+    }
+
+    private static boolean checkStringsEquality(String condition) {
+        if (condition.contains("===")) {
+            String[] equalsElements = condition.split("===", 2);
+            return equalsElements[0].equals(equalsElements[1]);
+        }
+        if (condition.contains("==")) {
+            String[] equalsElements = condition.split("==", 2);
+            return equalsElements[0].equalsIgnoreCase(equalsElements[1]);
+        }
+        return false;
+    }
+
+    private static String handleIfExpression(String syntax) {
+        while (syntax.contains("<if>")) {
+            int start = syntax.indexOf("<if>");
+            int expressionStart = start + 4;
+            int end = findIfEnd(syntax, expressionStart);
+            String expression = syntax.substring(expressionStart, end);
+            String[] elements = expression.split("\\?", 2);
+            String condition = elements[0];
+            int indexOfSplit = findResultSplit(elements[1], 0);
+            String[] results = splitAtIndex(elements[1], indexOfSplit);
+
+            boolean check = parseCondition(condition);
+            String result = check ? results[0] : results[1];
+            syntax = syntax.replace("<if>" + expression + "</if>", result);
+        }
+        return syntax;
+    }
+
+    public static boolean parseCondition(String condition) {
+        condition = condition.replaceAll(" ", "");
+        boolean check;
+        Expression conditionMathExpression = new net.advancedplugins.utils.evalex.Expression(condition, MathContext.UNLIMITED);
+        try {
+            check = conditionMathExpression.eval().intValue() == 1;
+        } catch (Exception e) {
+            check = checkStringsEquality(condition);
+        }
+        return check;
+    }
+
     public static double parseThroughCalculator(String syntax) {
         if (syntax.contains("<random>")) {
             String current = StringUtils.substringBetween(syntax, "<random>", "</random>");
@@ -676,6 +767,8 @@ public class ASManager {
         }
 
         syntax = syntax.replaceAll(" ", "");
+        syntax = handleIfExpression(syntax);
+
         Expression mathExpression = new net.advancedplugins.utils.evalex.Expression(syntax, MathContext.UNLIMITED);
 
         try {
@@ -1251,7 +1344,7 @@ public class ASManager {
     }
 
     public static boolean isUnbreakable(ItemStack itemStack) {
-        return NBTapi.contains("Unbreakable", itemStack);
+        return (itemStack != null && itemStack.hasItemMeta() && itemStack.getItemMeta().isUnbreakable()) || NBTapi.contains("Unbreakable", itemStack);
     }
 
     /**
@@ -1570,8 +1663,7 @@ public class ASManager {
         }
     }
 
-    public static ItemStack makeItemGlow(ItemStack itemstack) {
-
+    public static ItemStack makeItemGlow(ItemStack itemstack, boolean glow) {
         /* Compound got removed when using durability effects (https://github.com/GC-spigot/AdvancedEnchantments/issues/3982)
         NBTItem item = new NBTItem(itemstack);
         NBTCompound compound = item.getCompoundList("Enchantments").addCompound();
@@ -1580,7 +1672,18 @@ public class ASManager {
          */
 
 //        itemstack.addEnchantment(Glow.ench, 0);
+
+        // 1.20.5 added a proper way for ench glow
+        if (itemstack.hasItemMeta() && MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
+            ItemMeta meta = itemstack.getItemMeta();
+            meta.setEnchantmentGlintOverride(glow ? true : null);
+            itemstack.setItemMeta(meta);
+        }
         return itemstack;
+    }
+
+    public static ItemStack makeItemGlow(ItemStack itemstack) {
+        return makeItemGlow(itemstack, true);
     }
 
     public static Pair<String, Integer> parseEnchantment(String ench) {
@@ -1666,5 +1769,38 @@ public class ASManager {
         List<T> list = new ArrayList<>(formats);
         Collections.reverse(list);
         return list;
+    }
+
+    public static boolean isOnline(LivingEntity ent) {
+        if (!(ent instanceof Player)) return true;
+        return ((Player) ent).isOnline();
+    }
+
+    public static String[] listFiles(String folder) {
+        return new File(instance.getDataFolder(), folder).list();
+    }
+
+    public static File getFile(String s) {
+        return new File(instance.getDataFolder(), s);
+    }
+
+    public static String join(Map map, String format, int maxLineLength) {
+        StringBuilder builder = new StringBuilder();
+        int i = 1;
+        for (Object loopItem : map.entrySet()) {
+            Map.Entry entry = (Map.Entry) loopItem;
+            builder.append(format.replace("%k%", capitalize(entry.getKey().toString())).replace("%v%", entry.getValue().toString()));
+
+            // If the line is too long, move to a new line
+            if (builder.length() > maxLineLength * i) {
+                builder.append("\n");
+                i++;
+            }
+        }
+        return builder.toString();
+    }
+
+    public static boolean isPlayer(Entity ent) {
+        return ent instanceof Player;
     }
 }

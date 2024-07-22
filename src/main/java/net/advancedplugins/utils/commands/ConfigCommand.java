@@ -2,10 +2,9 @@ package net.advancedplugins.utils.commands;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import com.google.common.io.ByteStreams;
+import com.google.common.io.CharSource;
+import lombok.*;
 import net.advancedplugins.utils.DataHandler;
 import net.advancedplugins.utils.commands.argument.Argument;
 import net.advancedplugins.utils.commands.argument.ArgumentHandler;
@@ -13,11 +12,14 @@ import net.advancedplugins.utils.text.Text;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.InputStream;
+import java.io.Reader;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -55,7 +57,25 @@ public abstract class ConfigCommand<T extends CommandSender> {
         private final List<String> aliases;
     }
 
+    @SneakyThrows
     public static Config getConfig(DataHandler handler, String command) {
+        if (!handler.isPath(command)) {
+            InputStream pluginInput = handler.getInstance().getResource(handler.getFileName() + ".yml");
+            byte[] buffer = ByteStreams.toByteArray(pluginInput);
+            Reader targetReader = CharSource.wrap(new String(buffer)).openStream();
+            YamlConfiguration defaultConfig = YamlConfiguration.loadConfiguration(targetReader);
+            if (!defaultConfig.contains(command)) {
+                throw new IllegalArgumentException("Command " + command + " not found in default config.");
+            }
+            handler.getConfig().set(command + ".command", defaultConfig.getString(command + ".command"));
+            handler.getConfig().set(command + ".permission", defaultConfig.getString(command + ".permission"));
+            handler.getConfig().set(command + ".description", defaultConfig.getString(command + ".description"));
+            handler.getConfig().set(command + ".aliases", defaultConfig.getStringList(command + ".aliases"));
+            handler.save();
+            handler.getInstance().getLogger().info("Added command/subcommand " + command + " to  config" + handler.getFileName() + ".yml");
+            handler.reloadConfig();
+            targetReader.close();
+        }
         return new Config(
                 handler.getString(command + ".command"),
                 handler.getString(command + ".permission"),
@@ -158,7 +178,7 @@ public abstract class ConfigCommand<T extends CommandSender> {
         return a;
     }
 
-    protected <S> Argument<S> addArgument(Class<S> clazz, String argument, Function<CommandSender, List<String>> onTabComplete, String... aliases) {
+    protected <S> Argument<S> addArgument(Class<S> clazz, String argument, Function<CommandSender, Collection<String>> onTabComplete, String... aliases) {
         if (argument.equalsIgnoreCase("player")) {
             onTabComplete = sender -> Bukkit.getOnlinePlayers()
                     .stream()
@@ -214,7 +234,7 @@ public abstract class ConfigCommand<T extends CommandSender> {
     }
 
 
-    public List<String> tabCompletionSuggestion(CommandSender commandSender, int index) {
+    public Collection<String> tabCompletionSuggestion(CommandSender commandSender, int index) {
         if (index > this.arguments.size() - 1) {
             return Lists.newArrayList();
         }
