@@ -10,7 +10,7 @@ public class SchedulerUtils {
      * @return The Task ID.
      */
     public static int runTaskLater(Runnable task, long delay) {
-        return Bukkit.getScheduler().runTaskLater(ASManager.getInstance(), task, delay).getTaskId();
+        return FoliaScheduler.runTaskLater(ASManager.getInstance(), task, delay).getTaskId();
     }
 
     /**
@@ -30,7 +30,7 @@ public class SchedulerUtils {
      * @return The Task ID.
      */
     public static int runTaskTimer(Runnable task, long initialDelay, long period) {
-        return Bukkit.getScheduler().runTaskTimer(ASManager.getInstance(), task, initialDelay, period).getTaskId();
+        return FoliaScheduler.runTaskTimer(ASManager.getInstance(), task, initialDelay, period).getTaskId();
     }
 
     /**
@@ -41,7 +41,7 @@ public class SchedulerUtils {
      * @return The Task ID.
      */
     public static int runTaskTimerAsync(Runnable task, long initialDelay, long period) {
-        return Bukkit.getScheduler().runTaskTimerAsynchronously(ASManager.getInstance(), task, initialDelay, period).getTaskId();
+        return FoliaScheduler.runTaskTimerAsynchronously(ASManager.getInstance(), task, initialDelay, period).getTaskId();
     }
 
     /**
@@ -50,7 +50,7 @@ public class SchedulerUtils {
      * @return The Task ID.
      */
     public static int runTask(Runnable task) {
-        return Bukkit.getScheduler().runTask(ASManager.getInstance(), task).getTaskId();
+        return FoliaScheduler.runTask(ASManager.getInstance(), task).getTaskId();
     }
 
 
@@ -60,7 +60,7 @@ public class SchedulerUtils {
      * @return The Task ID.
      */
     public static int runTaskAsync(Runnable task) {
-        return Bukkit.getScheduler().runTaskAsynchronously(ASManager.getInstance(), task).getTaskId();
+        return FoliaScheduler.runTaskAsynchronously(ASManager.getInstance(), task).getTaskId();
     }
 
 }

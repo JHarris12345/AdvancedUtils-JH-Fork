@@ -8,8 +8,8 @@ plugins {
 group 'net.advancedplugins.utils'
 version '1.0.0'
 
-java.sourceCompatibility = 1.8
-java.targetCompatibility = 1.8
+sourceCompatibility = 17
+targetCompatibility = 17
 
 repositories {
     mavenCentral()
@@ -47,7 +47,7 @@ repositories {
     maven { url 'https://repo.citizensnpcs.co/' } // Citizens
     maven { url 'https://bitbucket.org/kangarko/libraries/raw/master' } // All mineacademy, e.g BossTM
 
-    maven { url 'https://papermc.io/repo/repository/maven-public/' }
+    maven { url 'https://repo.papermc.io/repository/maven-public/' }
 }
 
 test {
@@ -77,8 +77,9 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
     compileOnly "com.mojang:datafixerupper:4.0.26"
-    compileOnly "org.spigotmc:spigot:1.20.6-R0.1-SNAPSHOT"
-    compileOnly "org.spigotmc:spigot-api:1.20.6-R0.1-SNAPSHOT"
+    compileOnly "org.spigotmc:spigot:1.20.4-R0.1-SNAPSHOT"
+    //compileOnly "org.spigotmc:spigot-api:1.20.6-R0.1-SNAPSHOT"
+    compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT") {changing = true}
 }
 
 processResources {
