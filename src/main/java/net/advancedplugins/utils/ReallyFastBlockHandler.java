@@ -85,7 +85,7 @@ public class ReallyFastBlockHandler {
      */
     public void setType(Material material, Block... blocks) {
         if (!Bukkit.isPrimaryThread()) {
-            Bukkit.getScheduler().runTask(ASManager.getInstance(), () -> this.setType(material, blocks));
+            FoliaScheduler.runTask(ASManager.getInstance(), () -> this.setType(material, blocks));
             return;
         }
         try {

@@ -2,6 +2,7 @@ package net.advancedplugins.utils.hooks;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.Getter;
+import net.advancedplugins.utils.FoliaScheduler;
 import net.advancedplugins.utils.hooks.holograms.CMIHologramHandler;
 import net.advancedplugins.utils.hooks.holograms.DecentHologramsHandler;
 import net.advancedplugins.utils.hooks.holograms.HologramHandler;
@@ -109,7 +110,7 @@ public class HooksHandler {
             registerNew(HookPlugin.DISCORDSRV, new DiscordSRVHook());
 
         // Do this after server is loaded, so all softdepends that aren't in the plugin.yml file will be enabled by this time
-        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+        FoliaScheduler.runTaskLater(plugin, () -> {
             // Figure out which factions plugin is loaded and hook into the correct one
 
             if (isPluginEnabled(HookPlugin.FACTIONS.getPluginName())) {

@@ -1,6 +1,7 @@
 package net.advancedplugins.utils.nbt.backend;
 
 import net.advancedplugins.utils.ASManager;
+import net.advancedplugins.utils.FoliaScheduler;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import net.advancedplugins.utils.nbt.utils.PackageWrapper;
 import org.bukkit.Bukkit;
@@ -186,7 +187,12 @@ public enum ClassWrapper {
                 Bukkit.getLogger().warning("Failed to load class " + clazzName);
             }
         } catch (Throwable ex) {
-            Bukkit.getLogger().log(Level.WARNING, "[AdvancedPlugins] Error while trying to resolve the class '" + clazzName + "'!", ex);
+            if(FoliaScheduler.isFolia()) {
+                // FIXME: Fix missing NMS in Folia
+                Bukkit.getLogger().log(Level.WARNING, "[AdvancedPlugins] Skipping class '"+clazzName+"' due to Folia");
+            } else {
+                Bukkit.getLogger().log(Level.WARNING, "[AdvancedPlugins] Error while trying to resolve the class '" + clazzName + "'!", ex);
+            }
         }
     }
 

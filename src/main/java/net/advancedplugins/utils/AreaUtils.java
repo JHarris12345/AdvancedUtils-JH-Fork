@@ -44,6 +44,7 @@ public class AreaUtils {
 
     // done for AE version 3.0.0 release (to be concluded)
     // OLD IMPLEMENTATION
+    @SuppressWarnings("removal")
     public static List<LivingEntity> getEntitiesInRadius(int radius, Entity p, boolean checkForDamage, boolean damageable, boolean mobs) {
         List<LivingEntity> playersList = new ArrayList<>();
 
@@ -128,6 +129,7 @@ public class AreaUtils {
         return playersList;
     }
 
+    @SuppressWarnings("removal")
     private static boolean isDamageable(Entity initiator, Entity entity) {
         entity.setMetadata("ae_ignore", new FixedMetadataValue(ASManager.getInstance(), true));
         EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(entity, entity, EntityDamageEvent.DamageCause.CUSTOM, 0);
