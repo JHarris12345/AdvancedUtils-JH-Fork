@@ -943,7 +943,7 @@ public class ASManager {
         if (m.name().endsWith("_DOOR")) return true;
         if (MinecraftVersion.isNew())
             return m == Material.SUNFLOWER || m == Material.LILAC || m == Material.ROSE_BUSH || m == Material.PEONY;
-        else return m == Material.valueOf("DOUBLE_PLANT");
+        else return m.name().equals("DOUBLE_PLANT");
     }
 
     public static List<Location> removeDuplicateLocations(List<Location> locations) {
@@ -1024,7 +1024,8 @@ public class ASManager {
      * @param items Items to drop.
      */
     public static void dropItem(Location loc, ItemStack... items) {
-        for (ItemStack i : items) loc.getWorld().dropItem(loc, i);
+        for (ItemStack i : items)
+            loc.getWorld().dropItem(loc, i);
     }
 
     /**
