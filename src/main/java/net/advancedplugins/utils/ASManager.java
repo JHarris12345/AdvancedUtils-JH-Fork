@@ -31,6 +31,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -40,13 +41,13 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.RoundingMode;
 
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -91,7 +92,7 @@ public class ASManager {
 //                    System.out.println(Math.abs(registryLastModified.getTime() - pluginYmlLastModified.getTime()) + " ");
 //                    System.out.println(Math.abs(coreLastModified.getTime() - pluginYmlLastModified.getTime()) + " ");
                     // clearly modified
-                    FoliaScheduler.runTaskLater(ASManager.getInstance(),() -> {
+                    FoliaScheduler.runTaskLater(ASManager.getInstance(), () -> {
                         Server server = Bukkit.getServer();
                         try {
                             Object manager = server.getClass().getMethod("getPluginManager").invoke(server);
@@ -101,7 +102,7 @@ public class ASManager {
                         } catch (Exception ev) {
                             ev.printStackTrace();
                         }
-                    },1);
+                    }, 1);
                 }
 
             }
@@ -1676,9 +1677,17 @@ public class ASManager {
 
         // 1.20.5 added a proper way for ench glow
         if (itemstack.hasItemMeta() && MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
-            ItemMeta meta = itemstack.getItemMeta();
-            meta.setEnchantmentGlintOverride(glow ? true : null);
-            itemstack.setItemMeta(meta);
+            try {
+                ItemMeta meta = itemstack.getItemMeta();
+                if (meta != null) {
+                    Method method = meta.getClass().getDeclaredMethod("setEnchantmentGlintOverride", Boolean.class);
+                    method.setAccessible(true);
+                    method.invoke(meta, glow ? Boolean.TRUE : null);
+                    itemstack.setItemMeta(meta);
+                }
+            } catch (Exception ev) {
+                ev.printStackTrace();
+            }
         }
         return itemstack;
     }
