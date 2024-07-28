@@ -100,9 +100,6 @@ public class HooksHandler {
         if (isPluginEnabled(HookPlugin.LUCKPERMS.getPluginName()))
             registerNew(HookPlugin.LUCKPERMS, new LuckPermsHook());
 
-        if (isPluginEnabled(HookPlugin.PREMIUMVANISH.getPluginName()))
-            registerNew(HookPlugin.PREMIUMVANISH, new PremiumVanishHook());
-
         if (isPluginEnabled(HookPlugin.SUPERVANISH.getPluginName()))
             registerNew(HookPlugin.SUPERVANISH, new SuperVanishHook());
 
@@ -126,6 +123,10 @@ public class HooksHandler {
 
             if (isPluginEnabled(HookPlugin.ADVANCEDCHESTS.getPluginName()))
                 registerNew(HookPlugin.ADVANCEDCHESTS, new AdvancedChestsHook());
+
+            // needs to be run later and not declared in plugin.yml, otherwise circular dependency will happen
+            if (isPluginEnabled(HookPlugin.PREMIUMVANISH.getPluginName()))
+                registerNew(HookPlugin.PREMIUMVANISH, new PremiumVanishHook());
 
             sendHookMessage(plugin);
         }, 10);
