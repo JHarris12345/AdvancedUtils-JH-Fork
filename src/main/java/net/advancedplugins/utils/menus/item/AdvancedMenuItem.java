@@ -99,7 +99,7 @@ public class AdvancedMenuItem {
         if (glow) {
             ItemBuilder builder = new ItemBuilder(item);
             builder.addUnsafeEnchantment(VanillaEnchants.displayNameToEnchant("FORTUNE"), 1);
-            builder.addItemFlag(ItemFlag.HIDE_ENCHANTS);
+            builder.addItemFlag(ItemFlag.values());
             item = builder.toItemStack();
         }
 
