@@ -40,7 +40,10 @@ public class HooksHandler {
             registerNew(HookPlugin.MCMMO, new McMMOHook(), true);
 
         if (isPluginEnabled(HookPlugin.ADVANCEDENCHANTMENTS.getPluginName()))
-            registerNew(HookPlugin.ADVANCEDENCHANTMENTS, new AdvancedEnchantmentsHook());
+            registerNew(HookPlugin.ADVANCEDENCHANTMENTS, new AdvancedSkillsHook());
+
+        if (isPluginEnabled(HookPlugin.ADVANCEDSKILLS.getPluginName()))
+            registerNew(HookPlugin.ADVANCEDSKILLS, new AdvancedEnchantmentsHook());
 
         if (isPluginEnabled(HookPlugin.WORLDGUARD.getPluginName()))
             registerNew(HookPlugin.WORLDGUARD, new WorldGuardHook());

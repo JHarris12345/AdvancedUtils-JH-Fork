@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public enum HookPlugin {
     ADVANCEDENCHANTMENTS("AdvancedEnchantments"),
+    ADVANCEDSKILLS("AdvancedSkills"),
     WORLDGUARD("WorldGuard"),
     TOWNY("Towny"),
     LWC("LWC"),
