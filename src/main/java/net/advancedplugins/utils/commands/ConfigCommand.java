@@ -37,9 +37,9 @@ public abstract class ConfigCommand<T extends CommandSender> {
     protected final JavaPlugin plugin;
     private final boolean console;
     @Setter
-    private Function<T, String> noPermission = player -> "&cYou do not have permission to do this.";
+    private Function<T, String> noPermission = player -> Text.modify("&cYou do not have permission to do this.");
     @Setter
-    private Function<T, String> notOnline = player -> "&cPlayer is not online.";
+    private Function<T, String> notOnline = player -> Text.modify("&cPlayer is not online.");
 
 
     public ConfigCommand(JavaPlugin plugin, Config config, boolean console) {
