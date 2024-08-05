@@ -1501,7 +1501,7 @@ public class ASManager {
     public static String join(Collection<String> args, String s) {
         StringBuilder builder = new StringBuilder();
         for (String l : args) {
-            builder.append(l).append(s);
+            builder.append(capitalize(l)).append(s);
         }
         return builder.substring(0, builder.length() - s.length());
     }
@@ -1640,7 +1640,7 @@ public class ASManager {
 
                     ConfigKey configKey = field.getAnnotation(ConfigKey.class);
                     if (configKey == null) {
-                        log("Missing ConfigKey annotation for field " + field.getName() + " in class " + clazz.getSimpleName());
+//                        log("Missing ConfigKey annotation for field " + field.getName() + " in class " + clazz.getSimpleName());
                         continue;
                     }
 
