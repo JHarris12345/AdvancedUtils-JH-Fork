@@ -5,6 +5,7 @@ import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.type.Slab;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -99,8 +100,21 @@ public class ReallyFastBlockHandler {
             for (Block block : blocks) {
                 if (block.getType() == material)
                     continue;
+
+                boolean waterLogged = false;
+
+                // waterlogged slabs need this, otherwise the water disappears
+                // https://github.com/GC-spigot/AdvancedEnchantments/issues/4440
+                if (block.getBlockData() instanceof Slab) {
+                    Slab slab = (Slab) block.getBlockData();
+                    waterLogged = slab.isWaterlogged();
+                }
+
                 Object bp = blockPos.newInstance(block.getX(), block.getY(), block.getZ());
                 setType.invoke(nmsWorld, bp, ibd, 3);
+
+                if (waterLogged)
+                    block.setType(Material.WATER);
             }
         } catch (Exception e) {
             e.printStackTrace();
