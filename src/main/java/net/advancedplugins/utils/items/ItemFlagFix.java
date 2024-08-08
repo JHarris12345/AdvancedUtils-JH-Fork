@@ -9,6 +9,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.UUID;
 
 public class ItemFlagFix {
+    // needs to be same all the time, otherwise can mess up item stacking
+    private static final UUID uuid = UUID.fromString("bf6de271-f84e-477b-b0a1-cf020dddc32a");
+
     /**
      * Minecraft 1.20.6+ broke ItemFlags, so there is simple util to fix it
      * Use it before setting ItemFlag
@@ -20,7 +23,7 @@ public class ItemFlagFix {
 
         ItemMeta meta = is.getItemMeta();
         AttributeModifier modifier = new AttributeModifier(
-                UUID.randomUUID(),
+                uuid,
                 "generic.follow_range",
                 0.1,
                 AttributeModifier.Operation.ADD_NUMBER
@@ -38,7 +41,7 @@ public class ItemFlagFix {
         if(!MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) return;
 
         AttributeModifier modifier = new AttributeModifier(
-                UUID.randomUUID(),
+                uuid,
                 "generic.follow_range",
                 0.1,
                 AttributeModifier.Operation.ADD_NUMBER
