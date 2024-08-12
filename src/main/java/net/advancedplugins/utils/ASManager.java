@@ -31,7 +31,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -1499,6 +1498,8 @@ public class ASManager {
     }
 
     public static String join(Collection<String> args, String s) {
+        if (args.isEmpty()) return "";
+
         StringBuilder builder = new StringBuilder();
         for (String l : args) {
             builder.append(capitalize(l)).append(s);
