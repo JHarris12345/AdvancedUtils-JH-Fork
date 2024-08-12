@@ -7,7 +7,7 @@ import java.util.Locale;
 
 public class VanillaEnchants {
 
-    public static Enchantment displayNameToEnchant(String paramString) {
+    public static Enchantment  displayNameToEnchant(String paramString) {
         return displayNameToEnchant(paramString, true);
     }
 
