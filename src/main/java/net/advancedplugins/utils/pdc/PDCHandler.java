@@ -83,6 +83,8 @@ public class PDCHandler {
 
     public static boolean has(PersistentDataHolder holder, String key, PersistentDataType type) {
         if (holder instanceof ItemStack && !((ItemStack) holder).hasItemMeta()) return false;
+        if (holder == null) return false;
+
         return holder.getPersistentDataContainer().has(getNamespace(key), type);
     }
 
