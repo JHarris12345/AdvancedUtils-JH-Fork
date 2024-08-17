@@ -5,6 +5,7 @@ import net.advancedplugins.utils.hooks.HooksHandler;
 import net.advancedplugins.utils.hooks.factions.FactionsPluginHook;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -130,19 +131,24 @@ public class AreaUtils {
     }
 
     @SuppressWarnings("removal")
-    private static boolean isDamageable(Entity initiator, Entity entity) {
+    public static boolean isDamageable(Entity initiator, Entity entity) {
         entity.setMetadata("ae_ignore", new FixedMetadataValue(ASManager.getInstance(), true));
         EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(entity, entity, EntityDamageEvent.DamageCause.CUSTOM, 0);
         Bukkit.getPluginManager().callEvent(event);
         entity.removeMetadata("ae_ignore", ASManager.getInstance());
 
-        if (entity instanceof Player && initiator instanceof Player) {
-            if (HooksHandler.isEnabled(HookPlugin.FACTIONS)) {
-                FactionsPluginHook factionsHook = ((FactionsPluginHook) HooksHandler.getHook(HookPlugin.FACTIONS));
-                String rel = factionsHook.getRelation(((Player) entity), ((Player) initiator));
-                if (rel.equals("member")) return false;
+        if (entity instanceof Player) {
+            Player entityPlayer = (Player) entity;
+            if (entityPlayer.getGameMode() == GameMode.CREATIVE || entityPlayer.getGameMode() == GameMode.SPECTATOR) return false;
+            if (initiator instanceof Player) {
+                if (HooksHandler.isEnabled(HookPlugin.FACTIONS)) {
+                    FactionsPluginHook factionsHook = ((FactionsPluginHook) HooksHandler.getHook(HookPlugin.FACTIONS));
+                    String rel = factionsHook.getRelation(entityPlayer, ((Player) initiator));
+                    if (rel.equals("member")) return false;
+                }
             }
         }
+
         return !event.isCancelled();
     }
 
