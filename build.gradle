@@ -48,6 +48,7 @@ repositories {
     maven { url 'https://bitbucket.org/kangarko/libraries/raw/master' } // All mineacademy, e.g BossTM
 
     maven { url 'https://repo.papermc.io/repository/maven-public/' }
+    maven { url = 'https://repo.viaversion.com' }
 }
 
 test {
@@ -76,6 +77,7 @@ dependencies {
     compileOnly 'dev.espi:protectionstones:2.10.2'
 //    compileOnly 'com.github.SaberLLC:Saber-Factions:4.1.2-STABLE'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    compileOnly "com.viaversion:viaversion-api:5.0.3"
 
     compileOnly "com.mojang:datafixerupper:4.0.26"
 //    compileOnly "org.spigotmc:spigot:1.20.4-R0.1-SNAPSHOT"

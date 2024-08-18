@@ -34,6 +34,7 @@ public enum HookPlugin {
     BEACONPLUS3("BeaconPlus3"),
     LUCKPERMS("LuckPerms"),
     VAULT("Vault"),
+    VIAVERSION("ViaVersion"),
     PREMIUMVANISH("PremiumVanish"),
     SUPERVANISH("SuperVanish"),
     DISCORDSRV("DiscordSRV");

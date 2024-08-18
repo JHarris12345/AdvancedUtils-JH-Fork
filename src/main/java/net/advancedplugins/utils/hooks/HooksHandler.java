@@ -109,6 +109,9 @@ public class HooksHandler {
         if (isPluginEnabled(HookPlugin.DISCORDSRV.getPluginName()))
             registerNew(HookPlugin.DISCORDSRV, new DiscordSRVHook());
 
+        if (isPluginEnabled(HookPlugin.VIAVERSION.getPluginName()))
+            registerNew(HookPlugin.VIAVERSION, new ViaVersionHook());
+
         // Do this after server is loaded, so all softdepends that aren't in the plugin.yml file will be enabled by this time
         FoliaScheduler.runTaskLater(plugin, () -> {
             // Figure out which factions plugin is loaded and hook into the correct one
