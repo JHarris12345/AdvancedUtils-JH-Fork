@@ -114,8 +114,7 @@ public class AdvancedPlugin extends JavaPlugin implements Listener {
     }
 
     protected CompletableFuture<Void> initializeMaterialSupport(boolean async) {
-        Executor executor = async ? runnable -> Bukkit.getScheduler()
-            .runTaskAsynchronously(this, runnable) : Runnable::run;
+        Executor executor = async ? new CompletableFuture<>().defaultExecutor() : Runnable::run;
 
         return CompletableFuture.runAsync(() -> {
             try {
