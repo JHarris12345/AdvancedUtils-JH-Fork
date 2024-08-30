@@ -3,6 +3,7 @@ package net.advancedplugins.utils.items;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -40,5 +41,8 @@ public class ItemFlagFix {
                 .anyMatch(m -> m.equals(modifier))) return;
 
         meta.addAttributeModifier(Attribute.GENERIC_FOLLOW_RANGE, modifier);
+        if(!meta.hasItemFlag(ItemFlag.HIDE_ATTRIBUTES)) {
+            meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES); // Automatically hide attributes to hide `generic.follow_range` attribute
+        }
     }
 }
