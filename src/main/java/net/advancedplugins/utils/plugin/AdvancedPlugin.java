@@ -7,6 +7,7 @@ import net.advancedplugins.utils.FoliaScheduler;
 import net.advancedplugins.utils.menus.AdvancedMenu;
 import net.advancedplugins.utils.text.Text;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,6 +17,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.logging.Level;
 
 public class AdvancedPlugin extends JavaPlugin implements Listener {
 
@@ -107,5 +111,19 @@ public class AdvancedPlugin extends JavaPlugin implements Listener {
     public void saveResource(String resourcePath) {
         if (new File(getDataFolder(), resourcePath).isFile()) return;
         saveResource(resourcePath, false);
+    }
+
+    protected CompletableFuture<Void> initializeMaterialSupport(boolean async) {
+        Executor executor = async ? runnable -> Bukkit.getScheduler()
+            .runTaskAsynchronously(this, runnable) : Runnable::run;
+
+        return CompletableFuture.runAsync(() -> {
+            try {
+                Material.matchMaterial("", true);
+                getLogger().info("Legacy material support initialized. Ignore any error or warn message.");
+            } catch (Exception e) {
+                getLogger().log(Level.SEVERE, "Cannot initialize legacy material support", e);
+            }
+        }, executor);
     }
 }
