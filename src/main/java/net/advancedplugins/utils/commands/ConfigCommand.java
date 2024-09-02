@@ -242,7 +242,7 @@ public abstract class ConfigCommand<T extends CommandSender> {
     }
 
     public boolean isArgumentValid(String[] arguments, int index) {
-        if (getArgumentsSize() - 1 < index) {
+        if (getArgumentsSizeReal() - 1 < index) {
             return false;
         }
 
@@ -257,7 +257,6 @@ public abstract class ConfigCommand<T extends CommandSender> {
             return arguments[index].equalsIgnoreCase(argument.getArgument());
         }
         return true;
-
     }
 
     @AllArgsConstructor
