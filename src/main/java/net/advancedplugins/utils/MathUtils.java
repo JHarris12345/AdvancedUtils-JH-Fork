@@ -37,6 +37,13 @@ public class MathUtils {
      * @return a random number between two numbers.
      */
     public static int randomBetween(int min, int max) {
+        if (min > max) {
+            int temp = min;
+            min = max;
+            max = temp;
+        }
+        if (min == max)
+            return min;
         return ThreadLocalRandom.current().nextInt(max - min) + min;
     }
 
