@@ -16,21 +16,23 @@ import java.util.stream.Collectors;
  * <a href="https://www.spigotmc.org/resources/treefix.17267/">TreeFix</a>
  */
 public class BreakWholeTree {
-    private static final int MAX_LEAVES_TO_SEARCH = 1000;
-    private static final int MAX_LOGS_TO_SEARCH = 300;
     private int leavesScanned = 0;
 
     private final Set<Block> foundBlocks;
     private final List<Location> logs = new ArrayList<>();
     private final List<Location> leaves = new ArrayList<>();
+    private final int maxLogs;
+    private final int maxLeaves;
 
     private final List<BlockFace> dirs = Arrays.asList(
             BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST,
             BlockFace.NORTH_EAST, BlockFace.SOUTH_EAST, BlockFace.SOUTH_WEST, BlockFace.NORTH_WEST
     );
 
-    public BreakWholeTree(final Block block) {
+    public BreakWholeTree(final Block block, int maxLogs, int maxLeaves) {
         this.foundBlocks = new HashSet<>();
+        this.maxLogs = maxLogs > 0 ? maxLogs : 1000;
+        this.maxLeaves = maxLeaves > 0 ? maxLeaves : 300;
         Location lowestBlock = block.getLocation();
 
         findLog(block, true, true);
@@ -47,7 +49,7 @@ public class BreakWholeTree {
     }
 
     private boolean findLog(Block block, boolean up, boolean prevFound) {
-        if (foundBlocks.size() >= MAX_LOGS_TO_SEARCH || leavesScanned >= MAX_LEAVES_TO_SEARCH) {
+        if (foundBlocks.size() >= maxLogs || leavesScanned >= maxLeaves) {
             return false;
         }
 
