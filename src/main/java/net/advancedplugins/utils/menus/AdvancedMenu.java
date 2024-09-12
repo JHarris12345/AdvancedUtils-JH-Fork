@@ -53,7 +53,7 @@ public class AdvancedMenu implements InventoryHolder {
     public AdvancedMenu(Player player, ConfigurationSection section, Replace replace) {
 //        this.section = section;
         this.player = player;
-        this.title = Text.modify(section.getString(handler.getPath("name")), replace);
+        this.title = Text.modify(Text.parsePapi(section.getString(handler.getPath("name")), player), replace);
         this.invSize = section.getInt(handler.getPath("size"));
         this.replace = replace;
         this.section = section;
@@ -64,7 +64,7 @@ public class AdvancedMenu implements InventoryHolder {
     public AdvancedMenu(Player player, ConfigurationSection section, Replace replace, int maxPages) {
 //        this.section = section;
         this.player = player;
-        this.title = Text.modify(section.getString(handler.getPath("name")), replace);
+        this.title = Text.modify(Text.parsePapi(section.getString(handler.getPath("name")), player), replace);
         this.invSize = section.getInt(handler.getPath("size"));
         this.replace = replace;
         this.section = section;

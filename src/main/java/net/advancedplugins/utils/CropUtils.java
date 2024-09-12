@@ -6,7 +6,6 @@ import org.apache.commons.math3.distribution.UniformIntegerDistribution;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;

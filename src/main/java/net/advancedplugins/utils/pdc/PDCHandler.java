@@ -6,6 +6,7 @@ import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.persistence.PersistentDataType;
 
@@ -138,9 +139,32 @@ public class PDCHandler {
         return !holder.getPersistentDataContainer().getKeys().isEmpty();
     }
 
+    /**
+     * Get all keys from an item
+     * @param i ItemStack
+     * @return List of keys
+     */
     public static List<String> getKeys(ItemStack i) {
-        return i.hasItemMeta() ? i.getItemMeta().getPersistentDataContainer().getKeys()
-                .stream().map(NamespacedKey::getKey).collect(Collectors.toList()): Collections.EMPTY_LIST;
+        if (i == null || !i.hasItemMeta()) {
+            return Collections.emptyList();
+        }
+
+        PersistentDataContainer container = i.getItemMeta().getPersistentDataContainer();
+        Set<NamespacedKey> keySet = container.getKeys();
+
+        if (keySet.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        if (keySet.size() == 1) {
+            return Collections.singletonList(keySet.iterator().next().getKey());
+        }
+
+        List<String> result = new ArrayList<>(keySet.size());
+        for (NamespacedKey key : keySet) {
+            result.add(key.getKey());
+        }
+        return Collections.unmodifiableList(result);
     }
 
     public static Object get(ItemStack itemInHand, NamespacedKey key) {

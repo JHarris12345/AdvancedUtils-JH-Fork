@@ -11,8 +11,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
-import org.bukkit.command.*;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandMap;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.StringUtil;
@@ -34,6 +36,7 @@ public class CommandBaseNew {
         this.plugin = plugin;
         this.registerArgumentTypes();
     }
+
     private static final Class<? extends Server> bukkitServerClass = Bukkit.getServer().getClass();
 
     public void registerCommand(ConfigCommand<? super CommandSender> cmd) {
@@ -103,7 +106,8 @@ public class CommandBaseNew {
             ConfigSubCommand<? extends CommandSender> subResult = null;
             for (ConfigSubCommand<? extends CommandSender> subCommand : cmd.getSubCommands()) {
                 if ((args.length > subCommand.getArgumentsSize() && subCommand.isEndless())
-                        || (subCommand.getArgumentsSize() <= args.length && subCommand.isMatch(args))) {
+                        || (subCommand.getArgumentsSize() <= args.length && subCommand.isMatch(args)) ||
+                        (args.length == subCommand.getArgumentsSizeReal() && subCommand.isMatch(args))) {
                     subResult = subCommand;
                     break;
                 }
@@ -138,6 +142,7 @@ public class CommandBaseNew {
             if (!cmd.isConsole() && sender instanceof ConsoleCommandSender) {
                 continue;
             }
+
             if (args.length == 0) {
                 continue;
             }

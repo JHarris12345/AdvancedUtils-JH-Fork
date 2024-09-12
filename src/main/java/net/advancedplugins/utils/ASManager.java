@@ -1223,6 +1223,7 @@ public class ASManager {
             case "NETHER_GOLD_ORE":
             case "MELON":
             case "MELON_BLOCK":
+            case "AMETHYST_CLUSTER":
                 return true;
         }
         return false;
@@ -1323,6 +1324,7 @@ public class ASManager {
                     allowFortune = false;
                     break;
                 }
+
             }
         }
 
