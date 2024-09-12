@@ -1,6 +1,10 @@
 package net.advancedplugins.utils.hooks.plugins;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.flags.Flags;
+import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.hooks.PluginHookInstance;
 import org.bukkit.Bukkit;
@@ -46,6 +50,19 @@ public class WorldGuardHook extends PluginHookInstance {
         } catch (Exception ev) {
             return false;
         }
+    }
+
+    public boolean canMobsSpawn(Location location) {
+        for (ProtectedRegion applicableRegion : WorldGuard.getInstance().getPlatform().getRegionContainer()
+            .get(BukkitAdapter.adapt(location.getWorld()))
+            .getApplicableRegions(BukkitAdapter.asBlockVector(location))) {
+
+            if (applicableRegion.getFlag(Flags.MOB_SPAWNING) == StateFlag.State.DENY) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 }
