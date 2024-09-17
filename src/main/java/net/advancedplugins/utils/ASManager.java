@@ -262,6 +262,12 @@ public class ASManager {
             if (count <= 0) return true;
         }
 
+        // Added checks for off-hand (GC, 2024 Sept 17)
+        if(p.getInventory().getItem(EquipmentSlot.OFF_HAND) != null && p.getInventory().getItem(EquipmentSlot.OFF_HAND).getType() == m) {
+            count -= p.getInventory().getItem(EquipmentSlot.OFF_HAND).getAmount();
+            if (count <= 0) return true;
+        }
+
         return false;
     }
 
@@ -283,12 +289,15 @@ public class ASManager {
         }
 
         int toDelete = amount;
-        if (MinecraftVersion.getVersionNumber() >= 1_9_0 && inventory instanceof PlayerInventory) {
+        if (inventory instanceof PlayerInventory) {
             PlayerInventory pInv = (PlayerInventory) inventory;
             ItemStack item = pInv.getItemInOffHand();
-            if (item.getType() == material) toDelete = removeItem(inventory, item, 45, toDelete);
+            if (item.getType() == material) {
+                toDelete = removeItem(pInv, item, EquipmentSlot.OFF_HAND, toDelete);
+            }
         }
 
+        if(toDelete <= 0) return true;
         for (int i = 0; i < inventory.getSize(); i++) {
             int first = inventory.first(material);
             if (first == -1) return false;
@@ -320,12 +329,13 @@ public class ASManager {
         }
 
         int toDelete = amount;
-        if (MinecraftVersion.getVersionNumber() >= 1_9_0 && inventory instanceof PlayerInventory) {
+        if (inventory instanceof PlayerInventory) {
             PlayerInventory pInv = (PlayerInventory) inventory;
             ItemStack item = pInv.getItemInOffHand();
-            if (item.isSimilar(itemStack)) toDelete = removeItem(inventory, item, 45, toDelete);
+            if (item.isSimilar(itemStack)) toDelete = removeItem(inventory, item, EquipmentSlot.OFF_HAND.ordinal(), toDelete);
         }
 
+        if(toDelete <= 0) return true;
         for (int i = 0; i < inventory.getSize(); i++) {
             int first = inventory.first(itemStack);
             if (first == -1) return false;
@@ -375,9 +385,26 @@ public class ASManager {
     private static int removeItem(Inventory inventory, ItemStack itemStack, int slot, int toDelete) {
         if (itemStack.getAmount() <= toDelete) {
             toDelete -= itemStack.getAmount();
+            /** This no longer handles OFF HAND correct. Slot 45 crashes the player client
+            I recommend using removeItem(PlayerInventory, ItemStack, EquipmentSlot, int) instead - GC*/
             if (slot == 45 && inventory instanceof PlayerInventory)
                 ((PlayerInventory) inventory).setItemInOffHand(null);
             else inventory.clear(slot);
+        } else {
+            itemStack.setAmount(itemStack.getAmount() - toDelete);
+            inventory.setItem(slot, itemStack);
+            toDelete = 0;
+        }
+        return toDelete;
+    }
+
+    /**
+     * Util method for AManager#removeItems.
+     */
+    private static int removeItem(PlayerInventory inventory, ItemStack itemStack, EquipmentSlot slot, int toDelete) {
+        if (itemStack.getAmount() <= toDelete) {
+            toDelete -= itemStack.getAmount();
+            inventory.setItem(slot, null);
         } else {
             itemStack.setAmount(itemStack.getAmount() - toDelete);
             inventory.setItem(slot, itemStack);
