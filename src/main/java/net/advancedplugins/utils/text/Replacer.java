@@ -1,6 +1,7 @@
 package net.advancedplugins.utils.text;
 
 import com.google.common.collect.Maps;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
@@ -12,7 +13,9 @@ import java.util.function.UnaryOperator;
 public class Replacer {
     private final Map<String, Object> variables = Maps.newHashMap();
     private final Map<String, Supplier<Object>> retrievableVariables = Maps.newHashMap();
+    @Getter
     private OfflinePlayer player;
+    @Getter
     private boolean usePlaceholderApi;
 
     public static String to(String string, UnaryOperator<Replacer> replacer) {
