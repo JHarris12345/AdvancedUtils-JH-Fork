@@ -322,16 +322,25 @@ public class SkullCreator {
             }
             metaSetProfileMethod.invoke(meta, makeProfile(b64));
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
-            // if in an older API where there is no setProfile method,
+            // if in an older API (or newer :) ) where there is no setProfile method,
             // we set the profile field directly.
             try {
                 if (metaProfileField == null) {
                     metaProfileField = meta.getClass().getDeclaredField("profile");
                     metaProfileField.setAccessible(true);
                 }
-                metaProfileField.set(meta, makeProfile(b64));
+                Object profile = makeProfile(b64);
 
-            } catch (NoSuchFieldException | IllegalAccessException ex2) {
+                // Yeah, I like when Mojang creates a new class which is a wrapper of another class and ofc removes backwards compatibility...
+                if(MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R2)) {
+                    profile = Class.forName("net.minecraft.world.item.component.ResolvableProfile")
+                            .getConstructor(GameProfile.class)
+                            .newInstance(profile);
+                }
+
+                metaProfileField.set(meta, profile);
+            } catch (NoSuchFieldException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException |
+                     InstantiationException | InvocationTargetException ex2) {
                 ex2.printStackTrace();
             }
         }
