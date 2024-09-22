@@ -332,7 +332,7 @@ public class SkullCreator {
                 Object profile = makeProfile(b64);
 
                 // Yeah, I like when Mojang creates a new class which is a wrapper of another class and ofc removes backwards compatibility...
-                if(MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R2)) {
+                if(MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_21_R1)) {
                     profile = Class.forName("net.minecraft.world.item.component.ResolvableProfile")
                             .getConstructor(GameProfile.class)
                             .newInstance(profile);
