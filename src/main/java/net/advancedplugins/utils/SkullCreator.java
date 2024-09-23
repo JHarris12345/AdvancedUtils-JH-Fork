@@ -1,9 +1,7 @@
 package net.advancedplugins.utils;
 
-
 import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
-import net.advancedplugins.utils.nbt.backend.ReflectionMethod;
+import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.SkullType;
@@ -21,7 +19,6 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * A library for the Bukkit API to create player skulls
@@ -40,7 +37,7 @@ public class SkullCreator {
     private static Field blockProfileField;
     private static Method metaSetProfileMethod;
     private static Field metaProfileField;
-    private static Map<String,GameProfile> profilesCache = new HashMap<>();
+    private static final Map<String,GameProfile> profilesCache = new HashMap<>();
 
     /**
      * Creates a player skull, should work in both legacy and new Bukkit APIs.
@@ -305,6 +302,18 @@ public class SkullCreator {
     }
 
     private static void mutateItemMeta(SkullMeta meta, String b64) {
+        // PAPER ONLY WAY BECAUSE SPIGOT SUCKS ASS
+        // paper has this from 1.12.2+...
+        if (MinecraftVersion.isPaper()) {
+            final UUID uuid = new UUID(
+                    b64.substring(b64.length() - 20).hashCode(),
+                    b64.substring(b64.length() - 10).hashCode()
+            );
+            final com. destroystokyo.paper.profile.PlayerProfile playerProfile = Bukkit.createProfile(uuid, uuid.toString().substring(0, 16));
+            playerProfile.setProperty(new com.destroystokyo.paper.profile.ProfileProperty("textures", b64));
+            meta.setPlayerProfile(playerProfile);
+            return;
+        }
 
         try {
             if (metaSetProfileMethod == null) {
@@ -313,16 +322,25 @@ public class SkullCreator {
             }
             metaSetProfileMethod.invoke(meta, makeProfile(b64));
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ex) {
-            // if in an older API where there is no setProfile method,
+            // if in an older API (or newer :) ) where there is no setProfile method,
             // we set the profile field directly.
             try {
                 if (metaProfileField == null) {
                     metaProfileField = meta.getClass().getDeclaredField("profile");
                     metaProfileField.setAccessible(true);
                 }
-                metaProfileField.set(meta, makeProfile(b64));
+                Object profile = makeProfile(b64);
 
-            } catch (NoSuchFieldException | IllegalAccessException ex2) {
+                // Yeah, I like when Mojang creates a new class which is a wrapper of another class and ofc removes backwards compatibility...
+                if(MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_21_R1)) {
+                    profile = Class.forName("net.minecraft.world.item.component.ResolvableProfile")
+                            .getConstructor(GameProfile.class)
+                            .newInstance(profile);
+                }
+
+                metaProfileField.set(meta, profile);
+            } catch (NoSuchFieldException | IllegalAccessException | ClassNotFoundException | NoSuchMethodException |
+                     InstantiationException | InvocationTargetException ex2) {
                 ex2.printStackTrace();
             }
         }
