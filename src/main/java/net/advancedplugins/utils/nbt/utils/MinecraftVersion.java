@@ -1,8 +1,6 @@
 package net.advancedplugins.utils.nbt.utils;
 
 import lombok.Getter;
-import net.advancedplugins.ae.Core;
-import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.nbt.backend.ClassWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
