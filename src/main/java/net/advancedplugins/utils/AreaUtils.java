@@ -133,7 +133,7 @@ public class AreaUtils {
     @SuppressWarnings("removal")
     public static boolean isDamageable(Entity initiator, Entity entity) {
         entity.setMetadata("ae_ignore", new FixedMetadataValue(ASManager.getInstance(), true));
-        EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(entity, entity, EntityDamageEvent.DamageCause.CUSTOM, 0);
+        EntityDamageByEntityEvent event = new EntityDamageByEntityEvent(initiator, entity, EntityDamageEvent.DamageCause.CUSTOM, 0);
         Bukkit.getPluginManager().callEvent(event);
         entity.removeMetadata("ae_ignore", ASManager.getInstance());
 
