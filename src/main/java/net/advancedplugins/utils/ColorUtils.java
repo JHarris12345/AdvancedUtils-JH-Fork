@@ -127,7 +127,11 @@ public class ColorUtils {
                 newStr = newStr.substring(0, i * gradientSize) + gradient(hex2, hex1, (float) i / (str.length() - 1))
                         + formatCode + newStr.substring(i * gradientSize);
             }
-            msg = msg.replaceFirst(toReplaceStart + str + toReplaceEnd, newStr);
+            String toReplace = toReplaceStart + str + toReplaceEnd;
+            toReplace = toReplace.replace("?", "\\?");
+            msg = msg.replaceFirst(
+                    toReplace,
+                    newStr);
         }
         return msg;
     }
