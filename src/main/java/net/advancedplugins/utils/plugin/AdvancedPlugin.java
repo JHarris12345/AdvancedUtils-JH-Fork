@@ -59,6 +59,7 @@ public class AdvancedPlugin extends JavaPlugin implements Listener {
     public void onEnable() {
         instance = this;
         ASManager.setInstance(this);
+        // bukkit.broadcast uncomment
 
         super.onEnable();
         pluginName = getDescription().getName();
