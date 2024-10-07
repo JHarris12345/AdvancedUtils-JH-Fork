@@ -8,6 +8,7 @@ public enum HookPlugin {
     ADVANCEDSKILLS("AdvancedSkills"),
     WORLDGUARD("WorldGuard"),
     TOWNY("Towny"),
+    TOWNYCHAT("TownyChat"),
     LWC("LWC"),
     LANDS("Lands"),
     GRIEFPREVENTION("GriefPrevention"),
