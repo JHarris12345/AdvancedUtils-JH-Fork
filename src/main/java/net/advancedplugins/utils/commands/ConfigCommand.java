@@ -8,6 +8,7 @@ import lombok.*;
 import net.advancedplugins.utils.DataHandler;
 import net.advancedplugins.utils.commands.argument.Argument;
 import net.advancedplugins.utils.commands.argument.ArgumentHandler;
+import net.advancedplugins.utils.commands.argument.ConfigArgument;
 import net.advancedplugins.utils.text.Text;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
@@ -57,6 +58,13 @@ public abstract class ConfigCommand<T extends CommandSender> {
         private final List<String> aliases;
     }
 
+    @Getter
+    @RequiredArgsConstructor
+    public static class ArgConfig {
+        private final String arg;
+        private final String displayArg;
+    }
+
     @SneakyThrows
     public static Config getConfig(DataHandler handler, String command) {
         if (!handler.isPath(command)) {
@@ -72,7 +80,7 @@ public abstract class ConfigCommand<T extends CommandSender> {
             handler.getConfig().set(command + ".description", defaultConfig.getString(command + ".description"));
             handler.getConfig().set(command + ".aliases", defaultConfig.getStringList(command + ".aliases"));
             handler.save();
-            handler.getInstance().getLogger().info("Added command/subcommand " + command + " to  config" + handler.getFileName() + ".yml");
+            handler.getInstance().getLogger().info("Added command/subcommand " + command + " to config " + handler.getFileName() + ".yml");
             handler.reloadConfig();
             targetReader.close();
         }
@@ -81,6 +89,28 @@ public abstract class ConfigCommand<T extends CommandSender> {
                 handler.getString(command + ".permission"),
                 handler.getString(command + ".description"),
                 handler.getStringList(command + ".aliases")
+        );
+    }
+
+    @SneakyThrows
+    public static ArgConfig getArgConfig(DataHandler handler, String command, String arg) {
+        if (handler.getString(command + ".args." + arg) == null) {
+            InputStream pluginInput = handler.getInstance().getResource(handler.getFileName() + ".yml");
+            byte[] buffer = ByteStreams.toByteArray(pluginInput);
+            Reader targetReader = CharSource.wrap(new String(buffer)).openStream();
+            YamlConfiguration defaultConfig = YamlConfiguration.loadConfiguration(targetReader);
+            if (!defaultConfig.contains(command)) {
+                throw new IllegalArgumentException("Command " + command + " not found in default config.");
+            }
+            handler.getConfig().set(command + ".args." + arg, arg);
+            handler.save();
+            handler.getInstance().getLogger().info("Added argument " + arg + " to config " + handler.getFileName() + ".yml");
+            handler.reloadConfig();
+            targetReader.close();
+        }
+        return new ArgConfig(
+                arg,
+                handler.getString(command + ".args." + arg)
         );
     }
 
@@ -169,23 +199,23 @@ public abstract class ConfigCommand<T extends CommandSender> {
         }
     }
 
-    protected <S> Argument<S> addArgument(Class<S> clazz, String argument, String... aliases) {
-        if (argument.equalsIgnoreCase("player")) {
+    protected <S> Argument<S> addArgument(Class<S> clazz, ArgConfig argument, String... aliases) {
+        if (argument.getArg().equalsIgnoreCase("player")) {
             return addArgument(clazz, argument, null, aliases);
         }
-        Argument<S> a = new Argument<>(ArgumentHandler.getArgumentType(clazz), argument, aliases);
+        Argument<S> a = new ConfigArgument<>(argument, ArgumentHandler.getArgumentType(clazz), aliases);
         this.arguments.add(a);
         return a;
     }
 
-    protected <S> Argument<S> addArgument(Class<S> clazz, String argument, Function<CommandSender, Collection<String>> onTabComplete, String... aliases) {
-        if (argument.equalsIgnoreCase("player")) {
+    protected <S> Argument<S> addArgument(Class<S> clazz, ArgConfig argument, Function<CommandSender, Collection<String>> onTabComplete, String... aliases) {
+        if (argument.getArg().equalsIgnoreCase("player")) {
             onTabComplete = sender -> Bukkit.getOnlinePlayers()
                     .stream()
                     .map(Player::getName)
                     .collect(Collectors.toList());
         }
-        Argument<S> a = new Argument<>(ArgumentHandler.getArgumentType(clazz), argument, onTabComplete, aliases);
+        Argument<S> a = new ConfigArgument<>(argument, ArgumentHandler.getArgumentType(clazz), onTabComplete, aliases);
         this.arguments.add(a);
         return a;
     }
