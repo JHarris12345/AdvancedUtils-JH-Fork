@@ -127,6 +127,7 @@ public class CropUtils {
             case "WHEAT":
             case "CARROTS":
             case "POTATOES":
+            case "SUGAR_CANE":
             case "BEETROOTS":
             case "CARROT":
             case "POTATO":
