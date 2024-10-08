@@ -106,9 +106,6 @@ public class HooksHandler {
         if (isPluginEnabled(HookPlugin.SUPERVANISH.getPluginName()))
             registerNew(HookPlugin.SUPERVANISH, new SuperVanishHook());
 
-        if (isPluginEnabled(HookPlugin.DISCORDSRV.getPluginName()))
-            registerNew(HookPlugin.DISCORDSRV, new DiscordSRVHook());
-
         if (isPluginEnabled(HookPlugin.VIAVERSION.getPluginName()))
             registerNew(HookPlugin.VIAVERSION, new ViaVersionHook());
 
@@ -133,6 +130,11 @@ public class HooksHandler {
             // needs to be run later and not declared in plugin.yml, otherwise circular dependency will happen
             if (isPluginEnabled(HookPlugin.PREMIUMVANISH.getPluginName()))
                 registerNew(HookPlugin.PREMIUMVANISH, new PremiumVanishHook());
+
+            // doesn't work correctly even if in softdepends if not here.
+            // My guess is that it's because discordsrv is dependent in Essentials and that overrides our softdepend
+            if (isPluginEnabled(HookPlugin.DISCORDSRV.getPluginName()))
+                registerNew(HookPlugin.DISCORDSRV, new DiscordSRVHook());
 
             sendHookMessage(plugin);
         }, 10);
