@@ -51,6 +51,7 @@ public abstract class ConfigCommand<T extends CommandSender> {
     @Getter
     @RequiredArgsConstructor
     public static class Config {
+        private final boolean enabled;
         private final String command;
         private final String permission;
         private final String description;
@@ -67,6 +68,7 @@ public abstract class ConfigCommand<T extends CommandSender> {
             if (!defaultConfig.contains(command)) {
                 throw new IllegalArgumentException("Command " + command + " not found in default config.");
             }
+            handler.getConfig().set(command + ".enabled", defaultConfig.getBoolean(command + ".enabled", true));
             handler.getConfig().set(command + ".command", defaultConfig.getString(command + ".command"));
             handler.getConfig().set(command + ".permission", defaultConfig.getString(command + ".permission"));
             handler.getConfig().set(command + ".description", defaultConfig.getString(command + ".description"));
@@ -77,6 +79,7 @@ public abstract class ConfigCommand<T extends CommandSender> {
             targetReader.close();
         }
         return new Config(
+                handler.getBoolean(command + ".enabled", true),
                 handler.getString(command + ".command"),
                 handler.getString(command + ".permission"),
                 handler.getString(command + ".description"),
