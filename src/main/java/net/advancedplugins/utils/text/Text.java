@@ -6,6 +6,7 @@ import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.hooks.HooksHandler;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import net.md_5.bungee.api.ChatColor;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -225,7 +226,11 @@ public class Text {
                 newStr = newStr.substring(0, i * gradientSize) + gradient(hex2, hex1, (float) i / (str.length() - 1))
                         + formatCode + newStr.substring(i * gradientSize);
             }
-            msg = msg.replaceFirst(toReplaceStart + str + toReplaceEnd, newStr);
+            String toReplace = toReplaceStart + str + toReplaceEnd;
+            toReplace = toReplace.replace("?", "\\?");
+            msg = msg.replaceFirst(
+                    toReplace,
+                    newStr);
         }
         return msg;
     }
