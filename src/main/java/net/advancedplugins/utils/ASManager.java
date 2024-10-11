@@ -1709,6 +1709,19 @@ public class ASManager {
         }
     }
 
+    private static final Class<?> CRAFT_META_ITEM_CLASS;
+    private static final Method SET_GLINT_OVERRIDE;
+
+    static {
+      try {
+          CRAFT_META_ITEM_CLASS = Class.forName("org.bukkit.craftbukkit.inventory.CraftMetaItem");
+          SET_GLINT_OVERRIDE = CRAFT_META_ITEM_CLASS.getDeclaredMethod("setEnchantmentGlintOverride", Boolean.class);
+          SET_GLINT_OVERRIDE.setAccessible(true);
+      } catch (NoSuchMethodException | ClassNotFoundException e) {
+        throw new RuntimeException(e);
+      }
+    }
+
     public static ItemStack makeItemGlow(ItemStack itemstack, boolean glow) {
         /* Compound got removed when using durability effects (https://github.com/GC-spigot/AdvancedEnchantments/issues/3982)
         NBTItem item = new NBTItem(itemstack);
@@ -1724,9 +1737,7 @@ public class ASManager {
             try {
                 ItemMeta meta = itemstack.getItemMeta();
                 if (meta != null) {
-                    Method method = meta.getClass().getDeclaredMethod("setEnchantmentGlintOverride", Boolean.class);
-                    method.setAccessible(true);
-                    method.invoke(meta, glow ? Boolean.TRUE : null);
+                    SET_GLINT_OVERRIDE.invoke(meta, glow ? Boolean.TRUE : null);
                     itemstack.setItemMeta(meta);
                 }
             } catch (Exception ev) {
