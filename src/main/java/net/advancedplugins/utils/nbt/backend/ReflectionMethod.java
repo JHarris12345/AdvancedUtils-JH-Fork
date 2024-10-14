@@ -75,6 +75,8 @@ public enum ReflectionMethod {
 
     ITEMSTACK_NMSCOPY(ClassWrapper.CRAFT_ITEMSTACK, new Class[]{ItemStack.class}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "asNMSCopy")),
     ITEMSTACK_BUKKITMIRROR(ClassWrapper.CRAFT_ITEMSTACK, new Class[]{ClassWrapper.NMS_ITEMSTACK.getClazz()}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "asCraftMirror")),
+    //SET_GLINT_OVERRIDE = ClassWrapper.CRAFT_ITEMSTACK.getClazz().getDeclaredMethod("setEnchantmentGlintOverride", Boolean.class);
+    ITEMSTACK_SET_GLINT_OVERRIDE(ClassWrapper.CRAFT_ITEMSTACK, new Class[]{boolean.class}, MinecraftVersion.MC1_20_R4, new Since(MinecraftVersion.MC1_20_R4, "setEnchantmentGlintOverride")),
 
     CRAFT_WORLD_GET_HANDLE(ClassWrapper.CRAFT_WORLD, new Class[]{}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "getHandle")),
     NMS_WORLD_GET_TILEENTITY(ClassWrapper.NMS_WORLDSERVER, new Class[]{ClassWrapper.NMS_BLOCKPOSITION.getClazz()}, MinecraftVersion.MC1_8_R3, new Since(MinecraftVersion.MC1_8_R3, "getTileEntity"), new Since(MinecraftVersion.MC1_18_R1, "getBlockEntity(net.minecraft.core.BlockPos)")),

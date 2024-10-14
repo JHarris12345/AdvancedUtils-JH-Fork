@@ -80,4 +80,8 @@ public class LocalLocation extends Location {
     public static String getChunkEncode(Chunk c) {
         return c.getWorld().getName() + ";" + c.getX() + ";" + c.getZ();
     }
+
+    public static LocalLocation fromBlock(Block block) {
+        return new LocalLocation(block.getLocation());
+    }
 }

@@ -263,7 +263,7 @@ public class ASManager {
         }
 
         // Added checks for off-hand (GC, 2024 Sept 17)
-        if(p.getInventory().getItem(EquipmentSlot.OFF_HAND) != null && p.getInventory().getItem(EquipmentSlot.OFF_HAND).getType() == m) {
+        if (p.getInventory().getItem(EquipmentSlot.OFF_HAND) != null && p.getInventory().getItem(EquipmentSlot.OFF_HAND).getType() == m) {
             count -= p.getInventory().getItem(EquipmentSlot.OFF_HAND).getAmount();
             if (count <= 0) return true;
         }
@@ -297,7 +297,7 @@ public class ASManager {
             }
         }
 
-        if(toDelete <= 0) return true;
+        if (toDelete <= 0) return true;
         for (int i = 0; i < inventory.getSize(); i++) {
             int first = inventory.first(material);
             if (first == -1) return false;
@@ -332,10 +332,11 @@ public class ASManager {
         if (inventory instanceof PlayerInventory) {
             PlayerInventory pInv = (PlayerInventory) inventory;
             ItemStack item = pInv.getItemInOffHand();
-            if (item.isSimilar(itemStack)) toDelete = removeItem(inventory, item, EquipmentSlot.OFF_HAND.ordinal(), toDelete);
+            if (item.isSimilar(itemStack))
+                toDelete = removeItem(inventory, item, EquipmentSlot.OFF_HAND.ordinal(), toDelete);
         }
 
-        if(toDelete <= 0) return true;
+        if (toDelete <= 0) return true;
         for (int i = 0; i < inventory.getSize(); i++) {
             int first = inventory.first(itemStack);
             if (first == -1) return false;
@@ -386,7 +387,7 @@ public class ASManager {
         if (itemStack.getAmount() <= toDelete) {
             toDelete -= itemStack.getAmount();
             /** This no longer handles OFF HAND correct. Slot 45 crashes the player client
-            I recommend using removeItem(PlayerInventory, ItemStack, EquipmentSlot, int) instead - GC*/
+             I recommend using removeItem(PlayerInventory, ItemStack, EquipmentSlot, int) instead - GC*/
             if (slot == 45 && inventory instanceof PlayerInventory)
                 ((PlayerInventory) inventory).setItemInOffHand(null);
             else inventory.clear(slot);
@@ -1653,7 +1654,8 @@ public class ASManager {
         Map<String, String> map = new HashMap<>();
         for (String s1 : s) {
             String[] split = s1.split(";");
-            map.put(split[0], split[1]);
+            if (split.length == 2)
+                map.put(split[0], split[1]);
         }
         return map;
     }
@@ -1709,35 +1711,13 @@ public class ASManager {
         }
     }
 
-    private static final Class<?> CRAFT_META_ITEM_CLASS;
-    private static final Method SET_GLINT_OVERRIDE;
-
-    static {
-      try {
-          CRAFT_META_ITEM_CLASS = Class.forName("org.bukkit.craftbukkit.inventory.CraftMetaItem");
-          SET_GLINT_OVERRIDE = CRAFT_META_ITEM_CLASS.getDeclaredMethod("setEnchantmentGlintOverride", Boolean.class);
-          SET_GLINT_OVERRIDE.setAccessible(true);
-      } catch (NoSuchMethodException | ClassNotFoundException e) {
-        throw new RuntimeException(e);
-      }
-    }
-
     public static ItemStack makeItemGlow(ItemStack itemstack, boolean glow) {
-        /* Compound got removed when using durability effects (https://github.com/GC-spigot/AdvancedEnchantments/issues/3982)
-        NBTItem item = new NBTItem(itemstack);
-        NBTCompound compound = item.getCompoundList("Enchantments").addCompound();
-        compound.setString("id", "");
-        compound.setInteger("lvl", 0);
-         */
-
-//        itemstack.addEnchantment(Glow.ench, 0);
-
         // 1.20.5 added a proper way for ench glow
         if (itemstack.hasItemMeta() && MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
             try {
                 ItemMeta meta = itemstack.getItemMeta();
                 if (meta != null) {
-                    SET_GLINT_OVERRIDE.invoke(meta, glow ? Boolean.TRUE : null);
+                    ReflectionMethod.ITEMSTACK_SET_GLINT_OVERRIDE.run(meta, glow);
                     itemstack.setItemMeta(meta);
                 }
             } catch (Exception ev) {
@@ -1867,5 +1847,43 @@ public class ASManager {
 
     public static boolean isPlayer(Entity ent) {
         return ent instanceof Player;
+    }
+
+    public static int[] getNumbersInRange(int i, int end) {
+        int[] rt = new int[end - i];
+        for (int j = i; j < end; j++) {
+            rt[j - i] = j;
+        }
+        return rt;
+    }
+
+    public static BlockFace getCardinalDirection(float yaw) {
+        if (yaw < 0) {
+            yaw += 360;
+        }
+        yaw = yaw % 360;
+        if (yaw <= 45) {
+            return BlockFace.NORTH;
+        } else if (yaw <= 135) {
+            return BlockFace.EAST;
+        } else if (yaw <= 225) {
+            return BlockFace.SOUTH;
+        } else if (yaw <= 315) {
+            return BlockFace.WEST;
+        } else {
+            return BlockFace.NORTH;
+        }
+    }
+
+    public static Collection<Block> getNearbyBlocks(Location location, float x, float y, float z) {
+        Collection<Block> blocks = new ArrayList<>();
+        for (float i = -x; i <= x; i++) {
+            for (float j = -y; j <= y; j++) {
+                for (float k = -z; k <= z; k++) {
+                    blocks.add(location.clone().add(i, j, k).getBlock());
+                }
+            }
+        }
+        return blocks;
     }
 }

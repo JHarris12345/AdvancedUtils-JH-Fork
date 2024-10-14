@@ -45,6 +45,7 @@ public class AdvancedMenu implements InventoryHolder {
     @Getter
     private final int invSize;
     @Setter
+    @Getter
     private int maxPages = -1;
 
     private ClickAction closeAction = null;
@@ -71,6 +72,14 @@ public class AdvancedMenu implements InventoryHolder {
         this.maxPages = maxPages;
 
         populateItemHashMap(section, itemHashMap, replace);
+    }
+
+    public AdvancedMenu(Player player, String menuName, int invSize, Replace replace) {
+        this.player = player;
+        this.title = Text.modify(Text.parsePapi(menuName, player), replace);
+        this.invSize = invSize;
+        this.replace = replace;
+        this.section = null;
     }
 
     public void refreshItems() {
@@ -180,6 +189,10 @@ public class AdvancedMenu implements InventoryHolder {
     }
 
     public AdvancedMenu addItem(AdvancedMenuItem item, int... slots) {
+        // If the item has no slots, set the slots to the provided slots
+        if (item.getSlots().equalsIgnoreCase("null")) // will be a string of "null" because of Arrays.toString call
+            item.setSlots(slots);
+
         for (int i : slots) {
             itemHashMap.put(i, item);
         }

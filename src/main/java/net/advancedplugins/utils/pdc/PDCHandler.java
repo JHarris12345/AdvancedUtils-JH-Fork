@@ -5,6 +5,7 @@ import net.advancedplugins.utils.nbt.NBTapi;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataHolder;
@@ -29,6 +30,12 @@ public class PDCHandler {
 
     public static boolean contains(PersistentDataHolder holder, String key) {
         return dataTypes.stream().filter(type -> holder.getPersistentDataContainer().has(getNamespace(key), type)).findFirst().orElse(null) != null;
+    }
+
+    public static String getString(PersistentDataHolder holder, String key, String def) {
+        if(!has(holder, key, PersistentDataType.STRING))
+            return def;
+        return get(holder, key, PersistentDataType.STRING).toString();
     }
 
     public static String getString(PersistentDataHolder holder, String key) {
@@ -174,5 +181,35 @@ public class PDCHandler {
             }
         }
         return null;
+    }
+
+    public static void set(Block block, String key, PersistentDataType type, String value) {
+        block.getChunk().getPersistentDataContainer().set(getNamespace(blockToString(block)+key), type, value);
+    }
+
+    public static Object get(Block block, String key) {
+        for(PersistentDataType type : dataTypes) {
+            if (block.getChunk().getPersistentDataContainer().has(getNamespace(blockToString(block)+key), type)) {
+                return block.getChunk().getPersistentDataContainer().get(getNamespace(blockToString(block)+key), type);
+            }
+        }
+        return null;
+    }
+
+    public static void remove(Block block, String key) {
+        block.getChunk().getPersistentDataContainer().remove(getNamespace(blockToString(block)+key));
+    }
+
+    public static boolean has(Block block, String key) {
+        for(PersistentDataType type : dataTypes) {
+            if (block.getChunk().getPersistentDataContainer().has(getNamespace(blockToString(block)+key), type)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static String blockToString(Block block) {
+        return block.getX() + ";" + block.getY() + ";" + block.getZ()+";";
     }
 }
