@@ -49,6 +49,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.sql.Ref;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.*;
@@ -1716,10 +1717,7 @@ public class ASManager {
         if (itemstack.hasItemMeta() && MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
             try {
                 ItemMeta meta = itemstack.getItemMeta();
-                if (meta != null) {
-                    ReflectionMethod.ITEMSTACK_SET_GLINT_OVERRIDE.run(meta, glow);
-                    itemstack.setItemMeta(meta);
-                }
+                meta.setEnchantmentGlintOverride(glow);
             } catch (Exception ev) {
                 ev.printStackTrace();
             }

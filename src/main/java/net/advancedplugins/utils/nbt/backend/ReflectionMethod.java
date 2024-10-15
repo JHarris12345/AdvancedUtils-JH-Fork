@@ -76,7 +76,6 @@ public enum ReflectionMethod {
     ITEMSTACK_NMSCOPY(ClassWrapper.CRAFT_ITEMSTACK, new Class[]{ItemStack.class}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "asNMSCopy")),
     ITEMSTACK_BUKKITMIRROR(ClassWrapper.CRAFT_ITEMSTACK, new Class[]{ClassWrapper.NMS_ITEMSTACK.getClazz()}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "asCraftMirror")),
     //SET_GLINT_OVERRIDE = ClassWrapper.CRAFT_ITEMSTACK.getClazz().getDeclaredMethod("setEnchantmentGlintOverride", Boolean.class);
-    ITEMSTACK_SET_GLINT_OVERRIDE(ClassWrapper.CRAFT_ITEMSTACK, new Class[]{boolean.class}, MinecraftVersion.MC1_20_R4, new Since(MinecraftVersion.MC1_20_R4, "setEnchantmentGlintOverride")),
 
     CRAFT_WORLD_GET_HANDLE(ClassWrapper.CRAFT_WORLD, new Class[]{}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "getHandle")),
     NMS_WORLD_GET_TILEENTITY(ClassWrapper.NMS_WORLDSERVER, new Class[]{ClassWrapper.NMS_BLOCKPOSITION.getClazz()}, MinecraftVersion.MC1_8_R3, new Since(MinecraftVersion.MC1_8_R3, "getTileEntity"), new Since(MinecraftVersion.MC1_18_R1, "getBlockEntity(net.minecraft.core.BlockPos)")),
@@ -193,6 +192,8 @@ public enum ReflectionMethod {
             MinecraftVersion.MC1_20_R4, new Since(MinecraftVersion.MC1_20_R4, "loadWithComponents(net.minecraft.nbt.CompoundTag,net.minecraft.core.HolderLookup$Provider)")),
     GET_DATAFIXER(ClassWrapper.NMS_DATAFIXERS, new Class[] {}, MinecraftVersion.MC1_20_R4,
             new Since(MinecraftVersion.MC1_20_R4, "getDataFixer()")),
+    ITEMSTACK_SET_GLINT_OVERRIDE(ClassWrapper.NMS_ITEMSTACK, new Class[]{boolean.class}, MinecraftVersion.MC1_20_R3,
+            new Since(MinecraftVersion.MC1_20_R4, "setEnchantmentGlintOverride")),
 
     NMS_REGISTER_BIOME(ClassWrapper.NMS_REGISTRYMATERIALS.getClazz(), new Class[]{}, MinecraftVersion.MC1_19_R2, new Since(MinecraftVersion.MC1_19_R3, "m"), new Since(MinecraftVersion.MC1_20_R1, "m"));
 
