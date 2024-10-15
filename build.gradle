@@ -15,6 +15,10 @@ repositories {
     mavenCentral()
     mavenLocal()
     maven {
+        name = "papermc"
+        url = uri("https://repo.papermc.io/repository/maven-public/")
+    }
+    maven {
         url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
 
     }
@@ -47,7 +51,7 @@ repositories {
     maven { url 'https://repo.citizensnpcs.co/' } // Citizens
     maven { url 'https://bitbucket.org/kangarko/libraries/raw/master' } // All mineacademy, e.g BossTM
 
-    maven { url 'https://repo.papermc.io/repository/maven-public/' }
+
     maven { url = 'https://repo.viaversion.com' }
 }
 
@@ -82,8 +86,8 @@ dependencies {
     compileOnly "com.mojang:datafixerupper:4.0.26"
 //    compileOnly "org.spigotmc:spigot:1.20.4-R0.1-SNAPSHOT"
     //compileOnly "org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT"
+//    compileOnly("io.papermc.paper:paper:1.21.1-R0.1-SNAPSHOT")
     compileOnly "org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT"
-//    compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT") {changing = true}
 }
 
 processResources {
