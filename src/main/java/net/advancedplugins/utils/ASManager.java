@@ -1718,6 +1718,7 @@ public class ASManager {
             try {
                 ItemMeta meta = itemstack.getItemMeta();
                 meta.setEnchantmentGlintOverride(glow);
+                itemstack.setItemMeta(meta);
             } catch (Exception ev) {
                 ev.printStackTrace();
             }
