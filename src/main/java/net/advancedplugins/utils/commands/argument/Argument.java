@@ -64,10 +64,7 @@ public class Argument<T> {
      * @param aliases  The alternatives (aliases) that can be used.
      */
     public Argument(ArgumentType<T> type, String argument, String... aliases) {
-        this.type = type;
-        this.argument = argument;
-        this.aliases = Sets.newHashSet(aliases);
-        this.onTabComplete = sender -> Lists.newArrayList(argument);
+        this(type, argument, sender -> Lists.newArrayList(argument), aliases);
     }
 
     public Argument asOptional() {
