@@ -1,6 +1,5 @@
 package net.advancedplugins.utils;
 
-import org.bukkit.Bukkit;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
@@ -35,27 +34,25 @@ public class PotionEffectMatcher {
             List<String> aliases = new ArrayList<>();
             String name = type.getName().toUpperCase(Locale.ROOT);
 
-            if (type.equals("CONFUSION")) {
-                aliases.add("NAUSEA");
-            } else if (type.equals("DAMAGE_RESISTANCE")) {
-                aliases.add("RESISTANCE");
-                aliases.add("RES");
-            } else if (type.equals("FAST_DIGGING")) {
-                aliases.add("HASTE");
-            } else if (type.equals("FIRE_RESISTANCE")) {
-                aliases.add("FIRE_RESISTANCE");
-                aliases.add("FIRE_RES");
-            } else if (type.equals("HARM")) {
-                aliases.add("HARMNESS");
-            } else if (type.equals("INCREASE_DAMAGE")) {
-                aliases.add("STRENGTH");
-                aliases.add("STRENGHT");
-            } else if (type.equals("JUMP")) {
-                aliases.add("JUMP_BOOST");
-            } else if (type.equals("SLOW")) {
-                aliases.add("SLOWNESS");
-            } else if (type.equals("BLINDNESS")) {
-                aliases.add("BLIND");
+            switch (name) {
+                case "CONFUSION" -> aliases.add("NAUSEA");
+                case "DAMAGE_RESISTANCE" -> {
+                    aliases.add("RESISTANCE");
+                    aliases.add("RES");
+                }
+                case "FAST_DIGGING" -> aliases.add("HASTE");
+                case "FIRE_RESISTANCE" -> {
+                    aliases.add("FIRE_RESISTANCE");
+                    aliases.add("FIRE_RES");
+                }
+                case "HARM" -> aliases.add("HARMNESS");
+                case "INCREASE_DAMAGE" -> {
+                    aliases.add("STRENGTH");
+                    aliases.add("STRENGHT");
+                }
+                case "JUMP" -> aliases.add("JUMP_BOOST");
+                case "SLOW" -> aliases.add("SLOWNESS");
+                case "BLINDNESS" -> aliases.add("BLIND");
             }
 
             if (!aliases.isEmpty()) {
