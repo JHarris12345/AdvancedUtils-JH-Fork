@@ -1068,7 +1068,8 @@ public class ASManager {
      */
     public static void dropItem(Location loc, ItemStack... items) {
         for (ItemStack i : items)
-            loc.getWorld().dropItem(loc, i);
+            if (i != null)
+                loc.getWorld().dropItem(loc, i);
     }
 
     /**
@@ -1487,24 +1488,10 @@ public class ASManager {
      * @return True if the provided tool is the correct one, false otherwise.
      */
     public static boolean isCorrectTool(ItemStack tool, Material blockType) {
-//        if (MinecraftVersion.getVersionNumber() == 1_17_0) {
-//            IBlockData data = CraftMagicNumbers.getBlock(blockType).getBlockData();
-//            return CraftItemStack.asNMSCopy(tool).canDestroySpecialBlock(data);
-//        } else if (MinecraftVersion.getVersionNumber() >= 1_18_0) {
-//            IBlockData data = org.bukkit.craftbukkit.v1_17_R1.getBlock(blockType).getBlockData();
-//            return CraftItemStack.asNMSCopy(tool).canDestroySpecialBlock(data);
-////        } else {
-        // code below was a test to remove NMS, didn't work
-//        if(MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_18_R1)) {
-//            Bukkit.broadcastMessage("passedBlock.getBreakSpeed(p) "+passedBlock.getBreakSpeed(p) +" "+blockType.name());
-//            return passedBlock.getBreakSpeed(p) > 1;
-//        }
-
         Object item = ReflectionMethod.CRAFT_ItemStack_asNMSCopy.run(null, tool);
         Object block = ReflectionMethod.CRAFT_MagicNumbers_getBlock.run(null, blockType);
         Object data = ReflectionMethod.NMS_Block_getBlockData.run(block);
         return (boolean) ReflectionMethod.NMS_ItemStack_canDestroySpecialBlock.run(item, data);
-        //  }
     }
 
     public static boolean notNullAndTrue(Boolean value) {

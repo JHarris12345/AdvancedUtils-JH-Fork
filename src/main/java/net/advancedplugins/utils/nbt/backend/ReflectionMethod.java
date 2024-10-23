@@ -133,14 +133,15 @@ public enum ReflectionMethod {
     CRAFT_MagicNumbers_getBlock(ClassWrapper.CRAFT_MagicNumbers.getClazz(), new Class[]{Material.class}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "getBlock")),
     // NMS_World_getTileEntity(ClassWrapper.NMS_World.getClazz(), new Class[]{ ClassWrapper.NMS_BlockPosition.getClazz() }, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "getTileEntity")),
     NMS_Block_getBlockData(ClassWrapper.NMS_Block.getClazz(), new Class[]{}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_13_R1, "getBlockData"),
-            new Since(MinecraftVersion.MC1_18_R1, "n"), // TODO: remove if fixed in new 1.18
+            new Since(MinecraftVersion.MC1_18_R1, "n"),
             new Since(MinecraftVersion.MC1_19_R1, "m"),
             new Since(MinecraftVersion.MC1_19_R2, "n"),
             new Since(MinecraftVersion.MC1_19_R3, "o"),
             new Since(MinecraftVersion.MC1_20_R1, "n"),
             new Since(MinecraftVersion.MC1_20_R3, "o"),
-            new Since(MinecraftVersion.MC1_20_R4, "o")
-    ), // TODO: remove if fixed in new 1.19
+            new Since(MinecraftVersion.MC1_20_R4, "o"),
+            new Since(MinecraftVersion.MC1_21_R2, "m")
+    ),
 
     // Item
     CRAFT_MagicNumbers_getItem(ClassWrapper.CRAFT_MagicNumbers.getClazz(), new Class[]{Material.class}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "getItem")),
@@ -166,11 +167,13 @@ public enum ReflectionMethod {
             new Since(MinecraftVersion.MC1_20_R2, "L"),
             new Since(MinecraftVersion.MC1_20_R3, "N"),
             new Since(MinecraftVersion.MC1_20_R4, "K"),
-            new Since(MinecraftVersion.MC1_21_R1, "N")), // looks like this: https://i.imgur.com/OjhNDUQ.png
+            new Since(MinecraftVersion.MC1_21_R1, "N"), // looks like this: https://i.imgur.com/OjhNDUQ.png
+            new Since(MinecraftVersion.MC1_21_R2, "L")), // looks like this: https://i.imgur.com/OjhNDUQ.png
     NMS_ENTITY_CLEARPATH(ClassWrapper.NMS_ENTITY_INSENTIENT.getClazz(), new Class[]{}, MinecraftVersion.MC1_13_R1,
             new Since(MinecraftVersion.MC1_13_R1, "D"), new Since(MinecraftVersion.MC1_17_R1, "getNavigation"),
             new Since(MinecraftVersion.MC1_18_R2, "D"), new Since(MinecraftVersion.MC1_19_R2, "E"), new Since(MinecraftVersion.MC1_20_R4, "M"),
-            new Since(MinecraftVersion.MC1_21_R1, "O")),
+            new Since(MinecraftVersion.MC1_21_R1, "O"),
+            new Since(MinecraftVersion.MC1_21_R1, "N")),
     NMSDATACOMPONENTHOLDER_GET(ClassWrapper.NMS_DATACOMPONENTHOLDER, new Class[] {ClassWrapper.NMS_DATACOMPONENTTYPE.getClazz()}, MinecraftVersion.MC1_20_R4,
             new Since(MinecraftVersion.MC1_20_R4, "get(net.minecraft.core.component.DataComponentType)")),
     NMSCUSTOMDATA_GETCOPY(ClassWrapper.NMS_CUSTOMDATA, new Class[] {}, MinecraftVersion.MC1_20_R4,
