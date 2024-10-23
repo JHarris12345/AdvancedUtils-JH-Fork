@@ -107,7 +107,7 @@ public abstract class ConfigCommand<T extends CommandSender> {
             }
             handler.getConfig().set(command + ".args." + arg, arg);
             handler.save();
-            handler.getInstance().getLogger().info("Added argument " + arg + " to config " + handler.getFileName() + ".yml");
+//            handler.getInstance().getLogger().info("Added argument " + arg + " to config " + handler.getFileName() + ".yml");
             handler.reloadConfig();
             targetReader.close();
         }
@@ -200,6 +200,27 @@ public abstract class ConfigCommand<T extends CommandSender> {
         for (String flatArgument : flat) {
             this.addFlat(flatArgument);
         }
+    }
+
+    protected <S> Argument<S> addArgument(Class<S> clazz, String argument,String... aliases) {
+        if (argument.equalsIgnoreCase("player")) {
+            return addArgument(clazz, argument, null, aliases);
+        }
+        Argument<S> a = new Argument<>(ArgumentHandler.getArgumentType(clazz), argument, aliases);
+        this.arguments.add(a);
+        return a;
+    }
+
+    protected <S> Argument<S> addArgument(Class<S> clazz, String argument, Function<CommandSender, Collection<String>> onTabComplete, String... aliases) {
+        if (argument.equalsIgnoreCase("player")) {
+            onTabComplete = sender -> Bukkit.getOnlinePlayers()
+                    .stream()
+                    .map(Player::getName)
+                    .collect(Collectors.toList());
+        }
+        Argument<S> a = new Argument<>(ArgumentHandler.getArgumentType(clazz), argument, onTabComplete, aliases);
+        this.arguments.add(a);
+        return a;
     }
 
     protected <S> Argument<S> addArgument(Class<S> clazz, ArgConfig argument, String... aliases) {
