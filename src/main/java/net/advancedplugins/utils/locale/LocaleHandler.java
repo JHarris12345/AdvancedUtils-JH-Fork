@@ -3,13 +3,20 @@ package net.advancedplugins.utils.locale;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import lombok.Getter;
+import net.advancedplugins.utils.files.ResourceFileManager;
 import net.advancedplugins.utils.locale.subclass.LocaleFile;
 import net.advancedplugins.utils.text.Text;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.*;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class LocaleHandler {
 
@@ -52,6 +59,10 @@ public class LocaleHandler {
             localeMap = ImmutableMap.<String, LocaleFile>builder()
                     .putAll(localeMap).put(locale, new LocaleFile(locale, instance)).build();
         }
+    }
+
+    public void saveAllLocaleFiles(JavaPlugin plugin) {
+        ResourceFileManager.saveAllResources(plugin, "lang", null);
     }
 
     public LocaleHandler readLocaleFiles(JavaPlugin plugin, String langFolder) {

@@ -308,11 +308,11 @@ public enum ReflectionMethod {
      */
     public Object run(Object target, Object... args) {
         if (method == null)
-            throw new NbtApiException("Method not loaded! '" + this + "'");
+            throw new NullPointerException("Method not loaded! '" + this + "'");
         try {
             return method.invoke(target, args);
         } catch (Exception ex) {
-            throw new NbtApiException("Error while calling the method '" + methodName + "', loaded: " + loaded + ", Enum: " + this + " Passed Class: " + target.getClass(), ex);
+            throw new NullPointerException("Error while calling the method '" + methodName + "', loaded: " + loaded + ", Enum: " + this + " Passed Class: " + target.getClass());
         }
     }
 

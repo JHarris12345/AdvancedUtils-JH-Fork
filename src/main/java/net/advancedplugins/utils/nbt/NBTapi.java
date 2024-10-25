@@ -1,6 +1,5 @@
 package net.advancedplugins.utils.nbt;
 
-import net.advancedplugins.utils.nbt.backend.NBTItem;
 import net.advancedplugins.utils.pdc.PDCHandler;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

@@ -42,6 +42,17 @@ public class CommandBase implements CommandExecutor, TabCompleter {
         this.commands.add(command);
     }
 
+    public void registerCommand(SimpleCommand<? super CommandSender> command, List<String> aliases) {
+        PluginCommand pluginCommand = this.plugin.getCommand(command.getCommand());
+        if (pluginCommand == null) {
+            Bukkit.getLogger().log(Level.WARNING, "Failed to load the command " + command.getCommand());
+            return;
+        }
+        pluginCommand.setAliases(aliases);
+        pluginCommand.setExecutor(this);
+        this.commands.add(command);
+    }
+
     public CommandBase registerArgumentType(Class<?> clazz, ArgumentType<?> argumentType) {
         ArgumentHandler.register(clazz, argumentType);
         return this;
