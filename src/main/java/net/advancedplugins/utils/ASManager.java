@@ -1394,6 +1394,10 @@ public class ASManager {
         return (itemStack != null && itemStack.hasItemMeta() && itemStack.getItemMeta().isUnbreakable()) || NBTapi.contains("Unbreakable", itemStack);
     }
 
+    public static Object getNMSEntity(LivingEntity entity) {
+        return ReflectionMethod.CRAFT_ENTITY_GET_HANDLE.run(ClassWrapper.CRAFT_ENTITY.getClazz().cast(entity));
+    }
+
     /**
      * Checks if a Material is damageable.
      * I'm not sure if this is 100% accurate, but it seems to work.
