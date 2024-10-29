@@ -4,6 +4,7 @@ import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.LocalLocation;
 import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.hooks.HooksHandler;
+import net.advancedplugins.utils.hooks.plugins.GriefDefenderHook;
 import net.advancedplugins.utils.protection.external.*;
 import net.advancedplugins.utils.protection.internal.GlobalProtCheck;
 import org.bukkit.Location;
@@ -32,6 +33,9 @@ public class ProtectionHandler {
 
         if (HooksHandler.isEnabled(HookPlugin.PROTECTIONSTONES))
             register(plugin, new ProtectionStonesCheck());
+
+        if (HooksHandler.isEnabled(HookPlugin.GRIEFDEFENDER))
+            register(plugin, new GriefDefenderCheck());
 
 //        if(HooksHandler.isEnabled(HookPlugin.GRIEFPREVENTION))
 //            register(plugin, new );
