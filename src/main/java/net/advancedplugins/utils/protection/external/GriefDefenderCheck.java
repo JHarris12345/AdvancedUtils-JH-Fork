@@ -19,7 +19,7 @@ public class GriefDefenderCheck implements ProtectionType {
         if (claim != null && !claim.isWilderness()) {
             return claim.getPlayers().contains(p.getUniqueId());
         }
-        return false;
+        return true;
     }
 
     public boolean isProtected(Location loc) {

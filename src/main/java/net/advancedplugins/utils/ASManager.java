@@ -953,7 +953,7 @@ public class ASManager {
             }
 
             if (reportError) {
-                Bukkit.getLogger().info("�cFailed to match '" + material + "' material, check your configuration or use materials.txt " + " to find needed material. �7�oFurther information has been pasted to console...");
+                Bukkit.getLogger().info("�cFailed to match '" + material + "' material, check your configuration or use https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Material.html " + " to find needed material. �7�oFurther information has been pasted to console...");
                 ev.printStackTrace();
             }
             return null;
