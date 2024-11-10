@@ -1,5 +1,6 @@
 package net.advancedplugins.utils.plugin;
 
+import net.advancedplugins.utils.FoliaScheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
@@ -23,7 +24,7 @@ public class FirstInstall implements Listener {
             announce = false;
 
             // send the welcome message
-            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            FoliaScheduler.runTaskLater(plugin, () -> {
                 e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&',
                         "&fThank you for installing &b&l" + pluginName + "&f! "));
                 e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&',
