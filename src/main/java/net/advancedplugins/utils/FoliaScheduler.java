@@ -8,7 +8,7 @@ import org.bukkit.scheduler.BukkitTask;
 import java.util.function.Consumer;
 
 public class FoliaScheduler {
-    private static final boolean isFolia = Bukkit.getVersion().contains("Folia");
+    private static final boolean isFolia = Bukkit.getVersion().contains("Folia") || Bukkit.getName().contains("Folia");
 
     public static Task runTask(Plugin plugin, Runnable runnable) {
         if (isFolia) {
