@@ -214,7 +214,13 @@ public class DataHandler {
     }
 
     public List<String> getStringList(String s) {
-        return getConfig().getStringList(s);
+        List<String> list = getConfig().getStringList(s);
+        // bukkit being weird and returning empty list when only string is used
+        if (list.isEmpty()) {
+            String str = getString(s);
+            return (str == null || str.isEmpty()) ? new ArrayList<>() : new ArrayList<>(Collections.singletonList(str));
+        }
+        return list;
     }
 
     public String getString(String s) {
