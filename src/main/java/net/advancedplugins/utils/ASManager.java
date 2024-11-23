@@ -1703,7 +1703,7 @@ public class ASManager {
         }
     }
 
-    public static ItemStack makeItemGlow(ItemStack itemstack, boolean glow) {
+    public static ItemStack makeItemGlow(ItemStack itemstack, @Nullable Boolean glow) {
         // 1.20.5 added a proper way for ench glow
         if (itemstack.hasItemMeta() && MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
             try {
