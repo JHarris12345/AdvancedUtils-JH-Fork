@@ -96,6 +96,9 @@ public class Text {
      * @return A string which has been modified replacing colours ("&amp;") for use in Minecraft
      */
     public static String modify(String string, Replace replacer) {
+        if(HooksHandler.getHook(HookPlugin.PLACEHOLDERAPI) != null && string != null) {
+            string = parsePapi(string, null);
+        }
         return string == null ? null : renderColorCodes(replacer == null ? string : replacer.apply(new Replacer()).applyTo(string));
     }
 
