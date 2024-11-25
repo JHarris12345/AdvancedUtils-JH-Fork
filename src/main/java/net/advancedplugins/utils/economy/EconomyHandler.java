@@ -10,7 +10,7 @@ import java.util.Locale;
 
 public class EconomyHandler {
 
-    private HashMap<String, AdvancedEconomy> econMap = new HashMap<>();
+    private final HashMap<String, AdvancedEconomy> econMap = new HashMap<>();
 
     public EconomyHandler(JavaPlugin plugin) {
         registerEconomy(new ExpEconomy());
