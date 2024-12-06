@@ -69,7 +69,7 @@ public class ResourceFileManager {
                 }
 
                 if (filesProcessed == 0) {
-                    plugin.getLogger().warning("No files found in: " + resourceFolder);
+//                    plugin.getLogger().warning("No files found in: " + resourceFolder);
                 }
             }
 

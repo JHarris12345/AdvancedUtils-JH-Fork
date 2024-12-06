@@ -35,7 +35,10 @@ public enum MinecraftVersion {
     MC1_20_R3(1_20_4, true),
     MC1_20_R4(1_20_6, true),
     MC1_21_R1(1_21_0, true),
-    MC1_21_R2(1_21_2, true);
+    MC1_21_R2(1_21_2, true),
+    MC1_21_R3(1_21_3, true),
+
+    ;
 
     private static final Map<String, MinecraftVersion> VERSION_TO_REVISION = new HashMap<String, MinecraftVersion>() {
         {
@@ -50,6 +53,7 @@ public enum MinecraftVersion {
             this.put("1.21.1", MC1_21_R1);
             this.put("1.21.2", MC1_21_R2);
             this.put("1.21.3", MC1_21_R2);
+            this.put("1.21.4", MC1_21_R3);
         }
     };
     /**

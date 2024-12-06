@@ -187,10 +187,21 @@ public class MojangToMapping {
             put("net.minecraft.world.level.block.entity.BlockEntity#getBlockState()", "m");
         }
     };
+    @SuppressWarnings("serial")
+    private static Map<String, String> MC1_21R3 = new HashMap<String, String>() {
 
+        {
+            putAll(MC1_21R2);
+
+            put("net.minecraft.world.item.component.CustomData#copyTag()", "d");
+        }
+
+    };
 
     public static Map<String, String> getMapping() {
         switch (MinecraftVersion.getVersion()) {
+            case MC1_21_R3:
+                return MC1_21R3;
             case MC1_21_R2:
                 return MC1_21R2;
             case MC1_21_R1:
