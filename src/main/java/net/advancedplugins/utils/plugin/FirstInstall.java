@@ -39,6 +39,10 @@ public class FirstInstall implements Listener {
     }
 
     public static void checkFirstInstall(JavaPlugin plugin, String configFile, String addonURL) {
+        checkFirstInstall(plugin, configFile, addonURL, null);
+    }
+
+    public static void checkFirstInstall(JavaPlugin plugin, String configFile, String addonURL, String override) {
         if (new File(plugin.getDataFolder(), configFile).exists()) {
             return;
         }
@@ -55,7 +59,12 @@ public class FirstInstall implements Listener {
                 "&fThank you for installing &b&l" + plugin.getName() + "&f! "));
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
                 "&7- &fTo get help, join our discord server: &bhttps://discord.gg/advancedplugins"));
-        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                "&7- &fWe recommend installing &b" + addonURL + "&f to enhance your experience with our UI overhaul!"));
+        if(override == null) {
+            Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    "&7- &fWe recommend installing &b" + addonURL + "&f to enhance your experience with our UI overhaul!"));
+        } else {
+            Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    override));
+        }
     }
 }

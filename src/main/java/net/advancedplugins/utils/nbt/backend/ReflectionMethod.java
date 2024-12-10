@@ -168,12 +168,8 @@ public enum ReflectionMethod {
             new Since(MinecraftVersion.MC1_20_R3, "N"),
             new Since(MinecraftVersion.MC1_20_R4, "K"),
             new Since(MinecraftVersion.MC1_21_R1, "N"), // looks like this: https://i.imgur.com/OjhNDUQ.png
-            new Since(MinecraftVersion.MC1_21_R2, "L")), // looks like this: https://i.imgur.com/OjhNDUQ.png
-    NMS_ENTITY_CLEARPATH(ClassWrapper.NMS_ENTITY_INSENTIENT.getClazz(), new Class[]{}, MinecraftVersion.MC1_13_R1,
-            new Since(MinecraftVersion.MC1_13_R1, "D"), new Since(MinecraftVersion.MC1_17_R1, "getNavigation"),
-            new Since(MinecraftVersion.MC1_18_R2, "D"), new Since(MinecraftVersion.MC1_19_R2, "E"), new Since(MinecraftVersion.MC1_20_R4, "M"),
-            new Since(MinecraftVersion.MC1_21_R1, "O"),
-            new Since(MinecraftVersion.MC1_21_R1, "N")),
+            new Since(MinecraftVersion.MC1_21_R2, "L"), // looks like this: https://i.imgur.com/OjhNDUQ.png
+            new Since(MinecraftVersion.MC1_21_R3, "P")), // looks like this: https://i.imgur.com/OjhNDUQ.png
     NMSDATACOMPONENTHOLDER_GET(ClassWrapper.NMS_DATACOMPONENTHOLDER, new Class[] {ClassWrapper.NMS_DATACOMPONENTTYPE.getClazz()}, MinecraftVersion.MC1_20_R4,
             new Since(MinecraftVersion.MC1_20_R4, "get(net.minecraft.core.component.DataComponentType)")),
     NMSCUSTOMDATA_GETCOPY(ClassWrapper.NMS_CUSTOMDATA, new Class[] {}, MinecraftVersion.MC1_20_R4,
