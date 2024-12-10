@@ -10,7 +10,7 @@ import net.advancedplugins.utils.commands.argument.Argument;
 import net.advancedplugins.utils.commands.argument.ArgumentHandler;
 import net.advancedplugins.utils.commands.argument.ConfigArgument;
 import net.advancedplugins.utils.text.Text;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;

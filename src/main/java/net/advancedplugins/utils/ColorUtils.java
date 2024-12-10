@@ -3,7 +3,7 @@ package net.advancedplugins.utils;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import net.advancedplugins.utils.text.Text;
 import net.md_5.bungee.api.ChatColor;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
