@@ -6,7 +6,7 @@ import lombok.Getter;
 import net.advancedplugins.utils.commands.argument.ArgumentHandler;
 import net.advancedplugins.utils.commands.argument.ArgumentType;
 import net.advancedplugins.utils.text.Text;
-import org.apache.commons.lang.NumberUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;

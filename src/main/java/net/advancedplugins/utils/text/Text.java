@@ -6,7 +6,7 @@ import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.hooks.HooksHandler;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import net.md_5.bungee.api.ChatColor;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;

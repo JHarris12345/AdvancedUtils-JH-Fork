@@ -14,7 +14,7 @@ import net.advancedplugins.utils.text.Text;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.math3.distribution.UniformIntegerDistribution;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

@@ -42,7 +42,6 @@ public class DecimalToRoman {
 
         if(l == null) {
             ASManager.getInstance().getLogger().warning("Invalid number for roman numerals: " + number);
-            Thread.dumpStack();
             return "?";
         }
 
