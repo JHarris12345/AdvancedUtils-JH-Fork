@@ -3,9 +3,11 @@ package net.advancedplugins.utils.pdc;
 import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.nbt.NBTapi;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataHolder;
@@ -40,11 +42,6 @@ public class PDCHandler {
 
     public static String getString(PersistentDataHolder holder, String key) {
         if(!has(holder, key, PersistentDataType.STRING)) {
-            if (MinecraftVersion.getVersionNumber() < 1_20_5 && holder instanceof ItemStack && NBTapi.contains(key, ((ItemStack) holder))) {
-                String nbtVal = NBTapi.get(key, ((ItemStack) holder));
-                PDCHandler.setString(holder, key, nbtVal);
-                return nbtVal;
-            }
             return null;
         }
         return get(holder, key, PersistentDataType.STRING).toString();
@@ -80,7 +77,6 @@ public class PDCHandler {
     }
 
     public static void remove(PersistentDataHolder holder, String key) {
-        if (holder == null) return;
         holder.getPersistentDataContainer().remove(getNamespace(key));
     }
 
@@ -211,5 +207,9 @@ public class PDCHandler {
 
     private static String blockToString(Block block) {
         return block.getX() + ";" + block.getY() + ";" + block.getZ()+";";
+    }
+
+    public static String getKeys(Player player) {
+        return player.getPersistentDataContainer().getKeys().stream().map(NamespacedKey::getKey).collect(Collectors.joining(","));
     }
 }
