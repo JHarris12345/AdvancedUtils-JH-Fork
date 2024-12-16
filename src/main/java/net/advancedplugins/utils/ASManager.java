@@ -23,6 +23,7 @@ import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.type.Bed;
+import org.bukkit.block.data.type.TurtleEgg;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -1375,6 +1376,12 @@ public class ASManager {
                     amount = new UniformIntegerDistribution(1, Math.min(max, amount * fortuneLevel)).sample();
                 }
             }
+        }
+
+        // https://github.com/GC-spigot/AdvancedEnchantments/issues/4753
+        if (blockType == Material.TURTLE_EGG) {
+            TurtleEgg egg = (TurtleEgg) block.getBlockData();
+            amount = egg.getEggs();
         }
 
         return MathUtils.clamp(amount, Integer.MIN_VALUE, max);
