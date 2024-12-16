@@ -96,7 +96,19 @@ public class Text {
      * @return A string which has been modified replacing colours ("&amp;") for use in Minecraft
      */
     public static String modify(String string, Replace replacer) {
-        if(HooksHandler.getHook(HookPlugin.PLACEHOLDERAPI) != null && string != null) {
+       return modify(string,replacer,true);
+    }
+
+    /**
+     * Applies colours and replaces certain internally set placeholders
+     *
+     * @param string   The string to modify
+     * @param replacer The replacer to apply to the string.
+     * @param addPapi Should add papi
+     * @return A string which has been modified replacing colours ("&amp;") for use in Minecraft
+     */
+    public static String modify(String string, Replace replacer, boolean addPapi) {
+        if(HooksHandler.getHook(HookPlugin.PLACEHOLDERAPI) != null && string != null && addPapi) {
             string = parsePapi(string, null);
         }
         return string == null ? null : renderColorCodes(replacer == null ? string : replacer.apply(new Replacer()).applyTo(string));
