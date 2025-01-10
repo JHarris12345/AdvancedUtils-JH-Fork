@@ -1,9 +1,6 @@
 package net.advancedplugins.utils.pdc;
 
 import net.advancedplugins.utils.ASManager;
-import net.advancedplugins.utils.nbt.NBTapi;
-import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
-import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -59,6 +56,12 @@ public class PDCHandler {
         return (long) get(holder, key, PersistentDataType.LONG);
     }
 
+    public static float getFloat(PersistentDataHolder holder, String key) {
+        if(!has(holder, key, PersistentDataType.FLOAT))
+            return 0.0F;
+        return (float) get(holder, key, PersistentDataType.FLOAT);
+    }
+
     public static double getDouble(PersistentDataHolder holder, String key) {
         if(!has(holder, key, PersistentDataType.DOUBLE))
             return 0.0D;
@@ -68,7 +71,7 @@ public class PDCHandler {
     public static boolean getBoolean(PersistentDataHolder holder, String key) {
         if(!has(holder, key, PersistentDataType.BYTE))
             return false;
-        return (boolean) get(holder, key, PersistentDataType.BYTE);
+        return (byte) get(holder, key, PersistentDataType.BYTE) == 1;
     }
 
     public static void set(PersistentDataHolder holder, String key, PersistentDataType type, Object value) {
