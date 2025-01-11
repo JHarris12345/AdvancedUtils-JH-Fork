@@ -6,7 +6,6 @@ import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.hooks.HooksHandler;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import net.md_5.bungee.api.ChatColor;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -109,7 +108,12 @@ public class Text {
      */
     public static String modify(String string, Replace replacer, boolean addPapi) {
         if(HooksHandler.getHook(HookPlugin.PLACEHOLDERAPI) != null && string != null && addPapi) {
+            // done because Player expansion for PAPI is dumb and returns empty string for any placeholder starting with %player
+            // instead of not parsing it at all (Wega)
+            // https://github.com/PlaceholderAPI/Player-Expansion/blob/master/src/main/java/com/extendedclip/papi/expansion/player/PlayerExpansion.java#L112
+            string = string.replace("%player", "%playertemp");
             string = parsePapi(string, null);
+            string = string.replace("%playertemp", "%player");
         }
         return string == null ? null : renderColorCodes(replacer == null ? string : replacer.apply(new Replacer()).applyTo(string));
     }
