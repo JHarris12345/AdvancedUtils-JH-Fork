@@ -912,7 +912,7 @@ public class ASManager {
     }
 
     private static boolean canAddColor(String input) {
-        return input.contains("STAINED_GLASS") || input.contains("SHULKER") || input.contains("TERRACOTTA") || input.contains("WOOL") || input.contains("BANNER") || input.contains("DYE") || input.contains("CONCRETE") || input.contains("CARPET") || input.contains("BED");
+        return input.contains("STAINED_GLASS") || input.contains("SHULKER") || input.contains("TERRACOTTA") || input.contains("WOOL") || (input.contains("BANNER") && !input.endsWith("BANNER_PATTERN")) || input.contains("DYE") || input.contains("CONCRETE") || input.contains("CARPET") || input.contains("BED");
     }
 
     public static ItemStack matchMaterial(String material, int amount, int damage) {
