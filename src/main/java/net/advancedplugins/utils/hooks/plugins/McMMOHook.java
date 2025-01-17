@@ -137,7 +137,7 @@ public class McMMOHook extends PluginHookInstance implements Listener {
         if (ProbabilityUtil.isSkillRNGSuccessful(SubSkillType.MINING_DOUBLE_DROPS, mmoPlayer)) {
             boolean useTriple = mmoPlayer.getAbilityMode(mcMMO.p.getSkillTools().getSuperAbility(PrimarySkillType.MINING)) && mcMMO.p.getAdvancedConfig().getAllowMiningTripleDrops();
 
-            BlockUtils.markDropsAsBonus(blockState, useTriple);
+            BlockUtils.markDropsAsBonus(block, useTriple);
 
             if (block.getMetadata(MetadataConstants.METADATA_KEY_BONUS_DROPS).size() > 0) {
                 BonusDropMeta bonusDropMeta = (BonusDropMeta) block.getMetadata(MetadataConstants.METADATA_KEY_BONUS_DROPS).get(0);
