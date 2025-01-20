@@ -32,7 +32,7 @@ public class DropsSettings {
     /**
      * Multiplier for the amount of drops.
      */
-    private int dropsMultiplier = 0;
+    private int dropsMultiplier = 1;
 
     /**
      * If the blocks should be broken.
