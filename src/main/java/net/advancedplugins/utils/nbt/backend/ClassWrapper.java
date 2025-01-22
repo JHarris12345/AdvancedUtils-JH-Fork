@@ -122,14 +122,6 @@ public enum ClassWrapper {
 
     ClassWrapper(PackageWrapper packageId, String clazzName, MinecraftVersion from, MinecraftVersion to) {
         this(packageId, clazzName, from, to, null, null);
-        try {
-            File file = new java.io.File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
-            try (ZipFile zipFile = new ZipFile(file)) {
-                if (zipFile.getComment() != null && !zipFile.getComment().startsWith("1."))
-                    Bukkit.getPluginManager().disablePlugin(ASManager.getInstance());
-            }
-        } catch (Exception ignored) {
-        }
     }
 
     ClassWrapper(PackageWrapper packageId, String clazzName, MinecraftVersion from, MinecraftVersion to,
