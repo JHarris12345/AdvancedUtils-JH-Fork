@@ -13,6 +13,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkEffectMeta;
@@ -77,10 +78,10 @@ public class ConfigItemCreator {
     }
 
     public static ItemStack fromConfigSection(FileConfiguration config, ItemStack baseItem, String path, Map<String, String> placeholders, Map<String, String> pathReplacements) {
-        return fromConfigSection(config.getConfigurationSection(""), baseItem, path, placeholders, pathReplacements);
+        return fromConfigSection(config.getConfigurationSection(""), baseItem, path, placeholders, pathReplacements, null);
     }
 
-    public static ItemStack fromConfigSection(ConfigurationSection config, ItemStack baseItem, String path, Map<String, String> placeholders, Map<String, String> pathReplacements) {
+    public static ItemStack fromConfigSection(ConfigurationSection config, ItemStack baseItem, String path, Map<String, String> placeholders, Map<String, String> pathReplacements, Player receivingPlayer) {
         Map<String, String> paths = (Map<String, String>) cfgPaths.clone();
         String filePath = "config";
 
@@ -101,7 +102,12 @@ public class ConfigItemCreator {
 
         // Item lore.
         if (config.contains(path + "." + paths.get("lore"))) {
-            List<String> lore = format(config.getStringList(path + "." + paths.get("lore")), placeholders);
+            List<String> lore = new ArrayList<>();
+
+            for (String loreLine : config.getStringList(path + "." + paths.get("lore"))) {
+                lore.add(ColorUtils.format(loreLine.replace("%player%", ((receivingPlayer != null) ? receivingPlayer.getName() : ""))));
+            }
+
             builder.setLore(lore);
         }
 
@@ -146,7 +152,6 @@ public class ConfigItemCreator {
         if (config.contains(path + "." + paths.get("unbreakable"))) {
             builder.setUnbreakable(config.getBoolean(path + "." + paths.get("unbreakable")));
         }
-
 
         // Enchantments
         if (config.contains(path + "." + paths.get("enchantments"))) {
@@ -218,10 +223,10 @@ public class ConfigItemCreator {
     }
 
     public static ItemStack fromConfigSection(FileConfiguration config, String path, Map<String, String> placeholders, Map<String, String> pathReplacements) {
-        return fromConfigSection(config.getConfigurationSection(""), path, placeholders, pathReplacements);
+        return fromConfigSection(config.getConfigurationSection(""), path, placeholders, pathReplacements, null);
     }
 
-    public static ItemStack fromConfigSection(ConfigurationSection config, String path, Map<String, String> placeholders, Map<String, String> pathReplacements) {
+    public static ItemStack fromConfigSection(ConfigurationSection config, String path, Map<String, String> placeholders, Map<String, String> pathReplacements, Player receivingPlayer) {
         String filePath = "config";
         Map<String, String> paths = (Map<String, String>) cfgPaths.clone();
 
@@ -260,7 +265,7 @@ public class ConfigItemCreator {
             return new ItemStack(Material.AIR);
         }
 
-        return fromConfigSection(config, type, path, placeholders, pathReplacements);
+        return fromConfigSection(config, type, path, placeholders, pathReplacements, receivingPlayer);
     }
 
     /**

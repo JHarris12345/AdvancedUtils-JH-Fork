@@ -1,5 +1,6 @@
 package net.advancedplugins.utils.pdc;
 
+import io.papermc.paper.persistence.PersistentDataContainerView;
 import net.advancedplugins.utils.ASManager;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
@@ -27,8 +28,8 @@ public class PDCHandler {
             PersistentDataType.STRING
     );
 
-    public static boolean contains(PersistentDataHolder holder, String key) {
-        return dataTypes.stream().filter(type -> holder.getPersistentDataContainer().has(getNamespace(key), type)).findFirst().orElse(null) != null;
+    public static boolean contains(ItemStack itemStack, String key) {
+        return dataTypes.stream().filter(type -> itemStack.getPersistentDataContainer().has(getNamespace(key), type)).findFirst().orElse(null) != null;
     }
 
     public static String getString(PersistentDataHolder holder, String key, String def) {
@@ -89,9 +90,7 @@ public class PDCHandler {
     }
 
     public static boolean has(PersistentDataHolder holder, String key, PersistentDataType type) {
-        if (holder instanceof ItemStack && !((ItemStack) holder).hasItemMeta()) return false;
         if (holder == null) return false;
-
         return holder.getPersistentDataContainer().has(getNamespace(key), type);
     }
 
@@ -151,11 +150,11 @@ public class PDCHandler {
      * @return List of keys
      */
     public static List<String> getKeys(ItemStack i) {
-        if (i == null || !i.hasItemMeta()) {
+        if (i == null) {
             return Collections.emptyList();
         }
 
-        PersistentDataContainer container = i.getItemMeta().getPersistentDataContainer();
+        PersistentDataContainerView container = i.getPersistentDataContainer();
         Set<NamespacedKey> keySet = container.getKeys();
 
         if (keySet.isEmpty()) {

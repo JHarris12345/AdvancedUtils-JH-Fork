@@ -7,7 +7,6 @@ import net.advancedplugins.utils.items.ConfigItemCreator;
 import net.advancedplugins.utils.items.ItemBuilder;
 import net.advancedplugins.utils.text.Replace;
 import net.advancedplugins.utils.text.Replacer;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
@@ -95,7 +94,7 @@ public class AdvancedMenuItem {
             return item;
 
         ItemStack item = ConfigItemCreator.fromConfigSection(section, "",
-                replace == null ? null : replace.apply(new Replacer()).getPlaceholders(), null);
+                replace == null ? null : replace.apply(new Replacer()).getPlaceholders(), null, null);
         if (glow) {
             ItemBuilder builder = new ItemBuilder(item);
             builder.addUnsafeEnchantment(VanillaEnchants.displayNameToEnchant("FORTUNE"), 1);

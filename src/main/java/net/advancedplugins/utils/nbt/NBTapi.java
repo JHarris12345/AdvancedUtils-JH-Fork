@@ -32,7 +32,7 @@ public class NBTapi {
         if (i == null || i.getType().equals(Material.AIR)) return false;
 
         // This checks for all possible PDC types if item has it
-        if (i.hasItemMeta() && PDCHandler.contains(i.getItemMeta(), type)) return true;
+        if (PDCHandler.contains(i, type)) return true;
 
 //        try {
 //            NBTItem nbti = new NBTItem(i);
