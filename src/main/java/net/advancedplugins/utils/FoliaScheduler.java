@@ -5,10 +5,20 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class FoliaScheduler {
-    private static final boolean isFolia = Bukkit.getVersion().contains("Folia") || Bukkit.getName().contains("Folia");
+    private static final boolean isFolia = checkFolia();
+
+    private static boolean checkFolia() {
+        List<String> foliaForks = Arrays.asList("Folia", "Luminol");
+        for (String fork : foliaForks) {
+            if(Bukkit.getVersion().contains(fork) || Bukkit.getName().contains(fork)) return true;
+        }
+        return false;
+    }
 
     public static Task runTask(Plugin plugin, Runnable runnable) {
         if (isFolia) {
