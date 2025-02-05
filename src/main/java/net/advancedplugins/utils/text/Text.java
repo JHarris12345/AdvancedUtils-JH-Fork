@@ -209,6 +209,8 @@ public class Text {
     }
 
     // Code stolen (and edited) from https://www.spigotmc.org/threads/bungee-hex-color-util.561417/
+    // Example format: <gradient:#HEX_FROM,#HEX_TO>text</gradient>
+    // i.e. <gradient:#FF0000,#0000FF>text</gradient>
     // :3
     private static String gradient(String msg) {
         while (msg.contains("<gradient") && msg.contains("</gradient>")) {
