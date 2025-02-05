@@ -63,17 +63,6 @@ public class AdvancedMenu implements InventoryHolder {
         populateItemHashMap(section, itemHashMap, replace);
     }
 
-    public AdvancedMenu(Player player, ConfigurationSection section, String title, Replace replace) {
-//        this.section = section;
-        this.player = player;
-        this.title = Text.modify(Text.parsePapi(title, player), replace);
-        this.invSize = section.getInt(handler.getPath("size"));
-        this.replace = replace;
-        this.section = section;
-
-        populateItemHashMap(section, itemHashMap, replace);
-    }
-
     public AdvancedMenu(Player player, ConfigurationSection section, Replace replace, int maxPages) {
 //        this.section = section;
         this.player = player;
