@@ -5,6 +5,7 @@ import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.hooks.HooksHandler;
 import net.advancedplugins.utils.hooks.plugins.ItemsAdderHook;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
+import net.advancedplugins.utils.text.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -13,6 +14,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkEffectMeta;
@@ -42,7 +44,6 @@ public class ConfigItemCreator {
      * @param pathReplacements Map used to override default paths for item settings.
      * @return ItemStack constructed from values from the config file.
      */
-
     static {
         HashMap<String, String> itemBuilderPaths = new HashMap<>();
         itemBuilderPaths.put("type", "type");
@@ -64,7 +65,6 @@ public class ConfigItemCreator {
         ConfigItemCreator.setDefaultPaths(itemBuilderPaths);
     }
 
-    @SuppressWarnings("unchecked")
     public static ItemStack fromConfigSection(String filePath, String path, Map<String, String> placeholders, Map<String, String> pathReplacements, JavaPlugin plugin) {
         File file = new File(plugin.getDataFolder().getAbsolutePath() + File.separator + filePath);
         if (!file.exists()) {
@@ -77,10 +77,10 @@ public class ConfigItemCreator {
     }
 
     public static ItemStack fromConfigSection(FileConfiguration config, ItemStack baseItem, String path, Map<String, String> placeholders, Map<String, String> pathReplacements) {
-        return fromConfigSection(config.getConfigurationSection(""), baseItem, path, placeholders, pathReplacements);
+        return fromConfigSection(config.getConfigurationSection(""), baseItem, path, placeholders, pathReplacements, null);
     }
 
-    public static ItemStack fromConfigSection(ConfigurationSection config, ItemStack baseItem, String path, Map<String, String> placeholders, Map<String, String> pathReplacements) {
+    public static ItemStack fromConfigSection(ConfigurationSection config, ItemStack baseItem, String path, Map<String, String> placeholders, Map<String, String> pathReplacements, Player player) {
         Map<String, String> paths = (Map<String, String>) cfgPaths.clone();
         String filePath = "config";
 
@@ -95,19 +95,19 @@ public class ConfigItemCreator {
 
         // Item name.
         if (config.contains(path + "." + paths.get("name"))) {
-            String itemName = format(config.getString(path + "." + paths.get("name"), null), placeholders);
+            String itemName = format(config.getString(path + "." + paths.get("name"), null), placeholders, player);
             builder.setName(itemName);
         }
 
         // Item lore.
         if (config.contains(path + "." + paths.get("lore"))) {
-            List<String> lore = format(config.getStringList(path + "." + paths.get("lore")), placeholders);
+            List<String> lore = format(config.getStringList(path + "." + paths.get("lore")), placeholders, player);
             builder.setLore(lore);
         }
 
         // Item Flags.
         if (config.contains(path + "." + paths.get("item-flags"))) {
-            List<String> itemFlags = format(config.getStringList(path + "." + paths.get("item-flags")), placeholders);
+            List<String> itemFlags = format(config.getStringList(path + "." + paths.get("item-flags")), placeholders, player);
             for (String flagStr : itemFlags) {
                 boolean isFlagValid = false;
                 String requestedFlagName = flagStr.toUpperCase(Locale.ROOT);
@@ -150,7 +150,7 @@ public class ConfigItemCreator {
 
         // Enchantments
         if (config.contains(path + "." + paths.get("enchantments"))) {
-            List<String> enchantments = format(config.getStringList(path + "." + paths.get("enchantments")), placeholders);
+            List<String> enchantments = format(config.getStringList(path + "." + paths.get("enchantments")), placeholders, player);
             for (String ench : enchantments) {
                 Pair<String, Integer> pair = ASManager.parseEnchantment(ench);
                 if (pair == null)
@@ -168,7 +168,7 @@ public class ConfigItemCreator {
 
         // Custom Enchantments
         if (config.contains(path + "." + paths.get("custom-enchantments"))) {
-            List<String> enchantments = format(config.getStringList(path + "." + paths.get("custom-enchantments")), placeholders);
+            List<String> enchantments = format(config.getStringList(path + "." + paths.get("custom-enchantments")), placeholders, player);
             for (String ench : enchantments) {
                 Pair<String, Integer> pair = ASManager.parseEnchantment(ench);
                 if (pair == null)
@@ -180,7 +180,7 @@ public class ConfigItemCreator {
 
         // RGB Color
         if ((typeStr.contains("LEATHER_") || typeStr.contains("FIREWORK_STAR")) && config.contains(path + "." + paths.get("rgb-color"))) {
-            String rgbStr = format(config.getString(path + "." + paths.get("rgb-color")), placeholders);
+            String rgbStr = format(config.getString(path + "." + paths.get("rgb-color")), placeholders, player);
             String[] rgb = rgbStr.split(";");
             if (rgb.length != 3) {
                 sendError("RGB color must contain 3 values in the format \"255;255;255\"!", filePath, path, rgbStr);
@@ -222,6 +222,10 @@ public class ConfigItemCreator {
     }
 
     public static ItemStack fromConfigSection(ConfigurationSection config, String path, Map<String, String> placeholders, Map<String, String> pathReplacements) {
+        return fromConfigSection(config, path, placeholders, pathReplacements, null);
+    }
+
+    public static ItemStack fromConfigSection(ConfigurationSection config, String path, Map<String, String> placeholders, Map<String, String> pathReplacements, Player player) {
         String filePath = "config";
         Map<String, String> paths = (Map<String, String>) cfgPaths.clone();
 
@@ -232,7 +236,7 @@ public class ConfigItemCreator {
         }
 
         String t = config.getString(path + "." + paths.get("type"), null);
-        String typeStr = t != null ? format(t, placeholders) : null;
+        String typeStr = t != null ? format(t, placeholders, player) : null;
 
         byte data = (byte) config.getInt(path + "." + paths.get("id"));
         int amount = MathUtils.clamp(ASManager.parseInt(config.getString(path + "." + paths.get("amount"), "1"), 1), 1, 64);
@@ -260,7 +264,7 @@ public class ConfigItemCreator {
             return new ItemStack(Material.AIR);
         }
 
-        return fromConfigSection(config, type, path, placeholders, pathReplacements);
+        return fromConfigSection(config, type, path, placeholders, pathReplacements, player);
     }
 
     /**
@@ -270,8 +274,8 @@ public class ConfigItemCreator {
      * @param placeholders Placeholders to fill in.
      * @return Formatted string.
      */
-    private static String format(String string, Map<String, String> placeholders) {
-        string = placeholders(string, placeholders);
+    private static String format(String string, Map<String, String> placeholders, Player player) {
+        string = placeholders(string, placeholders, player);
         string = ColorUtils.format(string);
         return string;
     }
@@ -283,8 +287,8 @@ public class ConfigItemCreator {
      * @param placeholders Placeholders to fill in.
      * @return Formatted String List.
      */
-    private static List<String> format(List<String> strings, Map<String, String> placeholders) {
-        return ColorUtils.format(placeholders(strings, placeholders));
+    private static List<String> format(List<String> strings, Map<String, String> placeholders, Player player) {
+        return ColorUtils.format(placeholders(strings, placeholders, player));
     }
 
     /**
@@ -301,7 +305,7 @@ public class ConfigItemCreator {
      * @param placeholders Map containing all placeholders and their values.
      * @return String with all placeholders filled in.
      */
-    private static String placeholders(String string, Map<String, String> placeholders) {
+    private static String placeholders(String string, Map<String, String> placeholders, Player player) {
         if (placeholders != null && string != null) {
             for (Map.Entry<String, String> entry : placeholders.entrySet()) {
                 if (string.contains("%description%") && entry.getKey().contains("%description%") && entry.getValue().contains("\n")) {
@@ -336,6 +340,9 @@ public class ConfigItemCreator {
                 }
             }
         }
+
+        if (string != null && player != null)
+            Text.parsePapi(string, player);
         return string;
     }
 
@@ -346,11 +353,11 @@ public class ConfigItemCreator {
      * @param placeholders Map containing all placeholders and their values.
      * @return String list with all placeholders filled in.
      */
-    private static List<String> placeholders(List<String> strings, Map<String, String> placeholders) {
+    private static List<String> placeholders(List<String> strings, Map<String, String> placeholders, Player player) {
         List<String> strings1 = new ArrayList<>();
         if (placeholders != null) {
             for (String str : strings) {
-                str = placeholders(str, placeholders);
+                str = placeholders(str, placeholders, player);
                 if (str.contains("\n")) {
                     String[] aa = str.split("\\n");
                     String lastColor = "";
@@ -363,6 +370,12 @@ public class ConfigItemCreator {
                 }
             }
         } else {
+            if (player != null) {
+                return new ArrayList<>(strings.stream()
+                        .map(s -> Text.parsePapi(s, player))
+                        .toList()
+                );
+            }
             return strings;
         }
 
