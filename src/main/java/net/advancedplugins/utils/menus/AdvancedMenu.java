@@ -41,7 +41,8 @@ public class AdvancedMenu implements InventoryHolder {
     private int page = 0;
 
     @Getter
-    private final String title;
+    @Setter
+    private String title;
     @Getter
     private final int invSize;
     @Setter
