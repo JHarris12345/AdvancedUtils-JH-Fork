@@ -50,7 +50,6 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.sql.Ref;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.*;
@@ -462,7 +461,6 @@ public class ASManager {
     public static boolean isLog(Material material) {
         if (material != null && !isAir(material)) {
             boolean doStemsCount = instance.getConfig().getBoolean("settings.stems-count-as-trees", false);
-            ;
             boolean isLog = material.name().endsWith("LOG") || material.name().endsWith("LOG_2");
             boolean isStem = material.name().endsWith("STEM");
             if (!isLog && !isStem) {
@@ -1386,6 +1384,35 @@ public class ASManager {
 
         return MathUtils.clamp(amount, Integer.MIN_VALUE, max);
     }
+
+
+    public static int getExpToDrop(@NotNull Material block, @NotNull ItemStack tool) {
+        int exp = 0;
+        String blockType = block.name();
+
+        // Check block type and assign base experience
+        // https://minecraft.fandom.com/wiki/Experience#Experience_amounts_by_source
+        switch (blockType) {
+            case "COAL_ORE", "DEEPSLATE_COAL_ORE" -> exp = new Random().nextInt(3); // 0-2
+            case "NETHER_GOLD_ORE" -> exp = new Random().nextInt(2); // 0-1
+            case "DIAMOND_ORE", "DEEPSLATE_DIAMOND_ORE", "EMERALD_ORE", "DEEPSLATE_EMERALD_ORE" ->
+                    exp = 3 + new Random().nextInt(5); // 3-7
+            case "LAPIS_ORE", "DEEPSLATE_LAPIS_ORE", "NETHER_QUARTZ_ORE" -> exp = 2 + new Random().nextInt(4); // 2-5
+            case "REDSTONE_ORE", "DEEPSLATE_REDSTONE_ORE" -> exp = 1 + new Random().nextInt(5); // 1-5
+            case "SPAWNER" -> exp = 15 + new Random().nextInt(29); // 15-43
+            case "SCULK" -> exp = 1;
+            case "SCULK_SENSOR", "SCULK_SHRIEKER", "SCULK_CATALYST", "CALIBRATED_SCULK_SENSOR" -> exp = 5;
+            default -> {
+                if (blockType.endsWith("_ORE")) {
+                    exp = 1 + new Random().nextInt(3); // 1-3
+                }
+                return exp;
+            }
+        }
+
+        return exp;
+    }
+
 
     /**
      * Turns a Collection of Strings representing Materials into a Set of Materials.
