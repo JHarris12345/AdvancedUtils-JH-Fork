@@ -28,12 +28,26 @@ public class ColorUtils {
     public static String format(String string) {
         if (string == null || string.isEmpty()) return string;
         if (MinecraftVersion.getVersionNumber() >= 1_16_0) {
-            string = gradient(string);
-            Matcher match = hexPattern.matcher(string);
-            while (match.find()) {
-                String hex = string.substring(match.start(), match.end());
-                string = StringUtils.replace(string, hex, "" + ChatColor.of(hex.replace("{", "").replace("}", "")));
-                match = hexPattern.matcher(string);
+            if (string.contains("{")) {
+                string = gradient(string);
+                Matcher match = hexPattern.matcher(string);
+                while (match.find()) {
+                    String hex = string.substring(match.start(), match.end());
+                    string = StringUtils.replace(string, hex, "" + ChatColor.of(hex.replace("{", "").replace("}", "")));
+                    match = hexPattern.matcher(string);
+                }
+
+            } else {
+                Pattern pattern = Pattern.compile("&?#[A-Fa-f0-9]{6}");
+                Matcher matcher = pattern.matcher(string);
+                String output = org.bukkit.ChatColor.translateAlternateColorCodes('&', string);
+
+                while (matcher.find()) {
+                    String color = string.substring(matcher.start(), matcher.end());
+                    output = output.replace(color, "" + net.md_5.bungee.api.ChatColor.of(color.replace("&", "")));
+                }
+
+                return output;
             }
         }
         return ChatColor.translateAlternateColorCodes('&', string);
