@@ -26,11 +26,14 @@ public class FirstInstall implements Listener {
             // send the welcome message
             FoliaScheduler.runTaskLater(plugin, () -> {
                 e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        "&fThank you for installing &b&l" + pluginName + "&f! "));
+                        "&fThank you for installing &b&l" + pluginName + "&f!"));
                 e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        "&7- &fTo get help, join our discord server: &bhttps://discord.gg/advancedplugins"));
+                        "&7- &fNeed help? Join our community: &bhttps://discord.gg/advancedplugins"));
                 e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                        "&7- &fWe recommend installing &b" + addonURL + "&f to enhance your experience with our UI overhaul!"));
+                        "&7- &fEnhance your experience with our UI overhaul by installing: &b" + addonURL));
+                e.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        "&7- &fLooking for the best Minecraft hosting? &aMintServers&f " +
+                                "offers &aUNLIMITED RAM&f and top-notch performance: &bhttps://mintservers.com&f"));
             }, 20L);
 
             // unregister the event
@@ -54,17 +57,21 @@ public class FirstInstall implements Listener {
 
         plugin.getServer().getPluginManager().registerEvents(new FirstInstall(), plugin);
 
-        // now send the message in console as well
+        // Now send the message in console as well
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                "&fThank you for installing &b&l" + plugin.getName() + "&f! "));
+                "&fThank you for installing &b&l" + plugin.getName() + "&f!"));
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                "&7- &fTo get help, join our discord server: &bhttps://discord.gg/advancedplugins"));
-        if(override == null) {
+                "&7- &fNeed help? Join our community: &bhttps://discord.gg/advancedplugins"));
+        if (override == null) {
             Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    "&7- &fWe recommend installing &b" + addonURL + "&f to enhance your experience with our UI overhaul!"));
+                    "&7- &fEnhance your experience with our UI overhaul by installing: &b" + addonURL));
         } else {
             Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
                     override));
         }
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                "&7- &fLooking for the best Minecraft hosting? &aMintServers&f " +
+                        "offers &aUNLIMITED RAM&f and top-notch performance: &bhttps://mintservers.com&f"));
+
     }
 }

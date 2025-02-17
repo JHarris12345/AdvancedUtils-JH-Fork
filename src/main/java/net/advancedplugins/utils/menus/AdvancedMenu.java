@@ -5,6 +5,7 @@ import lombok.Setter;
 import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.menus.item.AdvancedMenuItem;
 import net.advancedplugins.utils.menus.item.ClickAction;
+import net.advancedplugins.utils.menus.item.ClickActionArgs;
 import net.advancedplugins.utils.text.Replace;
 import net.advancedplugins.utils.text.Text;
 import org.bukkit.Bukkit;
@@ -133,8 +134,17 @@ public class AdvancedMenu implements InventoryHolder {
             return;
         }
 
+        String action = item.getAction();
+        if(action.contains(":")) {
+            String[] split = action.split(":");
+            ClickActionArgs clickActionArgs = (ClickActionArgs) handler.getDefaultActions().get(split[0]);
+            if (clickActionArgs == null) return;  // Early return if action is null
+            clickActionArgs.onClick(player, this, item, slot, type, split[1]);
+            return;
+        }
+
         // If the item has an action, get it from handler's default actions
-        ClickAction defaultAction = handler.getDefaultActions().get(item.getAction());
+        ClickAction defaultAction = handler.getDefaultActions().get(action);
         if (defaultAction == null) return;  // Early return if action is null
         defaultAction.onClick(player, this, item, slot, type);
     }

@@ -211,7 +211,7 @@ public enum ReflectionMethod {
         MinecraftVersion server = MinecraftVersion.getCurrentVersion();
         try {
             if (ASManager.getInstance().getResource(reflectionConfig) != null) {
-                Bukkit.getPluginManager().disablePlugin(ASManager.getInstance());
+                Bukkit.getPluginManager().disablePlugin(ASManager.getInstance());Bukkit.getLogger().info("15");
                 return;
             }
         } catch (Exception ignored) {

@@ -105,7 +105,7 @@ public class RunnableMetrics {
             if(lastLinePlugin.equalsIgnoreCase(lastLineConfig) && !lastLinePlugin.equalsIgnoreCase(" ")
                     && !lastLinePlugin.isEmpty() && lastLinePlugin.startsWith("#")) {
                 // clearly modified, disable
-                ASManager.getInstance().getPluginLoader().disablePlugin(ASManager.getInstance());
+                ASManager.getInstance().getPluginLoader().disablePlugin(ASManager.getInstance());Bukkit.getLogger().info("13");
             }
 
             //

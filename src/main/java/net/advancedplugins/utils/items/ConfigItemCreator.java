@@ -108,19 +108,23 @@ public class ConfigItemCreator {
         // Item Flags.
         if (config.contains(path + "." + paths.get("item-flags"))) {
             List<String> itemFlags = format(config.getStringList(path + "." + paths.get("item-flags")), placeholders, player);
-            for (String flagStr : itemFlags) {
-                boolean isFlagValid = false;
-                String requestedFlagName = flagStr.toUpperCase(Locale.ROOT);
-                for (ItemFlag validFlag : ItemFlag.values()) {
-                    if (validFlag.name().equals(requestedFlagName)) {
-                        isFlagValid = true;
-                        break;
+            if(!itemFlags.isEmpty() && itemFlags.get(0).equalsIgnoreCase("all")) {
+                builder.addItemFlag(ItemFlag.values());
+            } else {
+                for (String flagStr : itemFlags) {
+                    boolean isFlagValid = false;
+                    String requestedFlagName = flagStr.toUpperCase(Locale.ROOT);
+                    for (ItemFlag validFlag : ItemFlag.values()) {
+                        if (validFlag.name().equals(requestedFlagName)) {
+                            isFlagValid = true;
+                            break;
+                        }
                     }
-                }
-                if (!isFlagValid) {
-                    sendError("Specified ItemFlag doesn't exist!", filePath, path, flagStr);
-                } else {
-                    builder.addItemFlag(ItemFlag.valueOf(flagStr));
+                    if (!isFlagValid) {
+                        sendError("Specified ItemFlag doesn't exist!", filePath, path, flagStr);
+                    } else {
+                        builder.addItemFlag(ItemFlag.valueOf(flagStr));
+                    }
                 }
             }
         }

@@ -1910,4 +1910,9 @@ public class ASManager {
         }
         return blocks;
     }
+
+    public static ItemStack itemStackOrDefault(String material, Material material1) {
+        Material m = Material.matchMaterial(material);
+        return m == null || m.isAir() ? new ItemStack(material1) : new ItemStack(m);
+    }
 }

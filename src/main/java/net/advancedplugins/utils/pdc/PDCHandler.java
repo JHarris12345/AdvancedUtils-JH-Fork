@@ -83,7 +83,7 @@ public class PDCHandler {
         holder.getPersistentDataContainer().remove(getNamespace(key));
     }
 
-    private static Object get(PersistentDataHolder holder, String key, PersistentDataType type) {
+    public static Object get(PersistentDataHolder holder, String key, PersistentDataType type) {
         if (holder instanceof ItemStack && !((ItemStack) holder).hasItemMeta()) return null;
         return holder.getPersistentDataContainer().get(getNamespace(key), type);
     }
