@@ -494,6 +494,7 @@ public class ASManager {
     }
 
     public static String capitalize(String output) {
+        if(output == null || output.isEmpty()) return output;
         output = output.replaceAll("_", " ").toLowerCase(Locale.ROOT);
         return output.substring(0, 1).toUpperCase() + output.substring(1);
     }
