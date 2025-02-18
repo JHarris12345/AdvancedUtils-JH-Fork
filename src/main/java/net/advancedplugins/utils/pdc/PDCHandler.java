@@ -5,6 +5,7 @@ import net.advancedplugins.utils.ASManager;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -32,47 +33,53 @@ public class PDCHandler {
         return dataTypes.stream().filter(type -> itemStack.getPersistentDataContainer().has(getNamespace(key), type)).findFirst().orElse(null) != null;
     }
 
-    public static String getString(PersistentDataHolder holder, String key, String def) {
-        if(!has(holder, key, PersistentDataType.STRING))
+    public static String getString(ItemStack itemStack, String key, String def) {
+        if(!has(itemStack, key, PersistentDataType.STRING))
             return def;
-        return get(holder, key, PersistentDataType.STRING).toString();
+        return get(itemStack, key, PersistentDataType.STRING).toString();
     }
 
-    public static String getString(PersistentDataHolder holder, String key) {
-        if(!has(holder, key, PersistentDataType.STRING)) {
+    public static String getString(ItemStack itemStack, String key) {
+        if(!has(itemStack, key, PersistentDataType.STRING)) {
             return null;
         }
-        return get(holder, key, PersistentDataType.STRING).toString();
+        return get(itemStack, key, PersistentDataType.STRING).toString();
     }
 
-    public static int getInt(PersistentDataHolder holder, String key) {
-        if(!has(holder, key, PersistentDataType.INTEGER))
+    public static int getInt(ItemStack itemStack, String key) {
+        if(!has(itemStack, key, PersistentDataType.INTEGER))
             return 0;
-        return (int) get(holder, key, PersistentDataType.INTEGER);
+        return (int) get(itemStack, key, PersistentDataType.INTEGER);
     }
 
-    public static long getLong(PersistentDataHolder holder, String key) {
-        if(!has(holder, key, PersistentDataType.LONG))
+    public static long getLong(ItemStack itemStack, String key) {
+        if(!has(itemStack, key, PersistentDataType.LONG))
             return 0;
-        return (long) get(holder, key, PersistentDataType.LONG);
+        return (long) get(itemStack, key, PersistentDataType.LONG);
     }
 
-    public static float getFloat(PersistentDataHolder holder, String key) {
-        if(!has(holder, key, PersistentDataType.FLOAT))
+    public static float getFloat(ItemStack itemStack, String key) {
+        if(!has(itemStack, key, PersistentDataType.FLOAT))
             return 0.0F;
-        return (float) get(holder, key, PersistentDataType.FLOAT);
+        return (float) get(itemStack, key, PersistentDataType.FLOAT);
     }
 
-    public static double getDouble(PersistentDataHolder holder, String key) {
-        if(!has(holder, key, PersistentDataType.DOUBLE))
+    public static float getFloat(Entity entity, String key) {
+        if(!has(entity, key, PersistentDataType.FLOAT))
+            return 0.0F;
+        return (float) get(entity, key, PersistentDataType.FLOAT);
+    }
+
+    public static double getDouble(ItemStack itemStack, String key) {
+        if(!has(itemStack, key, PersistentDataType.DOUBLE))
             return 0.0D;
-        return (double) get(holder, key, PersistentDataType.DOUBLE);
+        return (double) get(itemStack, key, PersistentDataType.DOUBLE);
     }
 
-    public static boolean getBoolean(PersistentDataHolder holder, String key) {
-        if(!has(holder, key, PersistentDataType.BYTE))
+    public static boolean getBoolean(ItemStack itemStack, String key) {
+        if(!has(itemStack, key, PersistentDataType.BYTE))
             return false;
-        return (byte) get(holder, key, PersistentDataType.BYTE) == 1;
+        return (byte) get(itemStack, key, PersistentDataType.BYTE) == 1;
     }
 
     public static void set(PersistentDataHolder holder, String key, PersistentDataType type, Object value) {
@@ -84,26 +91,34 @@ public class PDCHandler {
         holder.getPersistentDataContainer().remove(getNamespace(key));
     }
 
-    private static Object get(PersistentDataHolder holder, String key, PersistentDataType type) {
-        if (holder instanceof ItemStack && !((ItemStack) holder).hasItemMeta()) return null;
-        return holder.getPersistentDataContainer().get(getNamespace(key), type);
+    private static Object get(ItemStack itemStack, String key, PersistentDataType type) {
+        return itemStack.getPersistentDataContainer().get(getNamespace(key), type);
     }
 
-    public static boolean has(PersistentDataHolder holder, String key, PersistentDataType type) {
-        if (holder == null) return false;
-        return holder.getPersistentDataContainer().has(getNamespace(key), type);
+    private static Object get(Entity entity, String key, PersistentDataType type) {
+        return entity.getPersistentDataContainer().get(getNamespace(key), type);
     }
 
-    public static boolean hasString(PersistentDataHolder holder, String key) {
-        return has(holder, key, PersistentDataType.STRING);
+    public static boolean has(ItemStack itemStack, String key, PersistentDataType type) {
+        if (itemStack == null) return false;
+        return itemStack.getPersistentDataContainer().has(getNamespace(key), type);
     }
 
-    public static boolean hasInt(PersistentDataHolder holder, String key) {
-        return has(holder, key, PersistentDataType.INTEGER);
+    public static boolean has(Entity entity, String key, PersistentDataType type) {
+        if (entity == null) return false;
+        return entity.getPersistentDataContainer().has(getNamespace(key), type);
     }
 
-    public static boolean hasBoolean(PersistentDataHolder holder, String key) {
-        return has(holder, key, PersistentDataType.BYTE);
+    public static boolean hasString(ItemStack itemStack, String key) {
+        return has(itemStack, key, PersistentDataType.STRING);
+    }
+
+    public static boolean hasInt(ItemStack itemStack, String key) {
+        return has(itemStack, key, PersistentDataType.INTEGER);
+    }
+
+    public static boolean hasBoolean(ItemStack itemStack, String key) {
+        return has(itemStack, key, PersistentDataType.BYTE);
     }
 
     public static NamespacedKey getNamespace(String key) {
@@ -130,9 +145,9 @@ public class PDCHandler {
         set(holder, key, PersistentDataType.INTEGER, i);
     }
 
-    public static long getLong(World world, String key) {
+    /*public static long getLong(World world, String key) {
         return (long) get(world, key, PersistentDataType.LONG);
-    }
+    }*/
 
     public static void unset(PersistentDataHolder holder, String chatColor) {
         if (holder == null) return;

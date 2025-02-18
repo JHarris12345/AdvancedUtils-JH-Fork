@@ -56,8 +56,8 @@ public class NBTapi {
 
     public static String get(String argument, ItemStack i) {
         if (i == null || i.getType().isAir()) return null;
-        if (i.hasItemMeta() && PDCHandler.hasString(i.getItemMeta(), argument))
-            return PDCHandler.getString(i.getItemMeta(), argument);
+        if (i.hasItemMeta() && PDCHandler.hasString(i, argument))
+            return PDCHandler.getString(i, argument);
 
 //        if (!containsNbt(argument, i)) return null;
 //
@@ -70,7 +70,7 @@ public class NBTapi {
 
     public static Integer getInt(String argument, ItemStack i) {
         if (i == null || i.getType().isAir()) return null;
-        if (PDCHandler.hasInt(i.getItemMeta(), argument)) return PDCHandler.getInt(i.getItemMeta(), argument);
+        if (PDCHandler.hasInt(i, argument)) return PDCHandler.getInt(i, argument);
 
 //        if (!containsNbt(argument, i)) {
 //            return 0;
@@ -84,8 +84,8 @@ public class NBTapi {
 
     public static long getLong(String argument, ItemStack i) {
         if (i == null) return 0;
-        if (PDCHandler.has(i.getItemMeta(), argument, PersistentDataType.LONG))
-            return PDCHandler.getLong(i.getItemMeta(), argument);
+        if (PDCHandler.has(i, argument, PersistentDataType.LONG))
+            return PDCHandler.getLong(i, argument);
 //
 //        if (!containsNbt(argument, i)) return 0;
 //
