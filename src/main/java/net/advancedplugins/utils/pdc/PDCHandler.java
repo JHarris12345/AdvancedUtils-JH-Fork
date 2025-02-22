@@ -1,6 +1,7 @@
 package net.advancedplugins.utils.pdc;
 
 import net.advancedplugins.utils.ASManager;
+import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -9,6 +10,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -95,6 +98,20 @@ public class PDCHandler {
         return holder.getPersistentDataContainer().has(getNamespace(key), type);
     }
 
+    public static boolean has(PersistentDataHolder holder, String key) {
+        if (holder instanceof ItemStack && !((ItemStack) holder).hasItemMeta()) return false;
+        if (holder == null) return false;
+
+        return holder.getPersistentDataContainer().has(getNamespace(key));
+    }
+
+    public static boolean has(PersistentDataHolder holder, NamespacedKey key) {
+        if (holder instanceof ItemStack && !((ItemStack) holder).hasItemMeta()) return false;
+        if (holder == null) return false;
+
+        return holder.getPersistentDataContainer().has(key);
+    }
+
     public static boolean hasString(PersistentDataHolder holder, String key) {
         return has(holder, key, PersistentDataType.STRING);
     }
@@ -105,6 +122,12 @@ public class PDCHandler {
 
     public static boolean hasBoolean(PersistentDataHolder holder, String key) {
         return has(holder, key, PersistentDataType.BYTE);
+    }
+
+    public static @Nullable NamespacedKey getNamespace(String plugin, String key) {
+        Plugin pl = Bukkit.getPluginManager().getPlugin(plugin);
+        if (pl == null) return null;
+        return new NamespacedKey(pl, key);
     }
 
     public static NamespacedKey getNamespace(String key) {
