@@ -105,7 +105,8 @@ public class PDCHandler {
         return holder.getPersistentDataContainer().has(getNamespace(key));
     }
 
-    public static boolean has(PersistentDataHolder holder, NamespacedKey key) {
+    public static boolean has(PersistentDataHolder holder, @Nullable NamespacedKey key) {
+        if (key == null) return false;
         if (holder instanceof ItemStack && !((ItemStack) holder).hasItemMeta()) return false;
         if (holder == null) return false;
 
