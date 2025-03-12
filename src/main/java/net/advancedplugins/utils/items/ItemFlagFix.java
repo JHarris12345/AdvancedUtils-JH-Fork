@@ -1,5 +1,7 @@
 package net.advancedplugins.utils.items;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -32,19 +34,26 @@ public class ItemFlagFix {
         try {
             if (!MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) return;
 
-            AttributeModifier modifier = new AttributeModifier(
-                    FIX_UUID,
-                    "generic.follow_range",
-                    0.1,
-                    AttributeModifier.Operation.ADD_NUMBER
-            );
-            if (meta.hasAttributeModifiers() && meta.getAttributeModifiers()
-                    .values().stream()
-                    .anyMatch(m -> m.equals(modifier))) return;
+            // CAUSED THIS https://github.com/GC-spigot/AdvancedEnchantments/issues/4852
+//            AttributeModifier modifier = new AttributeModifier(
+//                    FIX_UUID,
+//                    "generic.follow_range",
+//                    0.1,
+//                    AttributeModifier.Operation.ADD_NUMBER
+//            );
+//            if (meta.hasAttributeModifiers() && meta.getAttributeModifiers()
+//                    .values().stream()
+//                    .anyMatch(m -> m.equals(modifier))) return;
+//
+//            meta.addAttributeModifier(Attribute.GENERIC_FOLLOW_RANGE, modifier);
+//            if (!meta.hasItemFlag(ItemFlag.HIDE_ATTRIBUTES)) {
+//                meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES); // Automatically hide attributes to hide `generic.follow_range` attribute
+//            }
 
-            meta.addAttributeModifier(Attribute.GENERIC_FOLLOW_RANGE, modifier);
-            if (!meta.hasItemFlag(ItemFlag.HIDE_ATTRIBUTES)) {
-                meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES); // Automatically hide attributes to hide `generic.follow_range` attribute
+            Multimap<Attribute, AttributeModifier> modifiers = meta.getAttributeModifiers();
+            if(modifiers == null) {
+                modifiers = HashMultimap.create();
+                meta.setAttributeModifiers(modifiers);
             }
         } catch (Exception ev) {
             ev.printStackTrace();
