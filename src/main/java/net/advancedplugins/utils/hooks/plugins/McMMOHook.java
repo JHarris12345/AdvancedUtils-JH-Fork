@@ -2,6 +2,7 @@ package net.advancedplugins.utils.hooks.plugins;
 
 import com.gmail.nossr50.api.ItemSpawnReason;
 import com.gmail.nossr50.api.TreeFellerBlockBreakEvent;
+import com.gmail.nossr50.config.GeneralConfig;
 import com.gmail.nossr50.datatypes.meta.BonusDropMeta;
 import com.gmail.nossr50.datatypes.player.McMMOPlayer;
 import com.gmail.nossr50.datatypes.skills.PrimarySkillType;
@@ -133,6 +134,8 @@ public class McMMOHook extends PluginHookInstance implements Listener {
         BlockState blockState = block.getState();
         McMMOPlayer mmoPlayer = UserManager.getPlayer(player);
         if (mmoPlayer == null) return;
+
+        if (!mcMMO.p.getGeneralConfig().getDoubleDropsEnabled(PrimarySkillType.MINING, block.getType())) return;
 
         if (ProbabilityUtil.isSkillRNGSuccessful(SubSkillType.MINING_DOUBLE_DROPS, mmoPlayer)) {
             boolean useTriple = mmoPlayer.getAbilityMode(mcMMO.p.getSkillTools().getSuperAbility(PrimarySkillType.MINING)) && mcMMO.p.getAdvancedConfig().getAllowMiningTripleDrops();
