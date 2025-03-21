@@ -1788,8 +1788,8 @@ public class ASManager {
 
     public static boolean parseBoolean(String arg, boolean b) {
         if (arg == null) return b;
-        if (arg.equalsIgnoreCase("true")) return true;
-        if (arg.equalsIgnoreCase("false")) return false;
+        if (arg.strip().equalsIgnoreCase("true")) return true;
+        if (arg.strip().equalsIgnoreCase("false")) return false;
         return b;
     }
 
