@@ -19,6 +19,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkEffectMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.*;
@@ -81,14 +82,19 @@ public class ConfigItemCreator {
     }
 
     public static ItemStack fromConfigSection(ConfigurationSection config, ItemStack baseItem, String path, Map<String, String> placeholders, Map<String, String> pathReplacements, Player player) {
+        return fromConfigSection(config, null, baseItem, path, null, placeholders, pathReplacements, null, player);
+    }
+
+    public static ItemStack fromConfigSection(ConfigurationSection config, @Nullable ConfigurationSection fallbackConfig, ItemStack baseItem, String path, String fallbackPath, Map<String, String> placeholders, Map<String, String> pathReplacements, @Nullable Map<String, String> fallbackPathReplacements, Player player) {
         Map<String, String> paths = (Map<String, String>) cfgPaths.clone();
         String filePath = "config";
+        
+        Map<String, String> fallbackPaths = (Map<String, String>) cfgPaths.clone();
+        if (fallbackPathReplacements != null && !fallbackPathReplacements.isEmpty()) 
+            fallbackPaths.putAll(fallbackPathReplacements);
 
-        if (pathReplacements != null && !pathReplacements.isEmpty()) {
-            for (Map.Entry<String, String> entry : pathReplacements.entrySet()) {
-                paths.put(entry.getKey(), entry.getValue());
-            }
-        }
+        if (pathReplacements != null && !pathReplacements.isEmpty()) 
+            paths.putAll(pathReplacements);
 
         ItemBuilder builder = new ItemBuilder(baseItem);
         String typeStr = builder.toItemStack().getType().name();
@@ -97,18 +103,27 @@ public class ConfigItemCreator {
         if (config.contains(path + "." + paths.get("name"))) {
             String itemName = format(config.getString(path + "." + paths.get("name"), null), placeholders, player);
             builder.setName(itemName);
+        } else if (fallbackConfig != null && fallbackConfig.contains(fallbackPath + "." + fallbackPaths.get("name"))) {
+            String itemName = format(fallbackConfig.getString(fallbackPath + "." + fallbackPaths.get("name"), null), placeholders, player);
+            builder.setName(itemName);
         }
 
         // Item lore.
         if (config.contains(path + "." + paths.get("lore"))) {
             List<String> lore = format(config.getStringList(path + "." + paths.get("lore")), placeholders, player);
             builder.setLore(lore);
+        } else if (fallbackConfig != null && fallbackConfig.contains(fallbackPath + "." + fallbackPaths.get("lore"))) {
+            List<String> lore = format(fallbackConfig.getStringList(fallbackPath + "." + fallbackPaths.get("lore")), placeholders, player);
+            builder.setLore(lore);
         }
 
         // Item Flags.
-        if (config.contains(path + "." + paths.get("item-flags"))) {
-            List<String> itemFlags = format(config.getStringList(path + "." + paths.get("item-flags")), placeholders, player);
-            if(!itemFlags.isEmpty() && itemFlags.get(0).equalsIgnoreCase("all")) {
+        if (config.contains(path + "." + paths.get("item-flags")) || (fallbackConfig != null && fallbackConfig.contains(fallbackPath + "." + fallbackPaths.get("item-flags")))) {
+            List<String> configFlags = config.contains(path + "." + paths.get("item-flags"))
+                    ? config.getStringList(path + "." + paths.get("item-flags"))
+                    : fallbackConfig != null ? fallbackConfig.getStringList(fallbackPath + "." + fallbackPaths.get("item-flags")) : new ArrayList<>();
+            List<String> itemFlags = format(configFlags, placeholders, player);
+            if (!itemFlags.isEmpty() && itemFlags.get(0).equalsIgnoreCase("all")) {
                 builder.addItemFlag(ItemFlag.values());
             } else {
                 for (String flagStr : itemFlags) {
@@ -136,6 +151,12 @@ public class ConfigItemCreator {
             String trimPattern = split[1];
 
             builder.setArmorTrim(trimMaterial, trimPattern);
+        } else if (fallbackConfig != null && fallbackConfig.contains(fallbackPath + "." + fallbackPaths.get("armor-trim"))) {
+            String[] split = fallbackConfig.getString(fallbackPath + "." + fallbackPaths.get("armor-trim")).split(";");
+            String trimMaterial = split[0];
+            String trimPattern = split[1];
+
+            builder.setArmorTrim(trimMaterial, trimPattern);
         }
 
         // Custom Model Data
@@ -144,17 +165,26 @@ public class ConfigItemCreator {
                 int modelData = config.getInt(path + "." + paths.get("custom-model-data"));
                 builder.setCustomModelData(modelData);
             }
-
+        } else if (fallbackConfig != null && fallbackConfig.contains(fallbackPath + "." + fallbackPaths.get("custom-model-data"))) {
+            if (MinecraftVersion.getVersionNumber() >= 1_14_0) {
+                int modelData = fallbackConfig.getInt(fallbackPath + "." + fallbackPaths.get("custom-model-data"));
+                builder.setCustomModelData(modelData);
+            }
         }
-        // Custom Model Data
+
+        // Unbreakable
         if (config.contains(path + "." + paths.get("unbreakable"))) {
             builder.setUnbreakable(config.getBoolean(path + "." + paths.get("unbreakable")));
+        } else if (fallbackConfig != null && fallbackConfig.contains(fallbackPath + "." + fallbackPaths.get("unbreakable"))) {
+            builder.setUnbreakable(fallbackConfig.getBoolean(fallbackPath + "." + fallbackPaths.get("unbreakable")));
         }
 
-
         // Enchantments
-        if (config.contains(path + "." + paths.get("enchantments"))) {
-            List<String> enchantments = format(config.getStringList(path + "." + paths.get("enchantments")), placeholders, player);
+        if (config.contains(path + "." + paths.get("enchantments")) || (fallbackConfig != null && fallbackConfig.contains(fallbackPath + "." + fallbackPaths.get("enchantments")))) {
+            List<String> configEnchs = config.contains(path + "." + paths.get("enchantments"))
+                    ? config.getStringList(path + "." + paths.get("enchantments"))
+                    : fallbackConfig != null ? fallbackConfig.getStringList(fallbackPath + "." + fallbackPaths.get("enchantments")) : new ArrayList<>();
+            List<String> enchantments = format(configEnchs, placeholders, player);
             for (String ench : enchantments) {
                 Pair<String, Integer> pair = ASManager.parseEnchantment(ench);
                 if (pair == null)
@@ -171,8 +201,11 @@ public class ConfigItemCreator {
         }
 
         // Custom Enchantments
-        if (config.contains(path + "." + paths.get("custom-enchantments"))) {
-            List<String> enchantments = format(config.getStringList(path + "." + paths.get("custom-enchantments")), placeholders, player);
+        if (config.contains(path + "." + paths.get("custom-enchantments")) || (fallbackConfig != null && fallbackConfig.contains(fallbackPath + "." + fallbackPaths.get("custom-enchantments")))) {
+            List<String> configEnchs = config.contains(path + "." + paths.get("custom-enchantments"))
+                    ? config.getStringList(path + "." + paths.get("custom-enchantments"))
+                    : fallbackConfig != null ? fallbackConfig.getStringList(fallbackPath + "." + fallbackPaths.get("custom-enchantments")) : new ArrayList<>();
+            List<String> enchantments = format(configEnchs, placeholders, player);
             for (String ench : enchantments) {
                 Pair<String, Integer> pair = ASManager.parseEnchantment(ench);
                 if (pair == null)
@@ -183,8 +216,11 @@ public class ConfigItemCreator {
         }
 
         // RGB Color
-        if ((typeStr.contains("LEATHER_") || typeStr.contains("FIREWORK_STAR")) && config.contains(path + "." + paths.get("rgb-color"))) {
-            String rgbStr = format(config.getString(path + "." + paths.get("rgb-color")), placeholders, player);
+        if ((typeStr.contains("LEATHER_") || typeStr.contains("FIREWORK_STAR")) && (config.contains(path + "." + paths.get("rgb-color")) || (fallbackConfig != null && fallbackConfig.contains(fallbackPath + "." + fallbackPaths.get("rgb-color"))))) {
+            String configRgb = config.contains(path + "." + paths.get("rgb-color"))
+                    ? config.getString(path + "." + paths.get("rgb-color"))
+                    : fallbackConfig != null ? fallbackConfig.getString(fallbackPath + "." + fallbackPaths.get("rgb-color")) : null;
+            String rgbStr = format(configRgb, placeholders, player);
             String[] rgb = rgbStr.split(";");
             if (rgb.length != 3) {
                 sendError("RGB color must contain 3 values in the format \"255;255;255\"!", filePath, path, rgbStr);
@@ -213,9 +249,12 @@ public class ConfigItemCreator {
         // This must be done last otherwise it will not glow
         if (config.contains(path + "." + paths.get("force-glow"))) {
             boolean forceGlow = config.getBoolean(path + "." + paths.get("force-glow"));
-            if (forceGlow) {
+            if (forceGlow)
                 builder.setGlowing(true);
-            }
+        } else if (fallbackConfig != null && fallbackConfig.contains(fallbackPath + "." + fallbackPaths.get("force-glow"))) {
+            boolean forceGlow = fallbackConfig.getBoolean(fallbackPath + "." + fallbackPaths.get("force-glow"));
+            if (forceGlow)
+                builder.setGlowing(true);
         }
 
         return builder.toItemStack();
@@ -229,29 +268,54 @@ public class ConfigItemCreator {
         return fromConfigSection(config, path, placeholders, pathReplacements, null);
     }
 
+    public static ItemStack fromConfigSection(ConfigurationSection config, ConfigurationSection fallbackConfig, String path, String fallbackPath, Map<String, String> placeholders, Map<String, String> pathReplacements, Map<String, String> fallbackPathReplacements) {
+        return fromConfigSection(config, fallbackConfig, path, fallbackPath, placeholders, pathReplacements, fallbackPathReplacements, null);
+    }
+
     public static ItemStack fromConfigSection(ConfigurationSection config, String path, Map<String, String> placeholders, Map<String, String> pathReplacements, Player player) {
+        return fromConfigSection(config, null, path, null, placeholders, pathReplacements, null, player);
+    }
+
+    public static ItemStack fromConfigSection(ConfigurationSection config, @Nullable ConfigurationSection fallbackConfig, String path, @Nullable String fallbackPath, Map<String, String> placeholders, Map<String, String> pathReplacements, @Nullable Map<String, String> fallbackPathReplacements, Player player) {
         String filePath = "config";
         Map<String, String> paths = (Map<String, String>) cfgPaths.clone();
 
-        if (pathReplacements != null && !pathReplacements.isEmpty()) {
-            for (Map.Entry<String, String> entry : pathReplacements.entrySet()) {
-                paths.put(entry.getKey(), entry.getValue());
-            }
-        }
+        Map<String, String> fallbackPaths = (Map<String, String>) cfgPaths.clone();
+        if (fallbackPathReplacements != null && !fallbackPathReplacements.isEmpty())
+            fallbackPaths.putAll(fallbackPathReplacements);
 
-        String t = config.getString(path + "." + paths.get("type"), null);
+        if (pathReplacements != null && !pathReplacements.isEmpty()) 
+            paths.putAll(pathReplacements);
+
+        String t = config.contains(path + "." + paths.get("type"))
+                ? config.getString(path + "." + paths.get("type"), null)
+                : fallbackConfig != null ? fallbackConfig.getString(fallbackPath + "." + fallbackPaths.get("type")) : null;
+
         String typeStr = t != null ? format(t, placeholders, player) : null;
 
-        byte data = (byte) config.getInt(path + "." + paths.get("id"));
-        int amount = MathUtils.clamp(ASManager.parseInt(config.getString(path + "." + paths.get("amount"), "1"), 1), 1, 64);
+        byte data = (byte) (config.contains(path + "." + paths.get("id"))
+                ? config.getInt(path + "." + paths.get("id"))
+                : fallbackConfig != null ? fallbackConfig.getInt(fallbackPath + "." + fallbackPaths.get("id")) : 0);
+        int amount = MathUtils.clamp(ASManager.parseInt(
+                config.contains(path + "." + paths.get("amount"))
+                        ? config.getString(path + "." + paths.get("amount"), "1")
+                        : fallbackConfig != null ? fallbackConfig.getString(fallbackPath + "." + fallbackPaths.get("amount"), "1") : "1",
+                1
+        ), 1, 64);
 
-        Object advancedHead = config.get(path + ".advanced-heads");
+        Object advancedHead = config.contains(path + ".advanced-heads")
+                ? config.get(path + ".advanced-heads")
+                : fallbackConfig != null ? fallbackConfig.get(fallbackPath + ".advanced-heads") : null;
 
         // Support for custom heads
-        String head = config.getString(path + "." + paths.get("head"));
+        String head = config.contains(path + "." + paths.get("head"))
+                ? config.getString(path + "." + paths.get("head"))
+                : fallbackConfig != null ? fallbackConfig.getString(fallbackPath + "." + fallbackPaths.get("head")) : null;
 
         // Support for itemsadder
-        String itemsadder = config.getString(path + "." + paths.get("itemsadder"));
+        String itemsadder = config.contains(path + "." + paths.get("itemsadder"))
+                ? config.getString(path + "." + paths.get("itemsadder"))
+                : fallbackConfig != null ? fallbackConfig.getString(fallbackPath + "." + fallbackPaths.get("itemsadder")) : null;
 
         ItemStack type;
         if (itemsadder != null) {
@@ -268,7 +332,7 @@ public class ConfigItemCreator {
             return new ItemStack(Material.AIR);
         }
 
-        return fromConfigSection(config, type, path, placeholders, pathReplacements, player);
+        return fromConfigSection(config, fallbackConfig, type, path, fallbackPath, placeholders, pathReplacements, fallbackPaths, player);
     }
 
     /**
