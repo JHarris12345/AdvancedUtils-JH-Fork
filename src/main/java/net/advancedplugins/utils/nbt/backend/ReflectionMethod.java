@@ -169,7 +169,8 @@ public enum ReflectionMethod {
             new Since(MinecraftVersion.MC1_20_R4, "K"),
             new Since(MinecraftVersion.MC1_21_R1, "N"), // looks like this: https://i.imgur.com/OjhNDUQ.png
             new Since(MinecraftVersion.MC1_21_R2, "L"), // looks like this: https://i.imgur.com/OjhNDUQ.png
-            new Since(MinecraftVersion.MC1_21_R3, "P")), // looks like this: https://i.imgur.com/OjhNDUQ.png
+            new Since(MinecraftVersion.MC1_21_R3, "P"), // looks like this: https://i.imgur.com/OjhNDUQ.png
+            new Since(MinecraftVersion.MC1_21_R4, "N")), // looks like this: https://i.imgur.com/OjhNDUQ.png
     NMSDATACOMPONENTHOLDER_GET(ClassWrapper.NMS_DATACOMPONENTHOLDER, new Class[] {ClassWrapper.NMS_DATACOMPONENTTYPE.getClazz()}, MinecraftVersion.MC1_20_R4,
             new Since(MinecraftVersion.MC1_20_R4, "get(net.minecraft.core.component.DataComponentType)")),
     NMSCUSTOMDATA_GETCOPY(ClassWrapper.NMS_CUSTOMDATA, new Class[] {}, MinecraftVersion.MC1_20_R4,

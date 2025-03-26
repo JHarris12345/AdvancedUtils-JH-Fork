@@ -27,7 +27,8 @@ public enum ClassWrapper {
     // NBT
     NMS_Block(PackageWrapper.NMS, "world.level.block.Block", MinecraftVersion.MC1_8_R3, null),
     // Items
-    NMS_ItemTool(PackageWrapper.NMS, "world.item", "ItemTool", MinecraftVersion.MC1_8_R3),
+    // removed in 1.21.5
+    //NMS_ItemTool(PackageWrapper.NMS, "world.item", "ItemTool", MinecraftVersion.MC1_8_R3),
     // Entities
     NMS_EntityPlayer(PackageWrapper.NMS, "server.level", "EntityPlayer", MinecraftVersion.MC1_8_R3),
     NMS_EntityHuman(PackageWrapper.NMS, "world.entity.player", "EntityHuman", MinecraftVersion.MC1_8_R3),

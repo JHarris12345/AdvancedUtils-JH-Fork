@@ -16,10 +16,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.math3.distribution.UniformIntegerDistribution;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Server;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.type.Bed;
@@ -206,8 +203,11 @@ public class ASManager {
      * @return True of the material is a tool, false otherwise.
      */
     public static boolean isTool(Material material) {
-        Object item = ReflectionMethod.CRAFT_MagicNumbers_getItem.run(null, material);
-        return ASManager.isValid(material) && ClassWrapper.NMS_ItemTool.getClazz().isInstance(item);
+        if(material == null) return false;
+        String name = material.name();
+        return name.endsWith("_AXE") || name.endsWith("_PICKAXE") ||
+                name.endsWith("_SWORD") || name.endsWith("_SHOVEL") ||
+                name.endsWith("_SPADE") || name.endsWith("_HOE") || name.endsWith("SHEARS");
     }
 
     public static boolean isExcessVelocity(Vector vel) {
@@ -1915,5 +1915,19 @@ public class ASManager {
     public static ItemStack itemStackOrDefault(String material, Material material1) {
         Material m = Material.matchMaterial(material);
         return m == null || m.isAir() ? new ItemStack(material1) : new ItemStack(m);
+    }
+
+    public static Optional<Entity> getEntityFromUUID(UUID uuid, World world) {
+        if(MinecraftVersion.isPaper()) {
+            return Optional.ofNullable(Bukkit.getEntity(uuid));
+        } else {
+            return world.getEntities().stream().filter(entity -> entity.getUniqueId().equals(uuid)).findFirst();
+        }
+    }
+
+    public static <T> Set<T> shuffle(Set<T> strings) {
+        List<T> list = new ArrayList<>(strings);
+        Collections.shuffle(list);
+        return new HashSet<>(list);
     }
 }

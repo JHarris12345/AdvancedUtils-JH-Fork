@@ -37,6 +37,7 @@ public enum MinecraftVersion {
     MC1_21_R1(1_21_0, true),
     MC1_21_R2(1_21_2, true),
     MC1_21_R3(1_21_3, true),
+    MC1_21_R4(1_21_4, true),
 
     ;
 
