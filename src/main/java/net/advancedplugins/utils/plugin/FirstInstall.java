@@ -63,8 +63,9 @@ public class FirstInstall implements Listener {
         Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
                 "&7- &fNeed help? Join our community: &bhttps://discord.gg/advancedplugins"));
         if (override == null) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                    "&7- &fEnhance your experience with our UI overhaul by installing: &b" + addonURL));
+            if (addonURL != null)
+                Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                        "&7- &fEnhance your experience with our UI overhaul by installing: &b" + addonURL));
         } else {
             Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
                     override));
@@ -73,5 +74,14 @@ public class FirstInstall implements Listener {
                 "&7- &fLooking for the best Minecraft hosting? &aMintServers&f " +
                         "offers &aUNLIMITED RAM&f and top-notch performance: &bhttps://mintservers.com&f"));
 
+    }
+
+    public static void sendStartupAlert(JavaPlugin plugin, String message) {
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                "&a>> &f" + message));
+
+        //  Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+        //          "&a>> &fLooking for the best Minecraft hosting? &aMintServers&f " +
+        //                 "offers &aUnlimited RAM&f and &aHigh Performance&f for only $9.99/mo: &ahttps://mintservers.com&f"));
     }
 }

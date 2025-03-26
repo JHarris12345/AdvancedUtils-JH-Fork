@@ -59,9 +59,9 @@ public class ResourceFileManager {
                             File targetFile = new File(dataFolder, relativePath);
 
                             // Create parent directories if needed
-                            if (!targetFile.exists()) {
-                                targetFile.getParentFile().mkdirs();
+                            if (!targetFile.exists() && !targetFile.isDirectory()) {
                                 plugin.saveResource(name, false);
+                                targetFile.getParentFile().mkdirs();
                                 filesProcessed++;
                             }
                         }
