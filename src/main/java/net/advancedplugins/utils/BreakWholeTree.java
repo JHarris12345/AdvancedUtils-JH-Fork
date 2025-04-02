@@ -19,6 +19,7 @@ public class BreakWholeTree {
     private int leavesScanned = 0;
 
     private final Set<Block> foundBlocks;
+    private final Set<Block> scannedBlocks = new HashSet<>();
     private final List<Location> logs = new ArrayList<>();
     private final List<Location> leaves = new ArrayList<>();
     private final int maxLogs;
@@ -49,12 +50,20 @@ public class BreakWholeTree {
     }
 
     private boolean findLog(Block block, boolean up, boolean prevFound) {
+        if (block == null || foundBlocks.contains(block)) {
+            return false; // Stop recursion if already processed
+        }
+
         if (foundBlocks.size() >= maxLogs || leavesScanned >= maxLeaves) {
             return false;
         }
 
+        if (scannedBlocks.contains(block)) {
+            return false; // Prevent infinite recursion
+        }
+
         boolean found = false;
-        if (ASManager.isLog(block.getType()) && !logs.contains(block.getLocation())) {
+        if (ASManager.isLog(block.getType()) && foundBlocks.add(block)) {
             logs.add(block.getLocation());
             found = true;
         }
@@ -64,6 +73,8 @@ public class BreakWholeTree {
             leavesScanned++;
         }
 
+        scannedBlocks.add(block);
+
         if (found) {
             for (BlockFace dir : dirs) {
                 findLog(block.getRelative(dir), up, true);
@@ -71,8 +82,12 @@ public class BreakWholeTree {
         }
 
         if (found || prevFound) {
-            findLog(block.getRelative(up ? BlockFace.UP : BlockFace.DOWN), up, found);
+            Block nextBlock = block.getRelative(up ? BlockFace.UP : BlockFace.DOWN);
+            if (!foundBlocks.contains(nextBlock)) { // Prevent revisiting
+                findLog(nextBlock, up, found);
+            }
         }
+
 
         return found;
     }
