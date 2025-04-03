@@ -1030,6 +1030,10 @@ public class ASManager {
     }
 
     public static void giveItem(Player p, ItemStack... items) {
+        giveItem(p, Arrays.stream(items).collect(Collectors.toList()));
+    }
+
+    public static void giveItem(Player p, Collection<ItemStack> items) {
         for (ItemStack item : items) {
             if (!isValid(item)) continue;
             if (!p.getInventory().addItem(item).isEmpty()) {
