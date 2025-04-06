@@ -148,10 +148,8 @@ public class McMMOHook extends PluginHookInstance implements Listener {
 
                 for (ItemStack itemStack : block.getDrops()) {
                     for (int i = 0; i < bonusCount; i++) {
-                        if (telepathy)
-                            blockState.setMetadata("ae_mcmmoTP_DROPS", new FixedMetadataValue(ASManager.getInstance(), true));
-                        if (smelt)
-                            blockState.setMetadata("ae_mcmmoSMELT", new FixedMetadataValue(ASManager.getInstance(), true));
+                        if (telepathy) blockState.setMetadata("ae_mcmmoTP_DROPS", new FixedMetadataValue(ASManager.getInstance(), true));
+                        if (smelt) blockState.setMetadata("ae_mcmmoSMELT", new FixedMetadataValue(ASManager.getInstance(), true));
 
                         ItemUtils.spawnItems(event.getPlayer(), blockState.getLocation(), itemStack, itemStack.getAmount(), ItemSpawnReason.BONUS_DROPS);
                     }
