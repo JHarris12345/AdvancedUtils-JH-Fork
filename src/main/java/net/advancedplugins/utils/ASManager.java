@@ -990,6 +990,8 @@ public class ASManager {
     }
 
     public static void giveItem(Player p, ItemStack... items) {
+        p.getInventory().setMaxStackSize(64);
+
         for (ItemStack item : items) {
             if (!isValid(item)) continue;
             if (!p.getInventory().addItem(item).isEmpty()) {
