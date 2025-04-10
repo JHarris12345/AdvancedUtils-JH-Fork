@@ -11,6 +11,7 @@ import net.advancedplugins.utils.nbt.backend.ReflectionMethod;
 import net.advancedplugins.utils.nbt.utils.MinecraftVersion;
 import net.advancedplugins.utils.text.Replace;
 import net.advancedplugins.utils.text.Text;
+import net.advancedplugins.utils.trycatch.TryCatchUtil;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.lang3.StringUtils;
@@ -1448,14 +1449,15 @@ public class ASManager {
         return material.getMaxDurability() > 0;
     }
 
-
+    /**
+     * Moved to net.advancedplugins.utils.trycatch.TryCatchUtil
+     * Method for compatibility :)
+     * @param s
+     * @param rt
+     * @return
+     */
     public static String tryOrElse(TryCatchMethodShort s, String rt) {
-        try {
-            return s.tryCatch();
-        } catch (Exception ev) {
-            //ev.printStackTrace();
-            return rt;
-        }
+        return TryCatchUtil.tryOrDefault(s::tryCatch, rt);
     }
 
     public static void setByMatching(ItemStack compareTo, ItemStack item, LivingEntity ent) {
