@@ -115,7 +115,7 @@ public class VanillaEnchants {
                         Enchantment.getByName("POWER") : Enchantment.getByName("ARROW_DAMAGE");
             case "punch":
                 return MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4) ?
-                        Enchantment.getByName("POWER") : Enchantment.getByName("ARROW_KNOCKBACK");
+                        Enchantment.getByName("PUNCH") : Enchantment.getByName("ARROW_KNOCKBACK");
             case "flame":
                 return MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4) ?
                         Enchantment.getByName("FLAME") : Enchantment.getByName("ARROW_FIRE");
