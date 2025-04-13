@@ -36,6 +36,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
+import org.bukkit.util.io.BukkitObjectInputStream;
+import org.bukkit.util.io.BukkitObjectOutputStream;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -1935,5 +1937,35 @@ public class ASManager {
         List<T> list = new ArrayList<>(strings);
         Collections.shuffle(list);
         return new HashSet<>(list);
+    }
+
+    /**
+     * Serialize ItemStack to b64
+     * @param is ItemStack
+     * @return Serialized ItemStack as B64 String
+     */
+    public static String serializeItem(ItemStack is) throws IOException {
+        ByteArrayOutputStream io = new ByteArrayOutputStream();
+        BukkitObjectOutputStream os = new BukkitObjectOutputStream(io);
+        os.writeObject(is);
+        os.flush();
+
+        byte[] serializedObject = io.toByteArray();
+
+        return new String(Base64.getEncoder().encode(serializedObject));
+    }
+
+    /**
+     * Deserialize ItemStack from b64
+     * @param b64 Serialized ItemStack as B64
+     * @return Deserialized ItemStack from B64
+     */
+    public static ItemStack deserializeItem(String b64) throws IOException, ClassNotFoundException {
+        byte[] serializedObject = Base64.getDecoder().decode(b64);
+
+        ByteArrayInputStream in = new ByteArrayInputStream(serializedObject);
+        BukkitObjectInputStream is = new BukkitObjectInputStream(in);
+
+        return (ItemStack) is.readObject();
     }
 }
