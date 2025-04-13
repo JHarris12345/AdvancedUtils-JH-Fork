@@ -2,14 +2,13 @@ package net.advancedplugins.utils.data.cache;
 
 import net.advancedplugins.utils.FoliaScheduler;
 import net.advancedplugins.utils.data.DatabaseController;
-import net.advancedplugins.utils.data.cache.iface.IAsyncCache;
-import net.advancedplugins.utils.data.cache.iface.IAsyncSavable;
+import net.advancedplugins.utils.data.cache.iface.IAsyncSavableCache;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Set;
 import java.util.function.Consumer;
 
-public class AsyncDataCache<K,V> extends DataCache<K,V> implements IAsyncCache<K,V>, IAsyncSavable<K,V> {
+public class AsyncDataCache<K,V> extends DataCache<K,V> implements IAsyncSavableCache<K,V> {
     private final JavaPlugin plugin;
 
     public AsyncDataCache(DatabaseController controller, JavaPlugin plugin) {

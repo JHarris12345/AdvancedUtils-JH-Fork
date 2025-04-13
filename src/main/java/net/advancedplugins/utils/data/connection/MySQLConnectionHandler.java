@@ -22,8 +22,17 @@ public class MySQLConnectionHandler implements IConnectionHandler{
 
     @Override
     public void retrieveCredentials(ConfigurationSection section) {
-        this.host = section.getString("host");
-        this.port = (short) section.getInt("port");
+        if(section.contains("host")) {
+            this.host = section.getString("host");
+            this.port = (short) section.getInt("port", 3306);
+        } else {
+            String[] socket = section.getString("address", "").split(":", 2);
+            this.host = socket[0];
+
+            if(socket.length == 2) this.port = Short.parseShort(socket[1]);
+            else this.port = 3306;
+        }
+
         this.username = section.getString("username");
         this.password = section.getString("password");
         this.database = section.getString("database");

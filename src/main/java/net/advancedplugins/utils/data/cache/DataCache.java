@@ -2,8 +2,7 @@ package net.advancedplugins.utils.data.cache;
 
 import com.j256.ormlite.dao.Dao;
 import net.advancedplugins.utils.data.DatabaseController;
-import net.advancedplugins.utils.data.cache.iface.ICache;
-import net.advancedplugins.utils.data.cache.iface.ISavable;
+import net.advancedplugins.utils.data.cache.iface.ISavableCache;
 import net.advancedplugins.utils.trycatch.TryCatchUtil;
 
 import java.lang.reflect.ParameterizedType;
@@ -11,7 +10,7 @@ import java.lang.reflect.Type;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class DataCache<K,V> implements ICache<K,V>, ISavable<K,V> {
+public class DataCache<K,V> implements ISavableCache<K,V> {
 
     private final Map<K,V> cache;
     private final Dao<V,K> dao;

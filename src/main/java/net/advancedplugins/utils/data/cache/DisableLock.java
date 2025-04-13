@@ -5,5 +5,5 @@ public class DisableLock {
      * Disable lock for async savable cache
      * Set to true when disabling plugin
      */
-    public static final boolean IS_LOCKED = false;
+    public static boolean IS_LOCKED = false;
 }
