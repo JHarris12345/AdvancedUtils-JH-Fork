@@ -484,6 +484,11 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder setCustomNBT(String nbt) {
+        Bukkit.getUnsafe().modifyItemStack(is, nbt);
+        return this;
+    }
+
     public void addLoreLines(List<String> lore) {
         List<String> newLore = new ArrayList<>();
         if (im.hasLore()) {

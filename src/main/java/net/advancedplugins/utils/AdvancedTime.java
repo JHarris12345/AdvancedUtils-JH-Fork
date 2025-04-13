@@ -51,7 +51,7 @@ public class AdvancedTime {
             Matcher matcher = pattern.matcher(timeFormat);
 
             while(matcher.find()) {
-                String extra = matcher.group();
+                String extra = matcher.group(1);
 
                 String toReplace = "<" + key + ":" + extra + ">";
                 String replace = value + extra;
@@ -130,7 +130,8 @@ public class AdvancedTime {
         while(old.contains("%d") && !keys.isEmpty()) {
             int start = old.indexOf("%d");
             int extraStart = start + 2;
-            int end  = old.indexOf("%d", start);
+            int end  = old.indexOf("%d", extraStart);
+            if(end == -1) end = old.length();
 
             String extra = old.substring(extraStart, end);
             output.append("<")
