@@ -15,6 +15,7 @@ public interface ISavable<K,V> {
     void saveAll();
 
     void remove(K key);
+    void removeAll();
 
     boolean exists(K key);
 }

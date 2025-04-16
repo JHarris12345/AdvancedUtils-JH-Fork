@@ -5,6 +5,7 @@ import net.advancedplugins.utils.data.DatabaseController;
 import net.advancedplugins.utils.data.cache.iface.IAsyncSavableCache;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
@@ -32,33 +33,59 @@ public class AsyncDataCache<K,V> extends DataCache<K,V> implements IAsyncSavable
     }
 
     @Override
-    public void modifyAsync(K key, Consumer<V> action) {
-        this.runAsync(() -> this.modify(key,action));
+    public void modifyAsync(K key, Consumer<V> action, Consumer<V> then) {
+        this.runAsync(() -> {
+            this.modify(key, action);
+            then.accept(get(key));
+        });
     }
 
     @Override
-    public void modifyAsyncMultiple(Set<K> keys, Consumer<V> action) {
-        this.runAsync(() -> this.modifyAsyncMultiple(keys,action));
+    public void modifyAsyncMultiple(Set<K> keys, Consumer<V> action, Runnable then) {
+        this.runAsync(() -> {
+            this.modifyMultiple(keys, action);
+            then.run();
+        });
     }
 
     @Override
-    public void modifyAsyncAll(Consumer<V> action) {
-        this.runAsync(() -> this.modifyAll(action));
+    public void modifyAsyncAll(Consumer<V> action,Runnable then) {
+        this.runAsync(() -> {
+            this.modifyAll(action);
+            then.run();
+        });
     }
 
     @Override
-    public void saveAsync(K key) {
-        this.runAsync(() -> this.save(key));
+    public void saveAsync(K key,Runnable then) {
+        this.runAsync(() -> {
+            this.save(key);
+            then.run();
+        });
     }
 
     @Override
-    public void saveAsyncAll() {
-        this.runAsync(this::saveAll);
+    public void saveAsyncAll(Runnable then) {
+        this.runAsync(() -> {
+            this.saveAll();
+            then.run();
+        });
     }
 
     @Override
-    public void removeAsync(K key) {
-        this.runAsync(() -> this.remove(key));
+    public void removeAsync(K key,Runnable then) {
+        this.runAsync(() -> {
+            this.remove(key);
+            then.run();
+        });
+    }
+
+    @Override
+    public void removeAsyncAll(Runnable then) {
+        this.runAsync(() -> {
+            this.removeAll();
+            then.run();
+        });
     }
 
     @Override

@@ -34,6 +34,21 @@ public class DataCache<K,V> implements ISavableCache<K,V> {
     }
 
     @Override
+    public Set<K> keySet() {
+        return this.cache.keySet();
+    }
+
+    @Override
+    public Collection<V> values() {
+        return this.cache.values();
+    }
+
+    @Override
+    public Set<Map.Entry<K, V>> entrySet() {
+        return this.cache.entrySet();
+    }
+
+    @Override
     public void set(K key, V value) {
         this.cache.put(key,value);
     }
@@ -56,6 +71,11 @@ public class DataCache<K,V> implements ISavableCache<K,V> {
     @Override
     public void remove(K key) {
         TryCatchUtil.tryRun(() -> this.dao.deleteById(key));
+    }
+
+    @Override
+    public void removeAll() {
+        TryCatchUtil.tryRun(() -> this.dao.deleteBuilder().delete());
     }
 
     @Override
