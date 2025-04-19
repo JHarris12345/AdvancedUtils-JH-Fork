@@ -3,6 +3,7 @@ package net.advancedplugins.utils.data.cache;
 import com.j256.ormlite.dao.Dao;
 import net.advancedplugins.utils.data.DatabaseController;
 import net.advancedplugins.utils.data.cache.iface.ISavableCache;
+import net.advancedplugins.utils.data.cache.iface.ISavableObject;
 import net.advancedplugins.utils.trycatch.TryCatchUtil;
 
 import java.lang.reflect.ParameterizedType;
@@ -15,15 +16,25 @@ public class DataCache<K,V> implements ISavableCache<K,V> {
     private final Map<K,V> cache;
     private final Dao<V,K> dao;
 
+    /**
+     * Automated constructor
+     * Works only when extending it or using anonymous class
+     * @param controller DatabaseController instance
+     */
     @SuppressWarnings("unchecked")
     public DataCache(DatabaseController controller) {
         this.cache = new HashMap<>();
 
-        ParameterizedType type = (ParameterizedType) getClass().getGenericInterfaces()[0];
+        ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
         Type[] typeArgs = type.getActualTypeArguments();
         Class<K> keyClass = (Class<K>) typeArgs[0];
         Class<V> valueClass = (Class<V>) typeArgs[1];
 
+        this.dao = controller.getDao(valueClass,keyClass);
+    }
+
+    public DataCache(DatabaseController controller, Class<K> keyClass, Class<V> valueClass) {
+        this.cache = new HashMap<>();
         this.dao = controller.getDao(valueClass,keyClass);
     }
 
@@ -82,6 +93,7 @@ public class DataCache<K,V> implements ISavableCache<K,V> {
     public V load(K key) {
         V value = TryCatchUtil.tryAndReturn(() -> this.dao.queryForId(key));
         if(value == null) return null;
+        if(value instanceof ISavableObject) ((ISavableObject) value).afterLoad();
         this.cache.put(key,value);
         return value;
     }
@@ -89,10 +101,13 @@ public class DataCache<K,V> implements ISavableCache<K,V> {
     @Override
     public Set<V> loadAll() {
         TryCatchUtil.tryOrDefault(this.dao::queryForAll, new ArrayList<V>())
-                .forEach(value -> this.cache.put(
-                        TryCatchUtil.tryAndReturn(() -> this.dao.extractId(value)),
-                        value
-                ));
+                .forEach(value -> {
+                    if(value instanceof ISavableObject) ((ISavableObject) value).afterLoad();
+                    this.cache.put(
+                            TryCatchUtil.tryAndReturn(() -> this.dao.extractId(value)),
+                            value
+                    );
+                });
         return new HashSet<>(this.cache.values());
     }
 
@@ -153,7 +168,9 @@ public class DataCache<K,V> implements ISavableCache<K,V> {
     @Override
     public void save(K key) {
         if(!contains(key)) return;
-        TryCatchUtil.tryRun(() -> this.dao.createOrUpdate(this.cache.get(key)));
+        V value = this.get(key);
+        if(value instanceof ISavableObject) ((ISavableObject) value).beforeSave();
+        TryCatchUtil.tryRun(() -> this.dao.createOrUpdate(value));
     }
 
     @Override

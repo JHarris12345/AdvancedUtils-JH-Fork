@@ -12,8 +12,19 @@ import java.util.function.Consumer;
 public class AsyncDataCache<K,V> extends DataCache<K,V> implements IAsyncSavableCache<K,V> {
     private final JavaPlugin plugin;
 
+    /**
+     * Automated constructor
+     * Works only when extending it or using anonymous class
+     * @param controller DatabaseController instance
+     * @param plugin Plugin instance
+     */
     public AsyncDataCache(DatabaseController controller, JavaPlugin plugin) {
         super(controller);
+        this.plugin = plugin;
+    }
+
+    public AsyncDataCache(DatabaseController controller, Class<K> keyClass, Class<V> valueClass, JavaPlugin plugin) {
+        super(controller, keyClass, valueClass);
         this.plugin = plugin;
     }
 
