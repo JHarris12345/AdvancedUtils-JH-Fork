@@ -84,6 +84,14 @@ public class AsyncDataCache<K,V> extends DataCache<K,V> implements IAsyncSavable
     }
 
     @Override
+    public void createAsync(K key, V value, Runnable then) {
+        this.runAsync(() -> {
+            this.create(key,value);
+            then.run();
+        });
+    }
+
+    @Override
     public void removeAsync(K key,Runnable then) {
         this.runAsync(() -> {
             this.remove(key);

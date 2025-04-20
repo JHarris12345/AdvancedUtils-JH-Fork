@@ -14,6 +14,8 @@ public interface ISavable<K,V> {
     void save(K key);
     void saveAll();
 
+    void create(K key, V value);
+
     void remove(K key);
     void removeAll();
 

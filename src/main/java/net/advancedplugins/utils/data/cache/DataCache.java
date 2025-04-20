@@ -1,7 +1,11 @@
 package net.advancedplugins.utils.data.cache;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.ForeignCollection;
+import com.j256.ormlite.misc.TransactionManager;
 import net.advancedplugins.utils.data.DatabaseController;
+import net.advancedplugins.utils.data.cache.iface.IForeignMapping;
+import net.advancedplugins.utils.data.cache.iface.IForeignMappingHandler;
 import net.advancedplugins.utils.data.cache.iface.ISavableCache;
 import net.advancedplugins.utils.data.cache.iface.ISavableObject;
 import net.advancedplugins.utils.trycatch.TryCatchUtil;
@@ -11,7 +15,7 @@ import java.lang.reflect.Type;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class DataCache<K,V> implements ISavableCache<K,V> {
+public class DataCache<K,V> implements ISavableCache<K,V>, IForeignMappingHandler {
 
     private final Map<K,V> cache;
     private final Dao<V,K> dao;
@@ -93,6 +97,7 @@ public class DataCache<K,V> implements ISavableCache<K,V> {
     public V load(K key) {
         V value = TryCatchUtil.tryAndReturn(() -> this.dao.queryForId(key));
         if(value == null) return null;
+        if(value instanceof IForeignMapping) this.dbToJava((IForeignMapping) value);
         if(value instanceof ISavableObject) ((ISavableObject) value).afterLoad();
         this.cache.put(key,value);
         return value;
@@ -132,7 +137,7 @@ public class DataCache<K,V> implements ISavableCache<K,V> {
                     action.accept(entry.getValue());
                 });
 
-        TryCatchUtil.tryOrDefault(this.dao::queryForAll, new ArrayList<V>())
+        this.runInTransaction(() -> TryCatchUtil.tryOrDefault(this.dao::queryForAll, new ArrayList<V>())
                 .stream()
                 .map(value -> new AbstractMap.SimpleEntry<K,V>(
                         TryCatchUtil.tryAndReturn(() -> this.dao.extractId(value)),
@@ -144,14 +149,14 @@ public class DataCache<K,V> implements ISavableCache<K,V> {
                     action.accept(entry.getValue());
                     this.save(entry.getKey());
                     this.invalidate(entry.getKey());
-                });
+                }));
     }
 
     @Override
     public void modifyAll(Consumer<V> action) {
         this.cache.values().forEach(action);
 
-        TryCatchUtil.tryOrDefault(this.dao::queryForAll, new ArrayList<V>())
+        this.runInTransaction(() -> TryCatchUtil.tryOrDefault(this.dao::queryForAll, new ArrayList<V>())
                 .stream()
                 .map(value -> new AbstractMap.SimpleEntry<K,V>(
                         TryCatchUtil.tryAndReturn(() -> this.dao.extractId(value)),
@@ -162,7 +167,7 @@ public class DataCache<K,V> implements ISavableCache<K,V> {
                     action.accept(entry.getValue());
                     this.save(entry.getKey());
                     this.invalidate(entry.getKey());
-                });
+                }));
     }
 
     @Override
@@ -170,17 +175,74 @@ public class DataCache<K,V> implements ISavableCache<K,V> {
         if(!contains(key)) return;
         V value = this.get(key);
         if(value instanceof ISavableObject) ((ISavableObject) value).beforeSave();
-        TryCatchUtil.tryRun(() -> this.dao.createOrUpdate(value));
+        this.runInTransaction(() -> {
+            if(value instanceof IForeignMapping) this.javaToDb((IForeignMapping) value);
+            TryCatchUtil.tryRun(() -> this.dao.createOrUpdate(value));
+        });
     }
 
     @Override
     public void saveAll() {
-        this.cache.keySet().forEach(this::save);
+        this.runInTransaction(() -> this.cache.keySet().forEach(this::save));
+    }
+
+    @Override
+    public void create(K key, V value) {
+        this.set(key,value);
+        if(value instanceof ISavableObject) ((ISavableObject) value).beforeSave();
+        this.runInTransaction(() -> {
+            if (value instanceof IForeignMapping) this.javaToDb((IForeignMapping) value);
+            this.save(key);
+            this.load(key);
+            if (value instanceof IForeignMapping) this.dbToJava((IForeignMapping) value);
+            if (value instanceof ISavableObject) ((ISavableObject) value).afterLoad();
+        });
     }
 
     @Override
     public boolean exists(K key) {
         if(this.contains(key)) return true;
         return TryCatchUtil.tryOrDefault(() -> this.dao.idExists(key),false);
+    }
+
+    private void runInTransaction(Runnable runnable) {
+        TryCatchUtil.tryRun(() -> TransactionManager.callInTransaction(
+                this.dao.getConnectionSource(),
+                () -> {
+                    runnable.run();
+                    return null;
+                }
+        ));
+    }
+
+    @Override
+    public void dbToJava(IForeignMapping entity) {
+        entity.getForeignMapping().forEach(this::addAllForeignToCollection);
+    }
+
+    @Override
+    public void javaToDb(IForeignMapping entity) {
+        entity.getForeignMapping().forEach((foreign, collection) -> {
+            foreign.removeIf(o -> !collection.contains(o));
+            collection.forEach(obj -> {
+                if(foreign.contains(obj)) updateForeign(foreign,obj);
+                else addToForeign(foreign,obj);
+            });
+        });
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> void addAllForeignToCollection(ForeignCollection<?> foreign, Collection<T> collection) {
+        foreign.forEach(entity -> collection.add((T)entity));
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> void updateForeign(ForeignCollection<T> foreign, Object obj) {
+        TryCatchUtil.tryRun(() -> foreign.update((T) obj));
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> void addToForeign(ForeignCollection<T> foreign, Object obj) {
+        TryCatchUtil.tryRun(() -> foreign.add((T) obj));
     }
 }

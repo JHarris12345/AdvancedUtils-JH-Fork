@@ -14,6 +14,8 @@ public interface IAsyncSavable<K,V> extends ISavable<K,V>{
     void saveAsync(K key,Runnable then);
     void saveAsyncAll(Runnable then);
 
+    void createAsync(K key, V value, Runnable then);
+
     void removeAsync(K key,Runnable then);
     void removeAsyncAll(Runnable then);
 
