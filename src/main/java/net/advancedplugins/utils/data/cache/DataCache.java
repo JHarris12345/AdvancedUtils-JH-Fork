@@ -234,6 +234,7 @@ public class DataCache<K,V> implements ISavableCache<K,V>, IForeignMappingHandle
 
     @SuppressWarnings("unchecked")
     private <T> void addAllForeignToCollection(ForeignCollection<?> foreign, Collection<T> collection) {
+        collection.clear();
         foreign.forEach(entity -> collection.add((T)entity));
     }
 

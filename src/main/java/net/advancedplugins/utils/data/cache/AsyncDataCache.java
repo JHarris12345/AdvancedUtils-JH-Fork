@@ -1,6 +1,5 @@
 package net.advancedplugins.utils.data.cache;
 
-import net.advancedplugins.utils.FoliaScheduler;
 import net.advancedplugins.utils.data.DatabaseController;
 import net.advancedplugins.utils.data.cache.iface.IAsyncSavableCache;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -107,5 +106,10 @@ public class AsyncDataCache<K,V> extends DataCache<K,V> implements IAsyncSavable
             return null;
         }
         return CompletableFuture.runAsync(runnable,this.executor);
+    }
+
+    @Override
+    public ExecutorService getExecutor() {
+        return this.executor;
     }
 }
