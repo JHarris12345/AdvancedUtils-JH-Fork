@@ -1,23 +1,24 @@
 package net.advancedplugins.utils.data.cache.iface;
 
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public interface IAsyncSavable<K,V> extends ISavable<K,V>{
-    void loadAsync(K key, Consumer<V> then);
-    void loadAsyncAll(Consumer<Set<V>> then);
+    CompletableFuture<V> loadAsync(K key);
+    CompletableFuture<Set<V>> loadAsyncAll();
 
-    void modifyAsync(K key, Consumer<V> action,Consumer<V> then);
-    void modifyAsyncMultiple(Set<K> keys, Consumer<V> action,Runnable then);
-    void modifyAsyncAll(Consumer<V> action,Runnable then);
+    CompletableFuture<Void> modifyAsync(K key, Consumer<V> action);
+    CompletableFuture<Void> modifyAsyncMultiple(Set<K> keys, Consumer<V> action);
+    CompletableFuture<Void> modifyAsyncAll(Consumer<V> action);
 
-    void saveAsync(K key,Runnable then);
-    void saveAsyncAll(Runnable then);
+    CompletableFuture<Void> saveAsync(K key);
+    CompletableFuture<Void> saveAsyncAll();
 
-    void createAsync(K key, V value, Runnable then);
+    CompletableFuture<Void> createAsync(K key, V value);
 
-    void removeAsync(K key,Runnable then);
-    void removeAsyncAll(Runnable then);
+    CompletableFuture<Void> removeAsync(K key);
+    CompletableFuture<Void> removeAsyncAll();
 
-    void existsAsync(K key, Consumer<Boolean> then);
+    CompletableFuture<Boolean> existsAsync(K key);
 }

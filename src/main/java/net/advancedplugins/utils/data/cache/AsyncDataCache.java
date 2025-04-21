@@ -5,12 +5,15 @@ import net.advancedplugins.utils.data.DatabaseController;
 import net.advancedplugins.utils.data.cache.iface.IAsyncSavableCache;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class AsyncDataCache<K,V> extends DataCache<K,V> implements IAsyncSavableCache<K,V> {
     private final JavaPlugin plugin;
+    private final ExecutorService executor;
 
     /**
      * Automated constructor
@@ -21,102 +24,88 @@ public class AsyncDataCache<K,V> extends DataCache<K,V> implements IAsyncSavable
     public AsyncDataCache(DatabaseController controller, JavaPlugin plugin) {
         super(controller);
         this.plugin = plugin;
+        this.executor = controller.getExecutor();
     }
 
     public AsyncDataCache(DatabaseController controller, Class<K> keyClass, Class<V> valueClass, JavaPlugin plugin) {
         super(controller, keyClass, valueClass);
         this.plugin = plugin;
+        this.executor = controller.getExecutor();
     }
 
     @Override
-    public void getAsync(K key, Consumer<V> then) {
-        this.runAsync(() -> then.accept(this.get(key)));
+    public CompletableFuture<V> getAsync(K key) {
+        return this.supplyAsync(() -> this.get(key));
     }
 
     @Override
-    public void loadAsync(K key, Consumer<V> then) {
-        this.runAsync(() -> then.accept(this.load(key)));
+    public CompletableFuture<V> loadAsync(K key) {
+        return this.supplyAsync(() -> this.load(key));
     }
 
     @Override
-    public void loadAsyncAll(Consumer<Set<V>> then) {
-        this.runAsync(() -> then.accept(this.loadAll()));
+    public CompletableFuture<Set<V>> loadAsyncAll() {
+        return this.supplyAsync(this::loadAll);
     }
 
     @Override
-    public void modifyAsync(K key, Consumer<V> action, Consumer<V> then) {
-        this.runAsync(() -> {
-            this.modify(key, action);
-            then.accept(get(key));
-        });
+    public CompletableFuture<Void> modifyAsync(K key, Consumer<V> action) {
+        return this.runAsync(() -> this.modify(key,action));
     }
 
     @Override
-    public void modifyAsyncMultiple(Set<K> keys, Consumer<V> action, Runnable then) {
-        this.runAsync(() -> {
-            this.modifyMultiple(keys, action);
-            then.run();
-        });
+    public CompletableFuture<Void> modifyAsyncMultiple(Set<K> keys, Consumer<V> action) {
+        return this.runAsync(() -> this.modifyMultiple(keys, action));
     }
 
     @Override
-    public void modifyAsyncAll(Consumer<V> action,Runnable then) {
-        this.runAsync(() -> {
-            this.modifyAll(action);
-            then.run();
-        });
+    public CompletableFuture<Void> modifyAsyncAll(Consumer<V> action) {
+        return this.runAsync(() -> this.modifyAll(action));
     }
 
     @Override
-    public void saveAsync(K key,Runnable then) {
-        this.runAsync(() -> {
-            this.save(key);
-            then.run();
-        });
+    public CompletableFuture<Void> saveAsync(K key) {
+        return this.runAsync(() -> this.save(key));
     }
 
     @Override
-    public void saveAsyncAll(Runnable then) {
-        this.runAsync(() -> {
-            this.saveAll();
-            then.run();
-        });
+    public CompletableFuture<Void> saveAsyncAll() {
+        return this.runAsync(this::saveAll);
     }
 
     @Override
-    public void createAsync(K key, V value, Runnable then) {
-        this.runAsync(() -> {
-            this.create(key,value);
-            then.run();
-        });
+    public CompletableFuture<Void> createAsync(K key, V value) {
+        return this.runAsync(() -> this.create(key,value));
     }
 
     @Override
-    public void removeAsync(K key,Runnable then) {
-        this.runAsync(() -> {
-            this.remove(key);
-            then.run();
-        });
+    public CompletableFuture<Void> removeAsync(K key) {
+        return this.runAsync(() -> this.remove(key));
     }
 
     @Override
-    public void removeAsyncAll(Runnable then) {
-        this.runAsync(() -> {
-            this.removeAll();
-            then.run();
-        });
+    public CompletableFuture<Void> removeAsyncAll() {
+        return this.runAsync(this::removeAll);
     }
 
     @Override
-    public void existsAsync(K key, Consumer<Boolean> then) {
-        this.runAsync(() -> then.accept(this.exists(key)));
+    public CompletableFuture<Boolean> existsAsync(K key) {
+        return this.supplyAsync(() -> this.exists(key));
     }
 
-    private void runAsync(Runnable runnable) {
+    private <T> CompletableFuture<T> supplyAsync(Supplier<T> supplier) {
+        if(DisableLock.IS_LOCKED) {
+            supplier.get();
+            return null;
+        }
+        return CompletableFuture.supplyAsync(supplier, this.executor);
+    }
+
+    private CompletableFuture<Void> runAsync(Runnable runnable) {
         if(DisableLock.IS_LOCKED) {
             runnable.run();
-            return;
+            return null;
         }
-        FoliaScheduler.runTaskAsynchronously(this.plugin, runnable);
+        return CompletableFuture.runAsync(runnable,this.executor);
     }
 }

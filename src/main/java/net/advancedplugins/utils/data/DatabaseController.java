@@ -27,8 +27,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Getter @Setter
 public class DatabaseController {
@@ -38,6 +39,7 @@ public class DatabaseController {
 
     private ConnectionType connectionType;
     private JdbcPooledConnectionSource source;
+    private ExecutorService executor;
 
     private boolean debug;
     private Map<Class<?>, Dao<?,?>> daoMap;
@@ -68,9 +70,11 @@ public class DatabaseController {
         switch (this.connectionType) {
             case MYSQL:
                 handler = new MySQLConnectionHandler();
+                this.executor = Executors.newFixedThreadPool(10);
                 break;
             case SQLITE:
                 handler = new SQLiteConnectionHandler(this.plugin.getDataFolder());
+                this.executor = Executors.newSingleThreadExecutor();
                 break;
             default:
                 throw new UnsupportedOperationException("Unsupported connection type: " + this.connectionType.name());
@@ -87,6 +91,7 @@ public class DatabaseController {
      */
     @SneakyThrows
     public void close() {
+        if(this.executor != null) this.executor.shutdownNow();
         if(this.source == null) return;
         this.source.close();
         this.source = null;

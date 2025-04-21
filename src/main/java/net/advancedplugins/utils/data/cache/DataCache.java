@@ -7,7 +7,7 @@ import net.advancedplugins.utils.data.DatabaseController;
 import net.advancedplugins.utils.data.cache.iface.IForeignMapping;
 import net.advancedplugins.utils.data.cache.iface.IForeignMappingHandler;
 import net.advancedplugins.utils.data.cache.iface.ISavableCache;
-import net.advancedplugins.utils.data.cache.iface.ISavableObject;
+import net.advancedplugins.utils.data.cache.iface.ISavableLifecycle;
 import net.advancedplugins.utils.trycatch.TryCatchUtil;
 
 import java.lang.reflect.ParameterizedType;
@@ -98,7 +98,7 @@ public class DataCache<K,V> implements ISavableCache<K,V>, IForeignMappingHandle
         V value = TryCatchUtil.tryAndReturn(() -> this.dao.queryForId(key));
         if(value == null) return null;
         if(value instanceof IForeignMapping) this.dbToJava((IForeignMapping) value);
-        if(value instanceof ISavableObject) ((ISavableObject) value).afterLoad();
+        if(value instanceof ISavableLifecycle) ((ISavableLifecycle) value).afterLoad();
         this.cache.put(key,value);
         return value;
     }
@@ -107,7 +107,8 @@ public class DataCache<K,V> implements ISavableCache<K,V>, IForeignMappingHandle
     public Set<V> loadAll() {
         TryCatchUtil.tryOrDefault(this.dao::queryForAll, new ArrayList<V>())
                 .forEach(value -> {
-                    if(value instanceof ISavableObject) ((ISavableObject) value).afterLoad();
+                    if(value instanceof IForeignMapping) this.dbToJava((IForeignMapping) value);
+                    if(value instanceof ISavableLifecycle) ((ISavableLifecycle) value).afterLoad();
                     this.cache.put(
                             TryCatchUtil.tryAndReturn(() -> this.dao.extractId(value)),
                             value
@@ -174,7 +175,7 @@ public class DataCache<K,V> implements ISavableCache<K,V>, IForeignMappingHandle
     public void save(K key) {
         if(!contains(key)) return;
         V value = this.get(key);
-        if(value instanceof ISavableObject) ((ISavableObject) value).beforeSave();
+        if(value instanceof ISavableLifecycle) ((ISavableLifecycle) value).beforeSave();
         this.runInTransaction(() -> {
             if(value instanceof IForeignMapping) this.javaToDb((IForeignMapping) value);
             TryCatchUtil.tryRun(() -> this.dao.createOrUpdate(value));
@@ -189,13 +190,13 @@ public class DataCache<K,V> implements ISavableCache<K,V>, IForeignMappingHandle
     @Override
     public void create(K key, V value) {
         this.set(key,value);
-        if(value instanceof ISavableObject) ((ISavableObject) value).beforeSave();
+        if(value instanceof ISavableLifecycle) ((ISavableLifecycle) value).beforeSave();
         this.runInTransaction(() -> {
             if (value instanceof IForeignMapping) this.javaToDb((IForeignMapping) value);
             this.save(key);
             this.load(key);
             if (value instanceof IForeignMapping) this.dbToJava((IForeignMapping) value);
-            if (value instanceof ISavableObject) ((ISavableObject) value).afterLoad();
+            if (value instanceof ISavableLifecycle) ((ISavableLifecycle) value).afterLoad();
         });
     }
 
