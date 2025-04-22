@@ -32,6 +32,7 @@ public class PDCHandler {
     );
 
     public static boolean contains(PersistentDataHolder holder, String key) {
+        if (holder == null) return false;
         return dataTypes.stream().filter(type -> holder.getPersistentDataContainer().has(getNamespace(key), type)).findFirst().orElse(null) != null;
     }
 
