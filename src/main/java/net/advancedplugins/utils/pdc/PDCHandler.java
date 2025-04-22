@@ -7,6 +7,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.persistence.PersistentDataType;
@@ -175,11 +176,13 @@ public class PDCHandler {
      * @return List of keys
      */
     public static List<String> getKeys(ItemStack i) {
-        if (i == null || !i.hasItemMeta()) {
+        if (i == null)
             return Collections.emptyList();
-        }
 
-        PersistentDataContainer container = i.getItemMeta().getPersistentDataContainer();
+        ItemMeta meta = i.getItemMeta();
+        if (meta == null) return Collections.emptyList();
+
+        PersistentDataContainer container = meta.getPersistentDataContainer();
         Set<NamespacedKey> keySet = container.getKeys();
 
         if (keySet.isEmpty()) {
