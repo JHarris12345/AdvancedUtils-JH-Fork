@@ -21,13 +21,13 @@ public class AsyncDataCache<K,V> extends DataCache<K,V> implements IAsyncSavable
      * @param plugin Plugin instance
      */
     public AsyncDataCache(DatabaseController controller, JavaPlugin plugin) {
-        super(controller);
+        super(controller,plugin);
         this.plugin = plugin;
         this.executor = controller.getExecutor();
     }
 
     public AsyncDataCache(DatabaseController controller, Class<K> keyClass, Class<V> valueClass, JavaPlugin plugin) {
-        super(controller, keyClass, valueClass);
+        super(controller,plugin, keyClass, valueClass);
         this.plugin = plugin;
         this.executor = controller.getExecutor();
     }

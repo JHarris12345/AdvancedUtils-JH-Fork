@@ -3,12 +3,15 @@ package net.advancedplugins.utils.data.cache;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.misc.TransactionManager;
+import net.advancedplugins.utils.FoliaScheduler;
 import net.advancedplugins.utils.data.DatabaseController;
 import net.advancedplugins.utils.data.cache.iface.IForeignMapping;
 import net.advancedplugins.utils.data.cache.iface.IForeignMappingHandler;
 import net.advancedplugins.utils.data.cache.iface.ISavableCache;
 import net.advancedplugins.utils.data.cache.iface.ISavableLifecycle;
 import net.advancedplugins.utils.trycatch.TryCatchUtil;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -19,6 +22,7 @@ public class DataCache<K,V> implements ISavableCache<K,V>, IForeignMappingHandle
 
     private final Map<K,V> cache;
     private final Dao<V,K> dao;
+    private final JavaPlugin plugin;
 
     /**
      * Automated constructor
@@ -26,8 +30,9 @@ public class DataCache<K,V> implements ISavableCache<K,V>, IForeignMappingHandle
      * @param controller DatabaseController instance
      */
     @SuppressWarnings("unchecked")
-    public DataCache(DatabaseController controller) {
+    public DataCache(DatabaseController controller, JavaPlugin plugin) {
         this.cache = new HashMap<>();
+        this.plugin = plugin;
 
         ParameterizedType type = (ParameterizedType) getClass().getGenericSuperclass();
         Type[] typeArgs = type.getActualTypeArguments();
@@ -37,9 +42,10 @@ public class DataCache<K,V> implements ISavableCache<K,V>, IForeignMappingHandle
         this.dao = controller.getDao(valueClass,keyClass);
     }
 
-    public DataCache(DatabaseController controller, Class<K> keyClass, Class<V> valueClass) {
+    public DataCache(DatabaseController controller,JavaPlugin plugin, Class<K> keyClass, Class<V> valueClass) {
         this.cache = new HashMap<>();
         this.dao = controller.getDao(valueClass,keyClass);
+        this.plugin = plugin;
     }
 
     @Override
@@ -190,14 +196,9 @@ public class DataCache<K,V> implements ISavableCache<K,V>, IForeignMappingHandle
     @Override
     public void create(K key, V value) {
         this.set(key,value);
-        if(value instanceof ISavableLifecycle) ((ISavableLifecycle) value).beforeSave();
-        this.runInTransaction(() -> {
-            if (value instanceof IForeignMapping) this.javaToDb((IForeignMapping) value);
-            this.save(key);
-            this.load(key);
-            if (value instanceof IForeignMapping) this.dbToJava((IForeignMapping) value);
-            if (value instanceof ISavableLifecycle) ((ISavableLifecycle) value).afterLoad();
-        });
+        this.save(key);
+
+        FoliaScheduler.runTaskLater(plugin, () -> this.load(key), 20);
     }
 
     @Override
