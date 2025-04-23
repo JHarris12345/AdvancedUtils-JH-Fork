@@ -12,7 +12,7 @@ import java.util.function.Supplier;
 
 public class AsyncDataCache<K,V> extends DataCache<K,V> implements IAsyncSavableCache<K,V> {
     private final JavaPlugin plugin;
-    private final ExecutorService executor;
+    private ExecutorService executor;
 
     /**
      * Automated constructor
@@ -111,5 +111,10 @@ public class AsyncDataCache<K,V> extends DataCache<K,V> implements IAsyncSavable
     @Override
     public ExecutorService getExecutor() {
         return this.executor;
+    }
+
+    @Override
+    public void setExecutor(ExecutorService executorService) {
+        this.executor = executorService;
     }
 }

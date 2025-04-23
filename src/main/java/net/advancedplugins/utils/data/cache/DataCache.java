@@ -3,6 +3,7 @@ package net.advancedplugins.utils.data.cache;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.misc.TransactionManager;
+import lombok.Getter;
 import net.advancedplugins.utils.FoliaScheduler;
 import net.advancedplugins.utils.data.DatabaseController;
 import net.advancedplugins.utils.data.cache.iface.IForeignMapping;
@@ -11,7 +12,6 @@ import net.advancedplugins.utils.data.cache.iface.ISavableCache;
 import net.advancedplugins.utils.data.cache.iface.ISavableLifecycle;
 import net.advancedplugins.utils.trycatch.TryCatchUtil;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -21,7 +21,7 @@ import java.util.function.Consumer;
 public class DataCache<K,V> implements ISavableCache<K,V>, IForeignMappingHandler {
 
     private final Map<K,V> cache;
-    private final Dao<V,K> dao;
+    @Getter private final Dao<V,K> dao;
     private final JavaPlugin plugin;
 
     /**
