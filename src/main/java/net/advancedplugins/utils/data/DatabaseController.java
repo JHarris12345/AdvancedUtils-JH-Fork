@@ -186,48 +186,4 @@ public class DatabaseController {
                 new WorldPersister()
         );
     }
-
-    /**
-     * Migrate data between current and new ConnectionType
-     * @param newType New connection type
-     * @param then Runnable which will be run after finishing migration
-     */
-    public void migrateDataAsync(ConnectionType newType, Runnable then) {
-        FoliaScheduler.runTaskAsynchronously(plugin, () -> {
-            Map<Class<?>, List<?>> cache = new HashMap<>();
-
-            this.daoMap.forEach((clazz, dao) -> {
-                cache.put(clazz, TryCatchUtil.tryAndReturn(dao::queryForAll));
-            });
-
-            FoliaScheduler.runTask(plugin, () -> {
-                this.close();
-                this.connectionType = newType;
-                this.connect();
-                cache.keySet().forEach(this::registerEntity);
-
-                FoliaScheduler.runTaskAsynchronously(plugin, () -> {
-                    cache.forEach((clazz,objects) -> {
-                        Dao<?,?> dao = daoMap.get(clazz);
-                        if(dao == null) {
-                            System.out.println("Migration failed for " + clazz.getSimpleName());
-                            return;
-                        }
-
-                        TryCatchUtil.tryRun(() -> dao.deleteBuilder().delete());
-                        restoreData(dao,objects);
-                    });
-
-                    then.run();
-                });
-            });
-        });
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T> void restoreData(Dao<T, ?> dao, List<?> objects) {
-        TryCatchUtil.tryRun(() -> {
-            dao.create((Collection<T>) objects);
-        });
-    }
 }
