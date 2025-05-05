@@ -4,6 +4,7 @@ import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.ColorUtils;
 import net.advancedplugins.utils.SchedulerUtils;
 import net.advancedplugins.utils.items.ItemBuilder;
+import net.advancedplugins.utils.items.ItemFlagFix;
 import net.advancedplugins.utils.nbt.NBTapi;
 import net.advancedplugins.utils.text.Text;
 import net.md_5.bungee.api.chat.ClickEvent;
@@ -191,7 +192,7 @@ public class ConfigEditorGui implements Listener {
         if (info != null && info.wikiLink != null)
             stack.addLoreLine(Text.modify(" &f\u24D8 &lRight Click&7 here to learn more"));
 
-        stack.addItemFlag(ItemFlag.values());
+        stack.addItemFlag(ItemFlagFix.hideAllAttributes());
         return stack.toItemStack();
     }
 

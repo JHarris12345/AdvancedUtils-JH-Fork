@@ -8,6 +8,7 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
@@ -58,5 +59,31 @@ public class ItemFlagFix {
         } catch (Exception ev) {
             ev.printStackTrace();
         }
+    }
+
+    public static @NotNull ItemFlag[] hideAllAttributes() {
+        // add these HIDE_ADDITIONAL_TOOLTIP
+        //Setting to show/hide potion effects, book and firework information, map tooltips, patterns of banners, and enchantments of enchanted books.
+        //HIDE_ARMOR_TRIM
+        //Setting to show/hide armor trim from leather armor.
+        //HIDE_ATTRIBUTES
+        //Setting to show/hide Attributes like Damage
+        //HIDE_DESTROYS
+        //Setting to show/hide what the ItemStack can break/destroy
+        //HIDE_DYE
+        //Setting to show/hide dyes from colored leather armor.
+        //HIDE_ENCHANTS
+        //Setting to show/hide enchants
+        //HIDE_PLACED_ON
+        //Setting to show/hide where this ItemStack can be build/placed on
+        //HIDE_UNBREAKABLE
+
+        return new ItemFlag[] {
+                ItemFlag.HIDE_ATTRIBUTES,
+                ItemFlag.HIDE_DESTROYS,
+                ItemFlag.HIDE_ENCHANTS,
+                ItemFlag.HIDE_PLACED_ON,
+                ItemFlag.HIDE_UNBREAKABLE
+        };
     }
 }

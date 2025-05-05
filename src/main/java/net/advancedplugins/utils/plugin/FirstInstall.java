@@ -46,6 +46,7 @@ public class FirstInstall implements Listener {
     }
 
     public static void checkFirstInstall(JavaPlugin plugin, String configFile, String addonURL, String override) {
+        UpdateChecker.checkUpdate(plugin);
         if (new File(plugin.getDataFolder(), configFile).exists()) {
             return;
         }

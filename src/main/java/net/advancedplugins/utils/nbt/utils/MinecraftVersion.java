@@ -55,6 +55,7 @@ public enum MinecraftVersion {
             this.put("1.21.2", MC1_21_R2);
             this.put("1.21.3", MC1_21_R2);
             this.put("1.21.4", MC1_21_R3);
+            this.put("1.21.5", MC1_21_R4);
         }
     };
     /**
@@ -102,6 +103,7 @@ public enum MinecraftVersion {
                     MinecraftVersion.Unknown);
         }
         isPaper = Package.getPackage("com.destroystokyo.paper") != null;
+
         if (version == Unknown) {
             Bukkit.getServer().getLogger().warning("You are using invalid version of Minecraft [" + Bukkit.getServer().getBukkitVersion() + "]! Disabling...");
         }
