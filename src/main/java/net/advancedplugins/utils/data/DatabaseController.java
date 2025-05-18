@@ -16,10 +16,7 @@ import lombok.Setter;
 import lombok.SneakyThrows;
 import net.advancedplugins.utils.FoliaScheduler;
 import net.advancedplugins.utils.ReflectionUtil;
-import net.advancedplugins.utils.data.connection.ConnectionType;
-import net.advancedplugins.utils.data.connection.IConnectionHandler;
-import net.advancedplugins.utils.data.connection.MySQLConnectionHandler;
-import net.advancedplugins.utils.data.connection.SQLiteConnectionHandler;
+import net.advancedplugins.utils.data.connection.*;
 import net.advancedplugins.utils.data.persister.base.*;
 import net.advancedplugins.utils.trycatch.TryCatchUtil;
 import org.bukkit.configuration.ConfigurationSection;
@@ -70,6 +67,10 @@ public class DatabaseController {
         switch (this.connectionType) {
             case MYSQL:
                 handler = new MySQLConnectionHandler();
+                this.executor = Executors.newFixedThreadPool(10);
+                break;
+            case POSTGRESQL:
+                handler = new PostgreSQLConnectionHandler();
                 this.executor = Executors.newFixedThreadPool(10);
                 break;
             case SQLITE:
