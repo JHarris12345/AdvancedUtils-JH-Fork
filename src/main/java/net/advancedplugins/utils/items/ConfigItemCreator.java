@@ -124,12 +124,12 @@ public class ConfigItemCreator {
                     : fallbackConfig != null ? fallbackConfig.getStringList(fallbackPath + "." + fallbackPaths.get("item-flags")) : new ArrayList<>();
             List<String> itemFlags = format(configFlags, placeholders, player);
             if (!itemFlags.isEmpty() && itemFlags.get(0).equalsIgnoreCase("all")) {
-                builder.addItemFlag(ItemFlag.values());
+                builder.addItemFlag(ItemFlagFix.hideAllAttributes());
             } else {
                 for (String flagStr : itemFlags) {
                     boolean isFlagValid = false;
                     String requestedFlagName = flagStr.toUpperCase(Locale.ROOT);
-                    for (ItemFlag validFlag : ItemFlag.values()) {
+                    for (ItemFlag validFlag : net.advancedplugins.utils.items.ItemFlagFix.hideAllAttributes()) {
                         if (validFlag.name().equals(requestedFlagName)) {
                             isFlagValid = true;
                             break;

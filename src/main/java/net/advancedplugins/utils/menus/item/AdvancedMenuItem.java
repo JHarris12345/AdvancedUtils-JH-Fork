@@ -5,6 +5,7 @@ import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.VanillaEnchants;
 import net.advancedplugins.utils.items.ConfigItemCreator;
 import net.advancedplugins.utils.items.ItemBuilder;
+import net.advancedplugins.utils.items.ItemFlagFix;
 import net.advancedplugins.utils.text.Replace;
 import net.advancedplugins.utils.text.Replacer;
 import org.bukkit.Bukkit;
@@ -99,7 +100,7 @@ public class AdvancedMenuItem {
         if (glow) {
             ItemBuilder builder = new ItemBuilder(item);
             builder.addUnsafeEnchantment(VanillaEnchants.displayNameToEnchant("FORTUNE"), 1);
-            builder.addItemFlag(ItemFlag.values());
+            builder.addItemFlag(ItemFlagFix.hideAllAttributes());
             item = builder.toItemStack();
         }
 
