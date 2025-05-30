@@ -39,6 +39,7 @@ public class TownyHook extends PluginHookInstance {
         return getKeepInventoryValue(resident, tb);
     }
 
+    // https://github.com/TownyAdvanced/Towny/blob/master/Towny/src/main/java/com/palmergames/bukkit/towny/listeners/TownyPlayerListener.java#L1049
     private boolean getKeepInventoryValue(Resident resident, TownBlock tb) {
         // Run it this way so that we will override a plugin that has kept the
         // inventory, but they're in the wilderness where we don't want to keep
