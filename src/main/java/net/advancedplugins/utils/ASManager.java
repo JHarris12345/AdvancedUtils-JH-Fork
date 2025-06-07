@@ -20,6 +20,7 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.type.Bed;
+import org.bukkit.block.data.type.Candle;
 import org.bukkit.block.data.type.TurtleEgg;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -1381,6 +1382,10 @@ public class ASManager {
         if (blockType == Material.TURTLE_EGG) {
             TurtleEgg egg = (TurtleEgg) block.getBlockData();
             amount = egg.getEggs();
+            // https://github.com/GC-spigot/AdvancedEnchantments/issues/4923
+        } else if (blockType.name().endsWith("CANDLE")) {
+            Candle candle = (Candle) block.getBlockData();
+            amount = candle.getCandles();
         }
 
         return MathUtils.clamp(amount, Integer.MIN_VALUE, max);
