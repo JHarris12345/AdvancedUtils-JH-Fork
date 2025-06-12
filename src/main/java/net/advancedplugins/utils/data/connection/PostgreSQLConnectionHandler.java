@@ -18,7 +18,7 @@ public class PostgreSQLConnectionHandler implements IConnectionHandler{
 
     @Override
     public ConnectionType getConnectionType() {
-        return ConnectionType.MYSQL;
+        return ConnectionType.POSTGRESQL;
     }
 
     @Override
