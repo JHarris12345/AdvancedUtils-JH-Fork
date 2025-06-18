@@ -472,5 +472,7 @@ public class ConfigItemCreator {
         Bukkit.getLogger().severe("Something went wrong while creating an item! " + addPunctuation(customMessage) + " File: " + file + "  Config Path: " + configPath + "  Value: " + value);
     }
 
-
+    public static HashMap<String, String> getDefaultPaths() {
+        return defaultPaths;
+    }
 }

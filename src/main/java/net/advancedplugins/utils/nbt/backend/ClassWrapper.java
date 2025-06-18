@@ -35,7 +35,7 @@ public enum ClassWrapper {
     NMS_DamageSource(PackageWrapper.NMS, "world.damagesource", "DamageSource", MinecraftVersion.MC1_8_R3),
     // Misc
     NMS_IChatBaseComponent(PackageWrapper.NMS, "network.chat", "IChatBaseComponent", MinecraftVersion.MC1_8_R3),
-    NMS_IChatBaseComponent$ChatSerializer(PackageWrapper.NMS, "network.chat", "IChatBaseComponent$ChatSerializer", MinecraftVersion.MC1_8_R3),
+//    NMS_IChatBaseComponent$ChatSerializer(PackageWrapper.NMS, "network.chat", "IChatBaseComponent$ChatSerializer", MinecraftVersion.MC1_8_R3),
     NMS_EnumHand(PackageWrapper.NMS, "world", "EnumHand", MinecraftVersion.MC1_9_R1),
     NMS_Explosion(PackageWrapper.NMS, "world.level", "Explosion", MinecraftVersion.MC1_8_R3),
     NMS_PathEntity(PackageWrapper.NMS, "world.level.pathfinder", "PathEntity", MinecraftVersion.MC1_8_R3),
