@@ -22,16 +22,18 @@ import com.google.gson.stream.JsonWriter;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
+import java.io.IOException;
+
 public class WorldAdapter extends TypeAdapter<World> {
     @Override
-    public void write(JsonWriter out, World value) {
+    public void write(JsonWriter out, World value) throws IOException {
         out.beginObject();
         out.name("world").value(value.getName());
         out.endObject();
     }
 
     @Override
-    public World read(JsonReader in) {
+    public World read(JsonReader in) throws IOException {
         in.beginObject();
         World result = null;
         if(in.hasNext()) {

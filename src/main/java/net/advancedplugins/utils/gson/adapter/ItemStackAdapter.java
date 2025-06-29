@@ -24,16 +24,18 @@ import net.advancedplugins.utils.trycatch.TryCatchUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.IOException;
+
 public class ItemStackAdapter extends TypeAdapter<ItemStack> {
     @Override
-    public void write(JsonWriter out, ItemStack value) {
+    public void write(JsonWriter out, ItemStack value) throws IOException {
         out.beginObject();
         out.name("item").value(TryCatchUtil.tryAndReturn(() -> ASManager.serializeItem(value)));
         out.endObject();
     }
 
     @Override
-    public ItemStack read(JsonReader in) {
+    public ItemStack read(JsonReader in) throws IOException {
         in.beginObject();
         ItemStack result = new ItemStack(Material.AIR);
         if(in.hasNext()) {

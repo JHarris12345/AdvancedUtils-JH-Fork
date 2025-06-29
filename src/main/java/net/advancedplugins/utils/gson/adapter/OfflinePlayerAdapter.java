@@ -22,18 +22,19 @@ import com.google.gson.stream.JsonWriter;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 
+import java.io.IOException;
 import java.util.UUID;
 
 public class OfflinePlayerAdapter extends TypeAdapter<OfflinePlayer> {
     @Override
-    public void write(JsonWriter out, OfflinePlayer value) {
+    public void write(JsonWriter out, OfflinePlayer value) throws IOException {
         out.beginObject();
         out.name("uuid").value(value.getUniqueId().toString());
         out.endObject();
     }
 
     @Override
-    public OfflinePlayer read(JsonReader in) {
+    public OfflinePlayer read(JsonReader in) throws IOException {
         in.beginObject();
         OfflinePlayer result = null;
         if(in.hasNext()) {

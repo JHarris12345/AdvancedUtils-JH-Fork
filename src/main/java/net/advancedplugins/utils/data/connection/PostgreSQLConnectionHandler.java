@@ -1,8 +1,13 @@
 package net.advancedplugins.utils.data.connection;
 
+import com.j256.ormlite.jdbc.DataSourceConnectionSource;
 import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import com.j256.ormlite.jdbc.db.MysqlDatabaseType;
 import com.j256.ormlite.jdbc.db.PostgresDatabaseType;
+import com.j256.ormlite.support.BaseConnectionSource;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import net.advancedplugins.utils.trycatch.TryCatchUtil;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.io.IOException;
@@ -15,6 +20,7 @@ public class PostgreSQLConnectionHandler implements IConnectionHandler{
     private String username;
     private String password;
     private String database;
+    private HikariDataSource dataSource;
 
     @Override
     public ConnectionType getConnectionType() {
@@ -40,8 +46,20 @@ public class PostgreSQLConnectionHandler implements IConnectionHandler{
     }
 
     @Override
-    public JdbcPooledConnectionSource connect() throws IOException, SQLException {
-        String url = "jdbc:postgresql://"+this.host+":"+this.port+"/"+this.database;
-        return new JdbcPooledConnectionSource(url,username,password,new PostgresDatabaseType());
+    public BaseConnectionSource connect() throws SQLException {
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl("jdbc:postgresql://"+this.host+":"+this.port+"/"+this.database);
+        config.setUsername(this.username);
+        config.setPassword(this.password);
+
+        TryCatchUtil.tryAndReturn(() -> Class.forName("org.postgresql.Driver"));
+        this.dataSource = new HikariDataSource(HikariHandler.configure(config));
+
+        return new DataSourceConnectionSource(this.dataSource, this.dataSource.getJdbcUrl());
+    }
+
+    @Override
+    public void close() {
+        if(dataSource != null) this.dataSource.close();
     }
 }

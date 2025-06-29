@@ -2,6 +2,7 @@ package net.advancedplugins.utils.data.connection;
 
 import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import com.j256.ormlite.jdbc.db.SqliteDatabaseType;
+import com.j256.ormlite.support.BaseConnectionSource;
 import org.bukkit.configuration.ConfigurationSection;
 
 import java.io.File;
@@ -26,7 +27,7 @@ public class SQLiteConnectionHandler implements IConnectionHandler{
     public void retrieveCredentials(ConfigurationSection credentialsSection) {return;}
 
     @Override
-    public JdbcPooledConnectionSource connect() throws IOException, SQLException {
+    public BaseConnectionSource connect() throws IOException, SQLException {
         this.file.getParentFile().mkdirs();
         if(!this.file.exists()) {
             this.file.createNewFile();
@@ -35,4 +36,7 @@ public class SQLiteConnectionHandler implements IConnectionHandler{
         String connectionUrl = "jdbc:sqlite:" + this.file.getAbsolutePath();
         return new JdbcPooledConnectionSource(connectionUrl, new SqliteDatabaseType());
     }
+
+    @Override
+    public void close() {}
 }

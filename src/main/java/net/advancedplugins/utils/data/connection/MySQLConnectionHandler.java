@@ -1,10 +1,12 @@
 package net.advancedplugins.utils.data.connection;
 
-import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
-import com.j256.ormlite.jdbc.db.MysqlDatabaseType;
+import com.j256.ormlite.jdbc.DataSourceConnectionSource;
+import com.j256.ormlite.support.BaseConnectionSource;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import net.advancedplugins.utils.trycatch.TryCatchUtil;
 import org.bukkit.configuration.ConfigurationSection;
 
-import java.io.IOException;
 import java.sql.SQLException;
 
 public class MySQLConnectionHandler implements IConnectionHandler{
@@ -14,6 +16,7 @@ public class MySQLConnectionHandler implements IConnectionHandler{
     private String username;
     private String password;
     private String database;
+    private HikariDataSource dataSource;
 
     @Override
     public ConnectionType getConnectionType() {
@@ -39,8 +42,20 @@ public class MySQLConnectionHandler implements IConnectionHandler{
     }
 
     @Override
-    public JdbcPooledConnectionSource connect() throws IOException, SQLException {
-        String url = "jdbc:mysql://"+this.host+":"+this.port+"/"+this.database;
-        return new JdbcPooledConnectionSource(url,username,password,new MysqlDatabaseType());
+    public BaseConnectionSource connect() throws SQLException {
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl("jdbc:mysql://"+this.host+":"+this.port+"/"+this.database);
+        config.setUsername(this.username);
+        config.setPassword(this.password);
+
+        TryCatchUtil.tryAndReturn(() -> Class.forName("com.mysql.cj.jdbc.Driver"));
+        this.dataSource = new HikariDataSource(HikariHandler.configure(config));
+
+        return new DataSourceConnectionSource(this.dataSource, this.dataSource.getJdbcUrl());
+    }
+
+    @Override
+    public void close() {
+        if(dataSource != null) this.dataSource.close();
     }
 }

@@ -6,9 +6,11 @@ import com.j256.ormlite.dao.LruObjectCache;
 import com.j256.ormlite.field.DataPersister;
 import com.j256.ormlite.field.DataPersisterManager;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.jdbc.DataSourceConnectionSource;
 import com.j256.ormlite.jdbc.JdbcPooledConnectionSource;
 import com.j256.ormlite.logger.LogBackendType;
 import com.j256.ormlite.logger.LoggerFactory;
+import com.j256.ormlite.support.BaseConnectionSource;
 import com.j256.ormlite.table.DatabaseTable;
 import com.j256.ormlite.table.TableUtils;
 import lombok.Getter;
@@ -35,7 +37,8 @@ public class DatabaseController {
     private final ConfigurationSection options;
 
     private ConnectionType connectionType;
-    private JdbcPooledConnectionSource source;
+    private IConnectionHandler handler;
+    private BaseConnectionSource source;
     private ExecutorService executor;
 
     private boolean debug;
@@ -63,25 +66,24 @@ public class DatabaseController {
      * Connect to the database
      */
     public void connect() {
-        IConnectionHandler handler = null;
         switch (this.connectionType) {
             case MYSQL:
-                handler = new MySQLConnectionHandler();
+                this.handler = new MySQLConnectionHandler();
                 this.executor = Executors.newFixedThreadPool(10);
                 break;
             case POSTGRESQL:
-                handler = new PostgreSQLConnectionHandler();
+                this.handler = new PostgreSQLConnectionHandler();
                 this.executor = Executors.newFixedThreadPool(10);
                 break;
             case SQLITE:
-                handler = new SQLiteConnectionHandler(this.plugin.getDataFolder());
+                this.handler = new SQLiteConnectionHandler(this.plugin.getDataFolder());
                 this.executor = Executors.newSingleThreadExecutor();
                 break;
             default:
                 throw new UnsupportedOperationException("Unsupported connection type: " + this.connectionType.name());
         }
-        handler.retrieveCredentials(this.options);
-        this.source = TryCatchUtil.tryAndReturn(handler::connect);
+        this.handler.retrieveCredentials(this.options);
+        this.source = TryCatchUtil.tryAndReturn(this.handler::connect);
         this.registerDefaultPersisters();
 
         if(!this.debug) LoggerFactory.setLogBackendFactory(LogBackendType.NULL);
@@ -95,6 +97,7 @@ public class DatabaseController {
         if(this.executor != null) this.executor.shutdownNow();
         if(this.source == null) return;
         this.source.close();
+        this.handler.close();
         this.source = null;
         this.daoMap = new HashMap<>();
     }
