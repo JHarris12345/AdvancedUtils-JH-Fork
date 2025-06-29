@@ -1,6 +1,7 @@
 package net.advancedplugins.utils.plugin;
 
 import net.advancedplugins.utils.ASManager;
+import net.advancedplugins.utils.FoliaScheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -11,27 +12,27 @@ public class UpdateChecker {
     private static final String UPDATE_URL = "https://advancedplugins.net/api/v1/getVersion.php?plugin=";
 
     public static void checkUpdate(JavaPlugin plugin) {
-        plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, () -> {
+        FoliaScheduler.runTaskLaterAsynchronously(plugin, () -> {
 
-        String currentVersion = plugin.getDescription().getVersion();
-        String pluginName = plugin.getDescription().getName();
+            String currentVersion = plugin.getDescription().getVersion();
+            String pluginName = plugin.getDescription().getName();
 
-        String latestVersion;
-        try {
-            latestVersion = ASManager.fetchJsonFromUrl(UPDATE_URL + pluginName);
-        }catch (Exception ev) {
-           ev.printStackTrace();
-            return;
-        }
+            String latestVersion;
+            try {
+                latestVersion = ASManager.fetchJsonFromUrl(UPDATE_URL + pluginName);
+            }catch (Exception ev) {
+                ev.printStackTrace();
+                return;
+            }
 
-        if (latestVersion.isEmpty() || isLatest(currentVersion, latestVersion)) {
-            return;
-        }
+            if (latestVersion.isEmpty() || isLatest(currentVersion, latestVersion)) {
+                return;
+            }
 
-        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                "&7[" + pluginName + "] &eYou're using an outdated version of "+pluginName+". A new version is available: &f" + latestVersion));
-        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
-                "&7[" + pluginName + "] &7Keep your Advanced plugins up to date automatically with &bMintServers&7 Unlimited Hosting: &bhttps://mintservers.com/"));
+            Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    "&7[" + pluginName + "] &eYou're using an outdated version of "+pluginName+". A new version is available: &f" + latestVersion));
+            Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&',
+                    "&7[" + pluginName + "] &7Keep your Advanced plugins up to date automatically with &bMintServers&7 Unlimited Hosting: &bhttps://mintservers.com/"));
 
         }, 20L);
     }

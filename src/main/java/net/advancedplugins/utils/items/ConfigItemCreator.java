@@ -1,5 +1,7 @@
 package net.advancedplugins.utils.items;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.advancedplugins.utils.*;
 import net.advancedplugins.utils.hooks.HookPlugin;
 import net.advancedplugins.utils.hooks.HooksHandler;
@@ -25,16 +27,14 @@ import java.io.File;
 import java.util.*;
 
 public class ConfigItemCreator {
-
-    private static HashMap<String, String> cfgPaths = null;
-
-
     /**
-     * Sets the default paths for getting item settings from a config file.
+     * -- SETTER --
+     *  Sets the default paths for getting item settings from a config file.
      */
-    public static void setDefaultPaths(HashMap<String, String> newPaths) {
-        cfgPaths = newPaths;
-    }
+    @Setter
+    @Getter
+    private static HashMap<String, String> defaultPaths = null;
+
 
     /**
      * Creates an item from a config file.
@@ -86,10 +86,10 @@ public class ConfigItemCreator {
     }
 
     public static ItemStack fromConfigSection(ConfigurationSection config, @Nullable ConfigurationSection fallbackConfig, ItemStack baseItem, String path, String fallbackPath, Map<String, String> placeholders, Map<String, String> pathReplacements, @Nullable Map<String, String> fallbackPathReplacements, Player player) {
-        Map<String, String> paths = (Map<String, String>) cfgPaths.clone();
+        Map<String, String> paths = (Map<String, String>) defaultPaths.clone();
         String filePath = "config";
         
-        Map<String, String> fallbackPaths = (Map<String, String>) cfgPaths.clone();
+        Map<String, String> fallbackPaths = (Map<String, String>) defaultPaths.clone();
         if (fallbackPathReplacements != null && !fallbackPathReplacements.isEmpty()) 
             fallbackPaths.putAll(fallbackPathReplacements);
 
@@ -278,9 +278,9 @@ public class ConfigItemCreator {
 
     public static ItemStack fromConfigSection(ConfigurationSection config, @Nullable ConfigurationSection fallbackConfig, String path, @Nullable String fallbackPath, Map<String, String> placeholders, Map<String, String> pathReplacements, @Nullable Map<String, String> fallbackPathReplacements, Player player) {
         String filePath = "config";
-        Map<String, String> paths = (Map<String, String>) cfgPaths.clone();
+        Map<String, String> paths = (Map<String, String>) defaultPaths.clone();
 
-        Map<String, String> fallbackPaths = (Map<String, String>) cfgPaths.clone();
+        Map<String, String> fallbackPaths = (Map<String, String>) defaultPaths.clone();
         if (fallbackPathReplacements != null && !fallbackPathReplacements.isEmpty())
             fallbackPaths.putAll(fallbackPathReplacements);
 
@@ -472,5 +472,7 @@ public class ConfigItemCreator {
         Bukkit.getLogger().severe("Something went wrong while creating an item! " + addPunctuation(customMessage) + " File: " + file + "  Config Path: " + configPath + "  Value: " + value);
     }
 
-
+    public static HashMap<String, String> getDefaultPaths() {
+        return defaultPaths;
+    }
 }
