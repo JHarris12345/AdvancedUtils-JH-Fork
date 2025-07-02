@@ -13,12 +13,13 @@ public class FoliaScheduler {
     private static final boolean isFolia = checkFolia();
 
     private static boolean checkFolia() {
-        List<String> foliaForks = Arrays.asList("Folia", "Luminol");
-        for (String fork : foliaForks) {
-            if(Bukkit.getVersion().contains(fork) || Bukkit.getName().contains(fork)) return true;
+        try {
+            Class.forName("io.papermc.paper.threadedregions.scheduler.GlobalRegionScheduler");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
         }
-        return false;
-    }
+	}
 
     public static Task runTask(Plugin plugin, Runnable runnable) {
         if (isFolia) {
