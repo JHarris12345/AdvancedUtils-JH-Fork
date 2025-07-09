@@ -79,6 +79,8 @@ public class ItemFlagFix {
         //HIDE_UNBREAKABLE
 
         return new ItemFlag[] {
+                ItemFlag.HIDE_ADDITIONAL_TOOLTIP,
+                ItemFlag.HIDE_ARMOR_TRIM,
                 ItemFlag.HIDE_ATTRIBUTES,
                 ItemFlag.HIDE_DESTROYS,
                 ItemFlag.HIDE_ENCHANTS,
