@@ -1228,6 +1228,10 @@ public class ASManager {
                 return Material.STRING;
             }
 
+            case "WATER_CAULDRON", "LAVA_CAULDRON", "POWDER_SNOW_CAULDRON": {
+                return Material.CAULDRON;
+            }
+
             default:
                 return material;
         }
