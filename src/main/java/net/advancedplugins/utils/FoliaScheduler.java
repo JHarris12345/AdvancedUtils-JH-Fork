@@ -34,7 +34,7 @@ public class FoliaScheduler {
     public static Task runTaskLater(Plugin plugin,Runnable runnable, long delayTicks) {
         if (isFolia)
             return new Task(Bukkit.getGlobalRegionScheduler()
-                    .runDelayed(plugin, t -> runnable.run(), delayTicks));
+                    .runDelayed(plugin, t -> runnable.run(), delayTicks < 1 ? 1 : delayTicks));
 
         else
             return new Task(Bukkit.getScheduler().runTaskLater(plugin, runnable, delayTicks));
@@ -61,7 +61,7 @@ public class FoliaScheduler {
     public static Task runTaskLaterAsynchronously(Plugin plugin,Runnable runnable, long delayTicks) {
         if (isFolia)
             return new Task(Bukkit.getGlobalRegionScheduler()
-                    .runDelayed(plugin, t -> runnable.run(), delayTicks));
+                    .runDelayed(plugin, t -> runnable.run(), delayTicks < 1 ? 1 : delayTicks));
 
         else
             return new Task(Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, runnable, delayTicks));
