@@ -111,9 +111,21 @@ public class Text {
             // done because Player expansion for PAPI is dumb and returns empty string for any placeholder starting with %player
             // instead of not parsing it at all (Wega)
             // https://github.com/PlaceholderAPI/Player-Expansion/blob/master/src/main/java/com/extendedclip/papi/expansion/player/PlayerExpansion.java#L112
-            string = string.replace("%player", "%playertemp");
+
+            // same for LuckPerms :)
+            // https://github.com/LuckPerms/placeholders/blob/master/bukkit-placeholderapi/src/main/java/me/lucko/luckperms/placeholders/LuckPermsExpansion.java
+
+            // NOTE: If this becomes an issue with more expansions, just create a separate getMethods in LocaleHandler
+            // which have a parser, so the player data is actually parsed instead of being parsed will null parser.
+            // This will only work for values which are player specific though and are parsed at the exact runtime.
+            // (Wega)
+            string = string
+                    .replace("%player", "%playertemp")
+                    .replace("%luckperms", "%luckpermstemp");
             string = parsePapi(string, null);
-            string = string.replace("%playertemp", "%player");
+            string = string
+                    .replace("%playertemp", "%player")
+                    .replace("%luckpermstemp", "%luckperms");
         }
         return string == null ? null : renderColorCodes(replacer == null ? string : replacer.apply(new Replacer()).applyTo(string));
     }
