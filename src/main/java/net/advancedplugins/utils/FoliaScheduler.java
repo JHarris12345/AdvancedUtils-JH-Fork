@@ -10,11 +10,12 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class FoliaScheduler {
-    private static final boolean isFolia = checkFolia();
+    public static final boolean isFolia = checkFolia();
 
     private static boolean checkFolia() {
         try {
-            Class.forName("io.papermc.paper.threadedregions.scheduler.GlobalRegionScheduler");
+            // Why the fuck Paper implemented Folia's Global Region Scheduler in their own code...
+            Class.forName("io.papermc.paper.threadedregions.RegionizedServer");
             return true;
         } catch (ClassNotFoundException e) {
             return false;
