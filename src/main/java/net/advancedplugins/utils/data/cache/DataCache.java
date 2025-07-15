@@ -143,14 +143,16 @@ public class DataCache<K,V> implements ISavableCache<K,V>, IForeignMappingHandle
                 .forEach(entry -> {
                     action.accept(entry.getValue());
                 });
+        Set<K> oldKeys = new HashSet<>(this.keySet());
+        this.loadAll();
 
-        this.runInTransaction(() -> TryCatchUtil.tryOrDefault(this.dao::queryForAll, new ArrayList<V>())
+        this.runInTransaction(() -> new ArrayList<>(this.values())
                 .stream()
                 .map(value -> new AbstractMap.SimpleEntry<K,V>(
                         TryCatchUtil.tryAndReturn(() -> this.dao.extractId(value)),
                         value
                 ))
-                .filter(entry -> !this.contains(entry.getKey()))
+                .filter(entry -> !oldKeys.contains(entry.getKey()))
                 .filter(entry -> keys.contains(entry.getKey()))
                 .forEach(entry -> {
                     action.accept(entry.getValue());
@@ -162,14 +164,16 @@ public class DataCache<K,V> implements ISavableCache<K,V>, IForeignMappingHandle
     @Override
     public void modifyAll(Consumer<V> action) {
         this.cache.values().forEach(action);
+        Set<K> oldKeys = new HashSet<>(this.keySet());
+        this.loadAll();
 
-        this.runInTransaction(() -> TryCatchUtil.tryOrDefault(this.dao::queryForAll, new ArrayList<V>())
+        this.runInTransaction(() -> new ArrayList<>(this.values())
                 .stream()
                 .map(value -> new AbstractMap.SimpleEntry<K,V>(
                         TryCatchUtil.tryAndReturn(() -> this.dao.extractId(value)),
                         value
                 ))
-                .filter(entry -> !this.contains(entry.getKey()))
+                .filter(entry -> !oldKeys.contains(entry.getKey()))
                 .forEach(entry -> {
                     action.accept(entry.getValue());
                     this.save(entry.getKey());
