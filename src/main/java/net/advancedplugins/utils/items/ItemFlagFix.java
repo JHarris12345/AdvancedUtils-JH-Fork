@@ -10,6 +10,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 public class ItemFlagFix {
@@ -52,7 +54,7 @@ public class ItemFlagFix {
 //            }
 
             Multimap<Attribute, AttributeModifier> modifiers = meta.getAttributeModifiers();
-            if(modifiers == null) {
+            if (modifiers == null) {
                 modifiers = HashMultimap.create();
                 meta.setAttributeModifiers(modifiers);
             }
@@ -78,14 +80,25 @@ public class ItemFlagFix {
         //Setting to show/hide where this ItemStack can be build/placed on
         //HIDE_UNBREAKABLE
 
-        return new ItemFlag[] {
-                ItemFlag.HIDE_ADDITIONAL_TOOLTIP,
-                ItemFlag.HIDE_ARMOR_TRIM,
+        final List<ItemFlag> flags = Arrays.asList(
                 ItemFlag.HIDE_ATTRIBUTES,
                 ItemFlag.HIDE_DESTROYS,
                 ItemFlag.HIDE_ENCHANTS,
                 ItemFlag.HIDE_PLACED_ON,
                 ItemFlag.HIDE_UNBREAKABLE
-        };
+        );
+
+        // Added in 1.20.5
+        if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4))
+            flags.add(ItemFlag.valueOf("HIDE_ADDITIONAL_TOOLTIP"));
+        // Added in 1.19.4
+        else if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_19_R3))
+            flags.add(ItemFlag.valueOf("HIDE_ARMOR_TRIM"));
+        // was replaced by HIDE_ADDITIONAL_TOOLTIP in 1.20.5
+        else
+            flags.add(ItemFlag.valueOf("HIDE_POTION_EFFECTS"));
+
+
+        return flags.toArray(ItemFlag[]::new);
     }
 }
