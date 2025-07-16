@@ -10,7 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -80,13 +80,13 @@ public class ItemFlagFix {
         //Setting to show/hide where this ItemStack can be build/placed on
         //HIDE_UNBREAKABLE
 
-        final List<ItemFlag> flags = Arrays.asList(
+        final List<ItemFlag> flags = new ArrayList<>(List.of(
                 ItemFlag.HIDE_ATTRIBUTES,
                 ItemFlag.HIDE_DESTROYS,
                 ItemFlag.HIDE_ENCHANTS,
                 ItemFlag.HIDE_PLACED_ON,
                 ItemFlag.HIDE_UNBREAKABLE
-        );
+        ));
 
         // Added in 1.20.5
         if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4))
