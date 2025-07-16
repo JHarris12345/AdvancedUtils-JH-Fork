@@ -91,13 +91,12 @@ public class ItemFlagFix {
         // Added in 1.20.5
         if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4))
             flags.add(ItemFlag.valueOf("HIDE_ADDITIONAL_TOOLTIP"));
-        // Added in 1.19.4
-        else if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_19_R3))
-            flags.add(ItemFlag.valueOf("HIDE_ARMOR_TRIM"));
-        // was replaced by HIDE_ADDITIONAL_TOOLTIP in 1.20.5
-        else
+        else // was replaced by HIDE_ADDITIONAL_TOOLTIP in 1.20.5
             flags.add(ItemFlag.valueOf("HIDE_POTION_EFFECTS"));
 
+        // Added in 1.19.4
+        if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_19_R3))
+            flags.add(ItemFlag.valueOf("HIDE_ARMOR_TRIM"));
 
         return flags.toArray(ItemFlag[]::new);
     }
