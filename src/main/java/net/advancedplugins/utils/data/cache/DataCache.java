@@ -111,15 +111,22 @@ public class DataCache<K,V> implements ISavableCache<K,V>, IForeignMappingHandle
 
     @Override
     public Set<V> loadAll() {
+        return this.loadAll(false);
+    }
+
+    @Override
+    public Set<V> loadAll(boolean ignoreCached) {
         TryCatchUtil.tryOrDefault(this.dao::queryForAll, new ArrayList<V>())
-                .forEach(value -> {
-                    if(value instanceof IForeignMapping) this.dbToJava((IForeignMapping) value);
-                    if(value instanceof ISavableLifecycle) ((ISavableLifecycle) value).afterLoad();
-                    this.cache.put(
-                            TryCatchUtil.tryAndReturn(() -> this.dao.extractId(value)),
-                            value
-                    );
-                });
+            .stream()
+            .filter(entity -> !ignoreCached || !this.contains(TryCatchUtil.tryAndReturn(() -> this.dao.extractId(entity))))
+            .forEach(value -> {
+                if(value instanceof IForeignMapping) this.dbToJava((IForeignMapping) value);
+                if(value instanceof ISavableLifecycle) ((ISavableLifecycle) value).afterLoad();
+                this.cache.put(
+                    TryCatchUtil.tryAndReturn(() -> this.dao.extractId(value)),
+                    value
+                );
+            });
         return new HashSet<>(this.cache.values());
     }
 
@@ -144,7 +151,7 @@ public class DataCache<K,V> implements ISavableCache<K,V>, IForeignMappingHandle
                     action.accept(entry.getValue());
                 });
         Set<K> oldKeys = new HashSet<>(this.keySet());
-        this.loadAll();
+        this.loadAll(true);
 
         this.runInTransaction(() -> new ArrayList<>(this.values())
                 .stream()
@@ -165,7 +172,7 @@ public class DataCache<K,V> implements ISavableCache<K,V>, IForeignMappingHandle
     public void modifyAll(Consumer<V> action) {
         this.cache.values().forEach(action);
         Set<K> oldKeys = new HashSet<>(this.keySet());
-        this.loadAll();
+        this.loadAll(true);
 
         this.runInTransaction(() -> new ArrayList<>(this.values())
                 .stream()

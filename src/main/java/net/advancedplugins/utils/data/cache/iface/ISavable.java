@@ -6,6 +6,7 @@ import java.util.function.Consumer;
 public interface ISavable<K,V> {
     V load(K key);
     Set<V> loadAll();
+    Set<V> loadAll(boolean ignoreCached);
 
     void modify(K key, Consumer<V> action);
     void modifyMultiple(Set<K> keys, Consumer<V> action);
