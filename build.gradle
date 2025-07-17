@@ -88,6 +88,10 @@ dependencies {
     //compileOnly "org.spigotmc:spigot-api:1.20.4-R0.1-SNAPSHOT"
 //    compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
     compileOnly "org.spigotmc:spigot-api:1.21-R0.1-SNAPSHOT"
+
+    compileOnly 'org.postgresql:postgresql:42.7.5'
+    compileOnly 'org.xerial:sqlite-jdbc:3.49.1.0'
+    compileOnly 'com.j256.ormlite:ormlite-jdbc:6.1'
 }
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'

@@ -1,20 +1,18 @@
 package net.advancedplugins.utils;
 
-public class Pair<T, V> {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
+import javax.annotation.concurrent.NotThreadSafe;
+
+@NotThreadSafe
+@AllArgsConstructor @Getter @Setter
+public class Pair<T, V> {
     private T key;
     private V value;
 
-    public T getKey() {
-        return key;
-    }
-
-    public V getValue() {
-        return value;
-    }
-
-    public Pair(T key, V value) {
-        this.key = key;
-        this.value = value;
+    public static <S, U> Pair<S, U> of(S key, U value) {
+        return new Pair<>(key, value);
     }
 }

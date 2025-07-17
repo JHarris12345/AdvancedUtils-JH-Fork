@@ -39,7 +39,7 @@ public class CommandBaseNew {
 
     private static final Class<? extends Server> bukkitServerClass = Bukkit.getServer().getClass();
 
-    public void registerCommand(ConfigCommand<? super CommandSender> cmd) {
+    public void registerCommand(ConfigCommand<? extends CommandSender> cmd) {
         if (!cmd.getConfig().isEnabled()) return;
         try {
             final Field bukkitCommandMap = bukkitServerClass.getDeclaredField("commandMap");
