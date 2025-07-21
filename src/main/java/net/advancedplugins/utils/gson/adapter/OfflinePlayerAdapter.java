@@ -27,14 +27,14 @@ import java.util.UUID;
 
 public class OfflinePlayerAdapter extends TypeAdapter<OfflinePlayer> {
     @Override
-    public void write(JsonWriter out, OfflinePlayer value) throws IOException {
+    public void write(JsonWriter out, OfflinePlayer value) {
         out.beginObject();
         out.name("uuid").value(value.getUniqueId().toString());
         out.endObject();
     }
 
     @Override
-    public OfflinePlayer read(JsonReader in) throws IOException {
+    public OfflinePlayer read(JsonReader in) {
         in.beginObject();
         OfflinePlayer result = null;
         if(in.hasNext()) {

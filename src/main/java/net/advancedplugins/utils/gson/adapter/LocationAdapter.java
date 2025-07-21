@@ -27,7 +27,7 @@ import java.io.IOException;
 
 public class LocationAdapter extends TypeAdapter<Location> {
     @Override
-    public void write(JsonWriter out, Location value) throws IOException {
+    public void write(JsonWriter out, Location value) {
         out.beginObject();
         out.name("world").value(value.getWorld().getName());
         out.name("x").value(value.getX());
@@ -39,7 +39,7 @@ public class LocationAdapter extends TypeAdapter<Location> {
     }
 
     @Override
-    public Location read(JsonReader in) throws IOException {
+    public Location read(JsonReader in) {
         in.beginObject();
         World world = null;
         double x = 0.0D;

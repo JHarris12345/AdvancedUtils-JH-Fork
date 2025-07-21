@@ -28,14 +28,14 @@ import java.io.IOException;
 
 public class ItemStackAdapter extends TypeAdapter<ItemStack> {
     @Override
-    public void write(JsonWriter out, ItemStack value) throws IOException {
+    public void write(JsonWriter out, ItemStack value) {
         out.beginObject();
         out.name("item").value(TryCatchUtil.tryAndReturn(() -> ASManager.serializeItem(value)));
         out.endObject();
     }
 
     @Override
-    public ItemStack read(JsonReader in) throws IOException {
+    public ItemStack read(JsonReader in) {
         in.beginObject();
         ItemStack result = new ItemStack(Material.AIR);
         if(in.hasNext()) {

@@ -26,14 +26,14 @@ import java.io.IOException;
 
 public class WorldAdapter extends TypeAdapter<World> {
     @Override
-    public void write(JsonWriter out, World value) throws IOException {
+    public void write(JsonWriter out, World value) {
         out.beginObject();
         out.name("world").value(value.getName());
         out.endObject();
     }
 
     @Override
-    public World read(JsonReader in) throws IOException {
+    public World read(JsonReader in) {
         in.beginObject();
         World result = null;
         if(in.hasNext()) {
