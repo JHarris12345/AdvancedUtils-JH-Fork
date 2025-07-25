@@ -37,7 +37,6 @@ public class PlayASound {
 
     private static final Cache<String, Boolean> warnedSounds = CacheBuilder.newBuilder()
             .maximumSize(1000)
-            .expireAfterWrite(Duration.ofMinutes(3))
             .build();
 
     private static void warn(String sound) {
