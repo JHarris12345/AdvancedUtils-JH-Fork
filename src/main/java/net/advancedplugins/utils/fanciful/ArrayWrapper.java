@@ -17,7 +17,7 @@ import java.util.Collection;
  * @author Glen Husman
  * @see Arrays
  */
-final class ArrayWrapper<E> {
+public final class ArrayWrapper<E> {
 
     private E[] _array;
 

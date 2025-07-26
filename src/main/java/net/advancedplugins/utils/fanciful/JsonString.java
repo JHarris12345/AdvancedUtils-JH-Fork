@@ -12,7 +12,7 @@ import java.util.Map;
  * Writes by this object will not write name values nor begin/end objects in the JSON stream.
  * All writes merely write the represented string value.
  */
-final class JsonString implements JsonRepresentedObject, ConfigurationSerializable {
+public final class JsonString implements JsonRepresentedObject, ConfigurationSerializable {
 
     private final String _value;
 
