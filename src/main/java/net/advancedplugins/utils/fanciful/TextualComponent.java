@@ -23,7 +23,7 @@ public abstract class TextualComponent implements Cloneable {
         ConfigurationSerialization.registerClass(ComplexTextTypeComponent.class);
     }
 
-    static TextualComponent deserialize(Map<String, Object> map) {
+    public static TextualComponent deserialize(Map<String, Object> map) {
         if (map.containsKey("key") && map.size() == 2 && map.containsKey("value")) {
             // Arbitrary text component
             return ArbitraryTextTypeComponent.deserialize(map);
@@ -35,11 +35,11 @@ public abstract class TextualComponent implements Cloneable {
         return null;
     }
 
-    static boolean isTextKey(String key) {
+    public static boolean isTextKey(String key) {
         return key.equals("translate") || key.equals("text") || key.equals("score") || key.equals("selector");
     }
 
-    static boolean isTranslatableText(TextualComponent component) {
+    public static boolean isTranslatableText(TextualComponent component) {
         return component instanceof ComplexTextTypeComponent && component.getKey().equals("translate");
     }
 
@@ -168,7 +168,7 @@ public abstract class TextualComponent implements Cloneable {
             setValue(value);
         }
 
-        static ArbitraryTextTypeComponent deserialize(Map<String, Object> map) {
+        public static ArbitraryTextTypeComponent deserialize(Map<String, Object> map) {
             return new ArbitraryTextTypeComponent(map.get("key").toString(), map.get("value").toString());
         }
 
@@ -230,7 +230,7 @@ public abstract class TextualComponent implements Cloneable {
             setValue(values);
         }
 
-        static ComplexTextTypeComponent deserialize(Map<String, Object> map) {
+        public static ComplexTextTypeComponent deserialize(Map<String, Object> map) {
             String key = null;
             Map<String, String> value = new HashMap<>();
             for (Map.Entry<String, Object> valEntry : map.entrySet()) {
