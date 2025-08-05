@@ -148,12 +148,24 @@ public class Text {
      * @return A string which has been modified replacing colours ("&amp;") for use in Minecraft
      */
     public static List<String> modify(List<String> list, Replace replacer) {
+        return modify(list, replacer,true);
+    }
+
+    /**
+     * Applies colours and replaces certain internally set placeholders
+     *
+     * @param list     The strings to modify
+     * @param replacer The replacer to apply to the string.
+     * @param addPapi  Should add papi
+     * @return A string which has been modified replacing colours ("&amp;") for use in Minecraft
+     */
+    public static List<String> modify(List<String> list, Replace replacer, boolean addPapi) {
         if (list == null) {
             return null;
         }
         List<String> middleList = Lists.newArrayList();
         for (String string : list) {
-            String s = modify(string, replacer);
+            String s = modify(string, replacer,addPapi);
             middleList.addAll(Arrays.stream(s.split("<new>")).collect(Collectors.toList()));
         }
         return middleList;
