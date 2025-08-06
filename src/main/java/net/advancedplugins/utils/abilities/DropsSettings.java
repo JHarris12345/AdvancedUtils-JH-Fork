@@ -63,8 +63,4 @@ public class DropsSettings {
      * Whether the event is AureliumSkills <a href="https://github.com/Archy-X/AureliumSkills/blob/master/bukkit/src/main/java/com/archyx/aureliumskills/api/event/TerraformBlockBreakEvent.java">TerraformBlockBreakEvent</a>
      */
     private boolean terraformEvent = false;
-
-    // ola fuck spigot fix, because they incorrectly merge exp orbs to one and then the correct amount is just not there,
-    // so we need to spawn only one orb in the DropsHandler
-    private int dropExpAmount = 0;
 }

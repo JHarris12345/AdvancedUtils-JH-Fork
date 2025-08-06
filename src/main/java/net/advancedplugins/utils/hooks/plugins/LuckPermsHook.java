@@ -39,16 +39,6 @@ public class LuckPermsHook extends PluginHookInstance implements PermissionHook 
         return success;
     }
 
-    public String getGroup(Player player) {
-        UserManager manager = LuckPermsProvider.get().getUserManager();
-        User user = manager.getUser(player.getUniqueId());
-        try {
-            return user.getPrimaryGroup();
-        } catch (NullPointerException e) {
-            return null;
-        }
-    }
-
     @Override
     public boolean isPermEnabled() {
         return this.isEnabled();

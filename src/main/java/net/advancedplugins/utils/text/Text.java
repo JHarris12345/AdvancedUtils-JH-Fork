@@ -111,21 +111,9 @@ public class Text {
             // done because Player expansion for PAPI is dumb and returns empty string for any placeholder starting with %player
             // instead of not parsing it at all (Wega)
             // https://github.com/PlaceholderAPI/Player-Expansion/blob/master/src/main/java/com/extendedclip/papi/expansion/player/PlayerExpansion.java#L112
-
-            // same for LuckPerms :)
-            // https://github.com/LuckPerms/placeholders/blob/master/bukkit-placeholderapi/src/main/java/me/lucko/luckperms/placeholders/LuckPermsExpansion.java
-
-            // NOTE: If this becomes an issue with more expansions, just create a separate getMethods in LocaleHandler
-            // which have a parser, so the player data is actually parsed instead of being parsed will null parser.
-            // This will only work for values which are player specific though and are parsed at the exact runtime.
-            // (Wega)
-            string = string
-                    .replace("%player", "%playertemp")
-                    .replace("%luckperms", "%luckpermstemp");
+            string = string.replace("%player", "%playertemp");
             string = parsePapi(string, null);
-            string = string
-                    .replace("%playertemp", "%player")
-                    .replace("%luckpermstemp", "%luckperms");
+            string = string.replace("%playertemp", "%player");
         }
         return string == null ? null : renderColorCodes(replacer == null ? string : replacer.apply(new Replacer()).applyTo(string));
     }
@@ -148,24 +136,12 @@ public class Text {
      * @return A string which has been modified replacing colours ("&amp;") for use in Minecraft
      */
     public static List<String> modify(List<String> list, Replace replacer) {
-        return modify(list, replacer,true);
-    }
-
-    /**
-     * Applies colours and replaces certain internally set placeholders
-     *
-     * @param list     The strings to modify
-     * @param replacer The replacer to apply to the string.
-     * @param addPapi  Should add papi
-     * @return A string which has been modified replacing colours ("&amp;") for use in Minecraft
-     */
-    public static List<String> modify(List<String> list, Replace replacer, boolean addPapi) {
         if (list == null) {
             return null;
         }
         List<String> middleList = Lists.newArrayList();
         for (String string : list) {
-            String s = modify(string, replacer,addPapi);
+            String s = modify(string, replacer);
             middleList.addAll(Arrays.stream(s.split("<new>")).collect(Collectors.toList()));
         }
         return middleList;
@@ -233,8 +209,6 @@ public class Text {
     }
 
     // Code stolen (and edited) from https://www.spigotmc.org/threads/bungee-hex-color-util.561417/
-    // Example format: <gradient:#HEX_FROM,#HEX_TO>text</gradient>
-    // i.e. <gradient:#FF0000,#0000FF>text</gradient>
     // :3
     private static String gradient(String msg) {
         while (msg.contains("<gradient") && msg.contains("</gradient>")) {

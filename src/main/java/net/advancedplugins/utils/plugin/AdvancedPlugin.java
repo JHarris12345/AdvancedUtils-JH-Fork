@@ -111,7 +111,6 @@ public class AdvancedPlugin extends JavaPlugin implements Listener {
 
     public void saveResource(String resourcePath) {
         if (new File(getDataFolder(), resourcePath).isFile()) return;
-        if (resourcePath.contains("_internal")) return;
         saveResource(resourcePath, false);
     }
 

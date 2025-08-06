@@ -82,11 +82,13 @@ public class ItemDurability {
             }
 
             int max = getMaxDurability();
+//            Bukkit.broadcastMessage("§aDo damage: " + amount + ", Max durability: " + max);
             if (getDurability() + amount > max) {
                 setDurability(max);
                 return this;
             }
 
+//            Bukkit.broadcastMessage("§cDo damage: " + amount + ", new dur: " + (getDurability() + amount));
             setDurability(getDurability() + amount);
             dealtDamage += amount;
         } catch (Exception ignored) {

@@ -18,9 +18,9 @@ import java.util.logging.Level;
 /**
  * Internal class: Represents a component of a JSON-serializable {@link FancyMessage}.
  */
-public final class MessagePart implements JsonRepresentedObject, ConfigurationSerializable, Cloneable {
+final class MessagePart implements JsonRepresentedObject, ConfigurationSerializable, Cloneable {
 
-    public static final BiMap<ChatColor, String> stylesToNames;
+    static final BiMap<ChatColor, String> stylesToNames;
 
     static {
         ImmutableBiMap.Builder<ChatColor, String> builder = ImmutableBiMap.builder();
@@ -51,19 +51,19 @@ public final class MessagePart implements JsonRepresentedObject, ConfigurationSe
         ConfigurationSerialization.registerClass(MessagePart.class);
     }
 
-    public ChatColor color = ChatColor.WHITE;
-    public ArrayList<ChatColor> styles = new ArrayList<>();
-    public String clickActionName = null, clickActionData = null, hoverActionName = null;
-    public JsonRepresentedObject hoverActionData = null;
-    public TextualComponent text = null;
-    public String insertionData = null;
-    public ArrayList<JsonRepresentedObject> translationReplacements = new ArrayList<>();
+    ChatColor color = ChatColor.WHITE;
+    ArrayList<ChatColor> styles = new ArrayList<>();
+    String clickActionName = null, clickActionData = null, hoverActionName = null;
+    JsonRepresentedObject hoverActionData = null;
+    TextualComponent text = null;
+    String insertionData = null;
+    ArrayList<JsonRepresentedObject> translationReplacements = new ArrayList<>();
 
-    public MessagePart(final TextualComponent text) {
+    MessagePart(final TextualComponent text) {
         this.text = text;
     }
 
-    public MessagePart() {
+    MessagePart() {
         this.text = null;
     }
 
@@ -81,7 +81,7 @@ public final class MessagePart implements JsonRepresentedObject, ConfigurationSe
         return part;
     }
 
-    public boolean hasText() {
+    boolean hasText() {
         return text != null;
     }
 

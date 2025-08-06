@@ -1,13 +1,12 @@
 package net.advancedplugins.utils;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
-import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PlayASound {
 
@@ -35,15 +34,13 @@ public class PlayASound {
         return s;
     }
 
-    private static final Cache<String, Boolean> warnedSounds = CacheBuilder.newBuilder()
-            .maximumSize(1000)
-            .build();
+    private static final List<String> warnedSounds = new ArrayList<>();
 
     private static void warn(String sound) {
-        if (warnedSounds.getIfPresent(sound) != null)
-            return; // already warned
+        if (warnedSounds.add(sound))
+            return;
         Bukkit.getLogger().warning("Sound " + sound + " couldn't be found: invalid sound for this minecraft version?");
-        warnedSounds.put(sound, true);
+        warnedSounds.add(sound);
     }
 
     public static void playSound(String sound, Player p) {

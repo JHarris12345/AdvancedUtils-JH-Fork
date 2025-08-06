@@ -21,9 +21,9 @@ public class ResourceFileManager {
      * Recursively saves all files from a specified resource folder to the plugin's data folder,
      * maintaining the original folder structure
      *
-     * @param plugin         The JavaPlugin instance
+     * @param plugin The JavaPlugin instance
      * @param resourceFolder The folder path within resources to save from (e.g., "lang" or "data/configs")
-     * @param fileExtension  Optional file extension filter (e.g., ".yml"). Pass null to save all files
+     * @param fileExtension Optional file extension filter (e.g., ".yml"). Pass null to save all files
      * @throws IOException If there's an error accessing or saving files
      */
     public static void saveAllResources(JavaPlugin plugin, String resourceFolder, String fileExtension) {
@@ -59,10 +59,9 @@ public class ResourceFileManager {
                             File targetFile = new File(dataFolder, relativePath);
 
                             // Create parent directories if needed
-                            if (!targetFile.exists() && !targetFile.isDirectory()) {
-                                if (!name.endsWith("/"))
-                                    plugin.saveResource(name, false);
+                            if (!targetFile.exists()) {
                                 targetFile.getParentFile().mkdirs();
+                                plugin.saveResource(name, false);
                                 filesProcessed++;
                             }
                         }
@@ -82,8 +81,8 @@ public class ResourceFileManager {
     /**
      * Utility method to save specific file types from multiple resource folders
      *
-     * @param plugin        The JavaPlugin instance
-     * @param folders       Array of folder paths to process
+     * @param plugin The JavaPlugin instance
+     * @param folders Array of folder paths to process
      * @param fileExtension File extension to filter by (e.g., ".yml")
      */
     public static void saveAllResourceFolders(JavaPlugin plugin, String[] folders, String fileExtension) {

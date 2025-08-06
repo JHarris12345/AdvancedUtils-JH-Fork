@@ -1,7 +1,6 @@
 package net.advancedplugins.utils.menus;
 
 import lombok.Getter;
-import net.advancedplugins.utils.PlayASound;
 import net.advancedplugins.utils.menus.item.ClickAction;
 import org.bukkit.Bukkit;
 import org.bukkit.event.HandlerList;
@@ -38,11 +37,9 @@ public class AdvancedMenusHandler {
         defaultActions.put("CLOSE", (player, inventory, item, slot, type) -> player.closeInventory());
         defaultActions.put("PREVIOUS_PAGE", (player, inventory, item, slot, type) -> {
             inventory.openInventory(inventory.getPage()-1);
-            PlayASound.playSound("ENTITY_EXPERIENCE_ORB_PICKUP", player);
         });
         defaultActions.put("NEXT_PAGE", (player, inventory, item, slot, type) -> {
             inventory.openInventory(inventory.getPage()+1);
-            PlayASound.playSound("ENTITY_EXPERIENCE_ORB_PICKUP", player);
         });
     }
 

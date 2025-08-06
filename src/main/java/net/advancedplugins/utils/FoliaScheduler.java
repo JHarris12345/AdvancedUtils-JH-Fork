@@ -5,22 +5,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.Consumer;
 
 public class FoliaScheduler {
-    public static final boolean isFolia = checkFolia();
-
-    private static boolean checkFolia() {
-        try {
-            // Why the fuck Paper implemented Folia's Global Region Scheduler in their own code...
-            Class.forName("io.papermc.paper.threadedregions.RegionizedServer");
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
-	}
+    private static final boolean isFolia = Bukkit.getVersion().contains("Folia") || Bukkit.getName().contains("Folia");
 
     public static Task runTask(Plugin plugin, Runnable runnable) {
         if (isFolia) {
@@ -35,7 +23,7 @@ public class FoliaScheduler {
     public static Task runTaskLater(Plugin plugin,Runnable runnable, long delayTicks) {
         if (isFolia)
             return new Task(Bukkit.getGlobalRegionScheduler()
-                    .runDelayed(plugin, t -> runnable.run(), delayTicks < 1 ? 1 : delayTicks));
+                    .runDelayed(plugin, t -> runnable.run(), delayTicks));
 
         else
             return new Task(Bukkit.getScheduler().runTaskLater(plugin, runnable, delayTicks));
@@ -62,7 +50,7 @@ public class FoliaScheduler {
     public static Task runTaskLaterAsynchronously(Plugin plugin,Runnable runnable, long delayTicks) {
         if (isFolia)
             return new Task(Bukkit.getGlobalRegionScheduler()
-                    .runDelayed(plugin, t -> runnable.run(), delayTicks < 1 ? 1 : delayTicks));
+                    .runDelayed(plugin, t -> runnable.run(), delayTicks));
 
         else
             return new Task(Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, runnable, delayTicks));
