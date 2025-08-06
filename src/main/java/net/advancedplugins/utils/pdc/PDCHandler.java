@@ -1,6 +1,5 @@
 package net.advancedplugins.utils.pdc;
 
-import io.papermc.paper.persistence.PersistentDataContainerView;
 import net.advancedplugins.utils.ASManager;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
@@ -30,7 +29,7 @@ public class PDCHandler {
     );
 
     public static boolean contains(ItemStack itemStack, String key) {
-        return dataTypes.stream().filter(type -> itemStack.getPersistentDataContainer().has(getNamespace(key), type)).findFirst().orElse(null) != null;
+        return dataTypes.stream().filter(type -> itemStack.getp.has(getNamespace(key), type)).findFirst().orElse(null) != null;
     }
 
     public static String getString(ItemStack itemStack, String key, String def) {
