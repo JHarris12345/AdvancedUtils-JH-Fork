@@ -6,6 +6,7 @@ import net.advancedplugins.utils.ASManager;
 import net.advancedplugins.utils.SchedulerUtils;
 import net.advancedplugins.utils.SkullCreator;
 import net.advancedplugins.utils.items.ItemBuilder;
+import net.advancedplugins.utils.items.ItemFlagFix;
 import net.advancedplugins.utils.nbt.NBTapi;
 import net.advancedplugins.utils.text.Text;
 import org.bukkit.Bukkit;
@@ -71,7 +72,7 @@ public class ConfigEditorMenu implements Listener {
                 builder.addLoreLine(Text.modify(" &7\u24D8 &nRight Click&7 here to read more."));
             }
 
-            builder.addItemFlag(ItemFlag.values());
+            builder.addItemFlag(ItemFlagFix.hideAllAttributes());
 
             ItemStack item = builder.toItemStack();
             item = NBTapi.addNBTTag("editKey", keyInfo.name, item);

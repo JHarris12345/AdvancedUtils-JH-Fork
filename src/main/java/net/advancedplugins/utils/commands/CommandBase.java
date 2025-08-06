@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.StringUtil;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,6 +34,26 @@ public class CommandBase implements CommandExecutor, TabCompleter {
     }
 
     public void registerCommand(SimpleCommand<? super CommandSender> command) {
+        PluginCommand pluginCommand = this.plugin.getCommand(command.getCommand());
+        if (pluginCommand == null) {
+            Bukkit.getLogger().log(Level.WARNING, "Failed to load the command " + command.getCommand());
+            return;
+        }
+        pluginCommand.setExecutor(this);
+        this.commands.add(command);
+    }
+
+    public void registerCommandOverride(SimpleCommand<? super CommandSender> command) {
+        try {
+            final Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
+
+            bukkitCommandMap.setAccessible(true);
+            CommandMap commandMap = (CommandMap) bukkitCommandMap.get(Bukkit.getServer());
+
+            commandMap.getCommand(command.getCommand()).unregister(commandMap);
+        } catch (Exception ev) {
+//            ev.printStackTrace();
+        }
         PluginCommand pluginCommand = this.plugin.getCommand(command.getCommand());
         if (pluginCommand == null) {
             Bukkit.getLogger().log(Level.WARNING, "Failed to load the command " + command.getCommand());

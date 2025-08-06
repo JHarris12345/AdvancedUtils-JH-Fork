@@ -111,6 +111,9 @@ public class HooksHandler {
         if (isPluginEnabled(HookPlugin.VIAVERSION.getPluginName()))
             registerNew(HookPlugin.VIAVERSION, new ViaVersionHook());
 
+        if (isPluginEnabled(HookPlugin.TAB.getPluginName()))
+            registerNew(HookPlugin.TAB, new TabHook());
+
         // Do this after server is loaded, so all softdepends that aren't in the plugin.yml file will be enabled by this time
         FoliaScheduler.runTaskLater(plugin, () -> {
             // Figure out which factions plugin is loaded and hook into the correct one

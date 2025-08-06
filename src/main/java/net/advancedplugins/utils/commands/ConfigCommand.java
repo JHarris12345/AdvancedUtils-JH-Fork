@@ -192,6 +192,10 @@ public abstract class ConfigCommand<T extends CommandSender> {
         this.arguments.add(new Argument<>(null, flat));
     }
 
+    public void addFlatWithAliases(String flat, List<String> aliases) {
+        this.addFlatWithAliases(flat,aliases.toArray(new String[0]));
+    }
+
     public void addFlatWithAliases(String flat, String... aliases) {
         this.arguments.add(new Argument<>(null, flat, aliases));
     }

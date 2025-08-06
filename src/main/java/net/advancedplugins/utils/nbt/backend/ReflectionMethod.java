@@ -160,6 +160,7 @@ public enum ReflectionMethod {
     NMS_EntityPlayer_attack(ClassWrapper.NMS_EntityPlayer.getClazz(), new Class[]{ClassWrapper.NMS_ENTITY.getClazz()}, MinecraftVersion.MC1_7_R4, new Since(MinecraftVersion.MC1_7_R4, "attack"),
             new Since(MinecraftVersion.MC1_18_R1, "d")),// TODO: remove if fixed in new 1.18),
 
+    // net.minecraft.world.entity.EntityInsentient
     NMS_ENTITY_GETNAVIGATION(ClassWrapper.NMS_ENTITY_INSENTIENT.getClazz(), new Class[]{}, MinecraftVersion.MC1_13_R1,
             new Since(MinecraftVersion.MC1_13_R1, "getNavigation"), new Since(MinecraftVersion.MC1_18_R1, "D"), new Since(MinecraftVersion.MC1_18_R2, "D"),
             new Since(MinecraftVersion.MC1_19_R2, "E"), new Since(MinecraftVersion.MC1_19_R3, "G"),
@@ -169,7 +170,9 @@ public enum ReflectionMethod {
             new Since(MinecraftVersion.MC1_20_R4, "K"),
             new Since(MinecraftVersion.MC1_21_R1, "N"), // looks like this: https://i.imgur.com/OjhNDUQ.png
             new Since(MinecraftVersion.MC1_21_R2, "L"), // looks like this: https://i.imgur.com/OjhNDUQ.png
-            new Since(MinecraftVersion.MC1_21_R3, "P")), // looks like this: https://i.imgur.com/OjhNDUQ.png
+            new Since(MinecraftVersion.MC1_21_R3, "P"), // looks like this: https://i.imgur.com/OjhNDUQ.png
+            new Since(MinecraftVersion.MC1_21_R4, "N"), // looks like this: https://i.imgur.com/OjhNDUQ.png
+            new Since(MinecraftVersion.MC1_21_R5, "S")), // looks like this: https://i.imgur.com/OjhNDUQ.png
     NMSDATACOMPONENTHOLDER_GET(ClassWrapper.NMS_DATACOMPONENTHOLDER, new Class[] {ClassWrapper.NMS_DATACOMPONENTTYPE.getClazz()}, MinecraftVersion.MC1_20_R4,
             new Since(MinecraftVersion.MC1_20_R4, "get(net.minecraft.core.component.DataComponentType)")),
     NMSCUSTOMDATA_GETCOPY(ClassWrapper.NMS_CUSTOMDATA, new Class[] {}, MinecraftVersion.MC1_20_R4,
@@ -211,7 +214,7 @@ public enum ReflectionMethod {
         MinecraftVersion server = MinecraftVersion.getCurrentVersion();
         try {
             if (ASManager.getInstance().getResource(reflectionConfig) != null) {
-                Bukkit.getPluginManager().disablePlugin(ASManager.getInstance());
+                Bukkit.getPluginManager().disablePlugin(ASManager.getInstance());Bukkit.getLogger().info("15");
                 return;
             }
         } catch (Exception ignored) {
