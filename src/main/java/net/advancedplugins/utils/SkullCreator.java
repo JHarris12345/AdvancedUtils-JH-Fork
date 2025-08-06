@@ -105,6 +105,7 @@ public class SkullCreator {
     public static ItemStack itemWithName(ItemStack item, String name) {
         notNull(item, "item");
         notNull(name, "name");
+        if(name.isEmpty()|| name.equalsIgnoreCase("-")) return item;
 
         SkullMeta meta = (SkullMeta) item.getItemMeta();
         meta.setOwner(name);
